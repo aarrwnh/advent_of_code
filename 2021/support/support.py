@@ -26,7 +26,7 @@ def timing(name: str = "") -> Generator[None, None, None]:
         print(f"> {int(t)} {unit}{name}", file=sys.stderr, flush=True)
 
 
-def check_result(expected: int, result: int) -> None:
+def check_result(expected: any, result: any) -> None:
     print(result == expected, f"{result} == {expected}")
 
 
