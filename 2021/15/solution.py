@@ -79,12 +79,13 @@ def find_path(
 
         for next_coord in adjacents(*last_coord):
             if next_coord in grid and next_coord not in path:
-                queue.append(
+                heapq.heappush(
+                    queue,
                     (
                         length + grid[next_coord],
                         next_coord,
                         path | {next_coord},
-                    )
+                    ),
                 )
 
     if print_path:
