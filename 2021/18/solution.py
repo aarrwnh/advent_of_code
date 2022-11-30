@@ -17,8 +17,8 @@ def sub_sum(num1: str):
 
 
 def sub_greater10(match: Match[str]) -> str:
-    i = int(match[0])
-    return f"[{math.floor(i/2)},{math.ceil(i/2)}]"
+    i = int(match[0]) / 2
+    return f"[{math.floor(i)},{math.ceil(i)}]"
 
 
 def parse_line(line) -> str:
@@ -72,6 +72,7 @@ def sum_magnitude(input: str) -> int:
         if isinstance(v, int):
             return v
         else:
+            assert len(v) == 2
             return reduce(v[0]) * 3 + reduce(v[1]) * 2
 
     return reduce(input)

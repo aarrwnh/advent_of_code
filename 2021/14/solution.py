@@ -20,7 +20,7 @@ def brute(data: Tuple[str, List[List[str]]], step: int) -> int:
     if step > 20:
         return 0
 
-    for i in range(step):
+    for _ in range(step):
         templ: Dict[int, str] = {}
         for rule in rules:
             pair, insertion = rule

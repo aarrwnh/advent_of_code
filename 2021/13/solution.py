@@ -50,7 +50,7 @@ def fold_points(
 
 def compute(
     data: Tuple[Set[Point], List[str]],
-    fold_count: int = None,
+    fold_count: int = 0,
 ) -> Set[Point]:
     points, folds = data
 
@@ -72,7 +72,7 @@ def part1(data: Tuple[Set[Point], List[str]], fold_count: int) -> int:
 
 @timing()
 def part2(data: Tuple[Set[Point], List[str]]) -> str:
-    return print_grid(compute(data, None))
+    return print_grid(compute(data, 0))
 
 
 def check_result(expected: int, result: int) -> None:

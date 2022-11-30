@@ -108,7 +108,6 @@ def get_packets(hex: str):
     return parse_packet(0)[1]
 
 
-@timing()
 def part1(hex: str) -> int:
     todo = [get_packets(hex)]
     total = 0
@@ -142,7 +141,6 @@ op = {
 }
 
 
-@timing()
 def part2(hex: str) -> int:
     def compute(packet) -> int:
         packet_id: int = packet["packet_type_id"]

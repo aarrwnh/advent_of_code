@@ -1,5 +1,6 @@
 import re
-from support import timing, check_result
+
+from support import check_result, timing
 
 
 @timing()

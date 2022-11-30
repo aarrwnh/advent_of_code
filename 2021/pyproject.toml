@@ -1,7 +1,0 @@
-[tool.pyright]
-exclude = [
-	"**/.mypy_cache",
-	"**/.git",
-	"**/.vscode",
-	"**/__pycache__",
-]

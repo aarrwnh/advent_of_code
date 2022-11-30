@@ -1,20 +1,21 @@
-from typing import List, Tuple, Union
+import collections
 import os
-from support import timing
+from typing import Union
+
+from support import check_result, timing  # type: ignore
 
 
-def parse_input(filename: str) -> List[List[int]]:
-    lines: List[List[int]] = []
+def parse_input(filename: str) -> list[list[int]]:
+    lines: list[list[int]] = []
     path = os.path.dirname(__file__) + "/" + filename
     with open(path, "r") as f:
         for line in f.readlines():
-            line = map(lambda x: int(x), line.rstrip())
-            lines.append([*line])
+            lines.append([*map(lambda x: int(x), line.rstrip())])
     return lines
 
 
-def find_low_points(areamap: List[List[int]]) -> List[Tuple[int, int, int]]:
-    coords: List[Tuple[int, int, int]] = []
+def find_low_points(areamap: list[list[int]]) -> list[tuple[int, int, int]]:
+    coords: list[tuple[int, int, int]] = []
     for y, row in enumerate(areamap):
         for x, point in enumerate(row):
             down = areamap[y + 1][x] if y + 1 < len(areamap) else -1
@@ -28,7 +29,7 @@ def find_low_points(areamap: List[List[int]]) -> List[Tuple[int, int, int]]:
 
 
 @timing()
-def part1(areamap: List[List[int]]) -> int:
+def part1(areamap: list[list[int]]) -> int:
     low_point_coords = find_low_points(areamap)
     low_points = [x[0] for x in low_point_coords]
     low_points.append(len(low_points))
@@ -36,9 +37,9 @@ def part1(areamap: List[List[int]]) -> int:
 
 
 @timing()
-def part2_first_attempt(areamap: List[List[int]]):
+def part2_first_attempt(areamap: list[list[int]]):
     low_points_coords = find_low_points(areamap)
-    seen_points: List[Tuple[int, int]] = []
+    seen_points: list[tuple[int, int]] = []
 
     width = len(areamap[0])
     height = len(areamap)
@@ -46,10 +47,10 @@ def part2_first_attempt(areamap: List[List[int]]):
     def is_bounding(x: int, y: int) -> bool:
         return x >= 0 and x < width and y >= 0 and y < height
 
-    def check_point(x: int, y: int) -> Union[Tuple[int, int], None]:
+    def check_point(x: int, y: int) -> Union[tuple[int, int], None]:
         return (x, y) if is_bounding(x, y) and areamap[y][x] != 9 else None
 
-    def get_adjacent(x: int, y: int) -> List[Union[Tuple[int, int], None]]:
+    def get_adjacent(x: int, y: int) -> list[Union[tuple[int, int], None]]:
         current = areamap[y][x]
         down = check_point(x, y - 1)
         right = check_point(x + 1, y)
@@ -76,7 +77,7 @@ def part2_first_attempt(areamap: List[List[int]]):
             count = compute(next_point[0], next_point[1], count)
         return count
 
-    basins: List[int] = []
+    basins: list[int] = []
     for (_, x, y) in low_points_coords:
         basins.append(compute(x, y))
     #  print(basins)
@@ -85,8 +86,41 @@ def part2_first_attempt(areamap: List[List[int]]):
     return basins[0] * basins[1] * basins[2]
 
 
-def check_result(expected: int, result: int) -> None:
-    print(result == expected, f"{result} == {expected}")
+@timing()
+def part2(filename: str) -> int:
+    path = os.path.dirname(__file__) + "/" + filename
+    coords = collections.defaultdict(lambda: 9)
+    with open(path, "r") as f:
+        for y, line in enumerate(f.readlines()):
+            for x, point in enumerate(line.rstrip()):
+                coords[(y, x)] = int(point)
+
+    sizes = []
+    for (y, x), n in tuple(coords.items()):
+        if (
+            coords[y, x + 1] > n
+            and coords[y, x - 1] > n
+            and coords[y + 1, x] > n
+            and coords[y - 1, x] > n
+        ):
+            seen = set()
+            todo = [(y, x)]
+            while todo:
+                y, x = todo.pop()
+                seen.add((y, x))
+                for other in (
+                    (y, x + 1),
+                    (y, x - 1),
+                    (y + 1, x),
+                    (y - 1, x),
+                ):
+                    if other not in seen and coords[other] != 9:
+                        todo.append(other)
+
+            sizes.append(len(seen))
+
+    sizes.sort()
+    return sizes[-1] * sizes[-2] * sizes[-3]
 
 
 def main() -> int:
@@ -96,7 +130,8 @@ def main() -> int:
     check_result(15, part1(sample))
     check_result(564, part1(puzzle))
 
-    check_result(1134, part2_first_attempt(sample))
+    check_result(1134, part2("sample.input"))
+    #  check_result(1038240, part2("puzzle.input"))
     check_result(1038240, part2_first_attempt(puzzle))
 
     return 0
