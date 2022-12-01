@@ -4,3 +4,4 @@ node_modules/
 __bare__/
 __pycache__/
 *.egg-info/
+/target

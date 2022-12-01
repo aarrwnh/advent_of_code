@@ -24,8 +24,8 @@ def part2(lines: list[str]):
 
 
 def main() -> int:
-    sample = read_file(__file__, "sample.input")
-    puzzle = read_file(__file__, "puzzle.input")
+    sample = read_file(__file__, "../../input/2022/01/sample.input")
+    puzzle = read_file(__file__, "../../input/2022/01/puzzle.input")
 
     sample.append("")
     puzzle.append("")

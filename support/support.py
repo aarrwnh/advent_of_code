@@ -4,8 +4,6 @@ import sys
 import time
 from typing import Any, Generator
 
-HERE = os.path.dirname(os.path.abspath(__file__))
-
 
 @contextlib.contextmanager
 def timing(name: str = "") -> Generator[None, None, None]:
@@ -25,17 +23,16 @@ def timing(name: str = "") -> Generator[None, None, None]:
 
 
 def red(s: str):
-    print(f"\033[41m\033[30m{s}\033[00m")
+    print(f"\033[41m\033[30m{s}\033[0m")
 
 
 def green(s: str):
-    print(f"\033[42m\033[30m{s}\033[00m")
+    print(f"\033[42m\033[30m{s}\033[0m")
 
 
 def check_result(expected: Any, result: Any) -> None:
-    check = result == expected
-    output = f"{check} {result} == {expected}\n"
-    if check:
+    output = f"{result} == {expected}"
+    if result == expected:
         green(output)
     else:
         red(output)
@@ -45,6 +42,12 @@ def read_file(__file__: str, filename: str) -> list[str]:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:
         return [line.strip() for line in f.readlines()]
+
+
+def read_file_int(__file__: str, filename: str) -> list[int]:
+    path = os.path.join(os.path.dirname(__file__), filename)
+    with open(path, "r") as f:
+        return [int(line.strip()) for line in f.readlines()]
 
 
 #  def adjacents(x: int, y: int) -> Generator[tuple[int, int], None, None]:
