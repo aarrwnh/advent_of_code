@@ -2,7 +2,7 @@ import contextlib
 import os.path
 import sys
 import time
-from typing import Generator
+from typing import Any, Generator
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -24,18 +24,27 @@ def timing(name: str = "") -> Generator[None, None, None]:
         print(f"> {int(t)} {unit}{name}", file=sys.stderr, flush=True)
 
 
-def check_result(expected: any, result: any) -> None:
-    print(result == expected, f"{result} == {expected}")
+def red(s: str):
+    print(f"\033[41m\033[30m{s}\033[00m")
+
+
+def green(s: str):
+    print(f"\033[42m\033[30m{s}\033[00m")
+
+
+def check_result(expected: Any, result: Any) -> None:
+    check = result == expected
+    output = f"{check} {result} == {expected}\n"
+    if check:
+        green(output)
+    else:
+        red(output)
 
 
 def read_file(__file__: str, filename: str) -> list[str]:
-    lines: list[str] = []
-    path = os.path.dirname(__file__) + "/" + filename
+    path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:
-        for line in f.readlines():
-            line = line.rstrip().split()
-            lines.append(line[0])
-    return lines
+        return [line.strip() for line in f.readlines()]
 
 
 #  def adjacents(x: int, y: int) -> Generator[tuple[int, int], None, None]:
