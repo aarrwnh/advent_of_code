@@ -1,4 +1,4 @@
-use std::{collections::BinaryHeap, fs::read_to_string};
+use std::{collections::BinaryHeap, fs::read_to_string, time::SystemTime};
 use support::check_values;
 
 fn get_calories(input: &str) -> impl Iterator<Item = u32> + '_ {
@@ -11,33 +11,32 @@ fn get_calories(input: &str) -> impl Iterator<Item = u32> + '_ {
 }
 
 fn part1(input: &str) -> u32 {
-    return get_calories(input).max().unwrap();
+    get_calories(input).max().unwrap()
 }
 
 fn part2(input: &str) -> u32 {
     // calories.sort_by(|a, b| b.cmp(a));
-    return get_calories(input)
+    get_calories(input)
         .collect::<BinaryHeap<u32>>()
         .iter()
         .take(3)
-        .sum::<u32>();
+        .sum::<u32>()
 }
 
 pub fn main() {
     let sample = read_to_string("../input/2022/01/sample.input").unwrap();
     let puzzle = read_to_string("../input/2022/01/puzzle.input").unwrap();
 
-    check_values!(24000, part1(&sample));
-    check_values!(71924, part1(&puzzle));
+    check_values!(24000, part1, &sample);
+    check_values!(71924, part1, &puzzle);
 
-    check_values!(45000, part2(&sample));
-    check_values!(210406, part2(&puzzle));
+    check_values!(45000, part2, &sample);
+    check_values!(210406, part2, &puzzle);
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::fs::read_to_string;
 
     #[test]
     fn test_part1() {

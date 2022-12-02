@@ -44,6 +44,12 @@ def read_file(__file__: str, filename: str) -> list[str]:
         return [line.strip() for line in f.readlines()]
 
 
+def read_file_split(__file__: str, filename: str) -> list[list[str]]:
+    path = os.path.join(os.path.dirname(__file__), filename)
+    with open(path, "r") as f:
+        return [line.strip().split() for line in f.readlines()]
+
+
 def read_file_int(__file__: str, filename: str) -> list[int]:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:

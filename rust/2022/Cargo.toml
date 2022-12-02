@@ -5,3 +5,5 @@ edition = "2021"
 
 [dependencies]
 support = { path = "../support" }
+timed = "0.1.5"
+log = "0.4"
