@@ -1,4 +1,4 @@
-use std::{collections::BinaryHeap, fs::read_to_string, time::SystemTime};
+use std::{collections::BinaryHeap, error::Error, fs::read_to_string, time::SystemTime};
 use support::check_values;
 
 fn get_calories(input: &str) -> impl Iterator<Item = u32> + '_ {
@@ -23,7 +23,7 @@ fn part2(input: &str) -> u32 {
         .sum::<u32>()
 }
 
-pub fn main() {
+pub fn main() -> Result<(), Box<dyn Error>> {
     let sample = read_to_string("../input/2022/01/sample.input").unwrap();
     let puzzle = read_to_string("../input/2022/01/puzzle.input").unwrap();
 
@@ -32,6 +32,8 @@ pub fn main() {
 
     check_values!(45000, part2, &sample);
     check_values!(210406, part2, &puzzle);
+
+    Ok(())
 }
 
 #[cfg(test)]

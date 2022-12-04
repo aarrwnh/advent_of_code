@@ -1,14 +1,21 @@
 use aoc2022::*;
-use std::env;
+use std::{env, fmt::Error};
 
-fn main() {
+fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
     let day = args[1].parse::<u32>().unwrap();
+
     let solve = match day {
         1 => d01::main,
         2 => d02::main,
+        3 => d03::main,
         _ => panic!("Unimplemented"),
     };
 
-    solve();
+    match solve() {
+        Err(e) => println!("{:?}", e),
+        _ => (),
+    }
+
+    Ok(())
 }

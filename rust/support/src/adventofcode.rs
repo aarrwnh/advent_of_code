@@ -11,7 +11,15 @@ pub fn timing<F: Fn() -> T, T>(f: F) -> T {
 
 #[macro_export]
 macro_rules! check_values {
-    ($expect:expr, $fn:expr, $file:expr) => {
+    (
+        $expect:expr,
+        $fn:expr,
+        $file:expr
+        $(, $hide_print:expr)?
+    ) => {{
+        let mut hide_print = false;
+        $ ( hide_print = $hide_print; )?;
+
         let start = SystemTime::now();
         let out = $fn($file);
         let end = SystemTime::now();
@@ -21,7 +29,10 @@ macro_rules! check_values {
         if $expect == out {
             color = "42";
         }
-        println!("\x1b[{}m\x1b[30m{:?} == {:?}\x1b[00m", color, $expect, out);
+
+        if !hide_print {
+            println!("\x1b[{}m\x1b[30m{:?} == {:?}\x1b[00m", color, $expect, out);
+        }
         // assert_eq!($expect, $output);
-    };
+    }};
 }

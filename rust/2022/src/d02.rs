@@ -1,5 +1,6 @@
 use self::HandShape::*;
 use self::RoundResult::*;
+use std::error::Error;
 use std::{fs::read_to_string, time::SystemTime};
 use support::check_values;
 
@@ -125,7 +126,7 @@ fn part2(input: &str) -> u32 {
     });
 }
 
-pub fn main() {
+pub fn main() -> Result<(), Box<dyn Error>> {
     // [["A", "Y"], ["B", "X"], ["C", "Z"]];
     let sample = "A Y\nB X\nC Z";
     let puzzle = read_to_string("../input/2022/02/puzzle.input").unwrap();
@@ -135,4 +136,6 @@ pub fn main() {
 
     check_values!(12, part2, &sample);
     check_values!(13022, part2, &puzzle);
+
+    Ok(())
 }

@@ -3,17 +3,15 @@ from support import check_result, read_file, timing  # type: ignore
 
 def priority():
     cache: dict[str, int] = {}
+    _sa = ord("a") - 1
+    _sA = ord("A") - 27
 
     def get(char: str) -> int:
         if char in cache:
             return cache[char]
-        i = ord(char)
         # a-z => 1~26
-        if i >= 97 and i <= 122:
-            cache[char] = i - 96
         # A-Z => 27~52
-        elif i >= 65 and i <= 90:
-            cache[char] = i - 38
+        cache[char] = ord(char) - (char.islower() and _sa or _sA)
         return cache[char]
 
     return get
@@ -25,34 +23,18 @@ def part1(compartments: list[str]) -> int:
     total = 0
     for rucksack in compartments:
         half = len(rucksack) // 2
-        first, second = rucksack[:half], rucksack[half:]
-        for char in first:
-            count1 = first.count(char)
-            count2 = second.count(char)
-            if count2 == 0:
-                continue
-            if count1 > 0:
-                total += convert_char(char)
-                break
+        (s,) = set(rucksack[:half]) & set(rucksack[half:])
+        total += convert_char(s)
     return total
 
 
 @timing()
-def part2(compartments: list[str]):
+def part2(c: list[str]):
     char_to_int = priority()
     total = 0
-    for i in range(0, len(compartments), 3):
-        for char in compartments[i]:
-            count1 = compartments[i].count(char)
-            count2 = compartments[i + 1].count(char)
-            if count2 == 0:
-                continue
-            count3 = compartments[i + 2].count(char)
-            if count3 == 0:
-                continue
-            if count1 > 0:
-                total += char_to_int(char)
-                break
+    for i in range(0, len(c), 3):
+        (char,) = set(c[i]) & set(c[i + 1]) & set(c[i + 2])
+        total += char_to_int(char)
     return total
 
 
