@@ -9,6 +9,7 @@ fn main() -> Result<(), Error> {
         1 => d01::main,
         2 => d02::main,
         3 => d03::main,
+        4 => d04::main,
         _ => panic!("Unimplemented"),
     };
 

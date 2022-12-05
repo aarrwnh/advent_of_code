@@ -1,3 +1,4 @@
+use array_tool::vec::*;
 use std::{
     collections::{HashMap, HashSet},
     error::Error,
@@ -6,13 +7,13 @@ use std::{
     // mem::take,
     string::ParseError,
     time::SystemTime,
-    vec,
 };
 use support::check_values;
 
 const LOWERCASE_ITEM: u32 = 'a' as u32 - 1; // + 1;
 const UPPERCASE_ITEM: u32 = 'A' as u32 - 27; // + 27;
 
+#[derive(Debug, PartialEq)]
 struct Item {
     value: usize,
 }
@@ -69,8 +70,10 @@ fn check_group(chunk: &[&str]) -> usize {
             let item = Item::try_from(element).unwrap();
 
             if row_index < 2 {
+                // On the two first rows we mark the element on the occurences
                 occurences[item.value] |= 1 << row_index;
             } else if occurences[item.value] == 0b011 {
+                // on the thrid row we check if the two contains the element
                 sum += item.value;
                 break;
             }
@@ -199,6 +202,24 @@ fn part1_fast(input: &Vec<&str>) -> u32 {
     return total;
 }
 
+fn part2_2(input: &[&str]) -> u32 {
+    let mut total = 0;
+    let chunks = input.chunks(3);
+    for chunk in chunks {
+        let g1 = chunk[0].split("").collect::<Vec<&str>>();
+        let g2 = chunk[1].split("").collect::<Vec<&str>>();
+        let g3 = chunk[2].split("").collect::<Vec<&str>>();
+        let common_val = g1.intersect(g2.intersect(g3))[1];
+        let w: char = common_val.chars().collect::<Vec<char>>()[0];
+        let c = w as u32;
+        total += if w.is_lowercase() {
+            c - LOWERCASE_ITEM
+        } else {
+            c - UPPERCASE_ITEM
+        };
+    }
+    total
+}
 pub fn main() -> Result<(), Box<dyn Error>> {
     let sample: String = read_to_string("../input/2022/03/sample.input")?.parse()?;
     let sample = sample.lines().collect::<Vec<&str>>();
@@ -232,6 +253,10 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     print!("\n  part2_by_cod3monk\n");
     check_values!(157, part2_by_cod3monk, &sample, true);
     check_values!(7908, part2_by_cod3monk, &puzzle, true);
+
+    print!("\n  part2_2\n");
+    check_values!(70, part2_2, &sample, true);
+    check_values!(2838, part2_2, &puzzle, true);
 
     Ok(())
 }

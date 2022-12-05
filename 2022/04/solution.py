@@ -1,10 +1,15 @@
+import re
+
 from support import check_result, read_file, timing  # type: ignore
+
+NON_NUMBER = re.compile(r"[-,]")
 
 
 def split_pairs(line: str):
-    [a, b], [c, d] = [
-        [int(z) for z in y.split("-")] for y in [x for x in line.split(",")]
-    ]
+    #  [a, b], [c, d] = [
+    #      [int(z) for z in y.split("-")] for y in [x for x in line.split(",")]
+    #  ]
+    [a, b, c, d] = [int(x) for x in NON_NUMBER.split(line)]
     return a, b, c, d
 
 
