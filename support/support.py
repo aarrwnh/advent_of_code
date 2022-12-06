@@ -38,10 +38,23 @@ def check_result(expected: Any, result: Any) -> None:
         red(output)
 
 
-def read_file(__file__: str, filename: str) -> list[str]:
+def read_file_clean(__file__: str, filename: str) -> str:
+    path = os.path.join(os.path.dirname(__file__), filename)
+    with open(path, "r") as f:
+        return f.read()
+
+
+def read_file_lines(__file__: str, filename: str) -> list[str]:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:
         return [line.strip() for line in f.readlines()]
+
+
+def read_file(__file__: str, filename: str) -> list[str]:
+    """
+    @deprecated
+    """
+    return read_file_lines(__file__, filename)
 
 
 def read_file_split(__file__: str, filename: str) -> list[list[str]]:

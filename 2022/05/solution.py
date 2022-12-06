@@ -2,7 +2,7 @@ import math
 import re
 from typing import NamedTuple
 
-from support import check_result, read_file_all, timing  # type: ignore
+from support import check_result, read_file_raw, timing  # type: ignore
 
 
 class Instruction(NamedTuple):
@@ -13,31 +13,31 @@ class Instruction(NamedTuple):
     @classmethod
     def parse(cls, instr: str):
         a = [int(x.group()) for x in re.finditer(r"(\d+)", instr)]
-        return cls(amount=a[0], move_from=a[1] - 1, move_to=a[2] - 1)
+        return cls(a[0], a[1] - 1, a[2] - 1)
 
 
-def transform_stack(stack: str) -> dict[int, list[str]]:
-    init_lines = stack.split("\n")
-    range_stop = math.ceil(len(init_lines[0]) / 4)
+def parse_input(input: str) -> tuple[list[str], dict[int, list[str]]]:
+    stack, instructions = input.split("\n\n")
+    range_stop = math.ceil(input.index("\n") / 4)
+    lines = stack.split("\n")
     stacks: dict[int, list[str]] = {x: [] for x in range(0, range_stop)}
-    #  print(len(init_lines[0]))
-    for idx in range(0, len(init_lines) - 1):
-        line = init_lines[idx]
-        for x in range(0, range_stop):
-            crate = line[x * 4 : x * 4 + 3].strip()
-            if crate != "":
-                stacks[x].insert(0, crate[1])
-    return stacks
+
+    for x in range(0, len(lines) - 1):  # skip the last line with numbers
+        for i, crate in enumerate(lines[x][1::4]):
+            if not crate.isspace():
+                stacks[i].insert(0, crate)
+
+    return instructions.strip().split("\n"), stacks
 
 
 @timing()
 def part1(input: str) -> str:
-    init, instructions = input.split("\n\n")
-    stacks = transform_stack(init)
+    instructions, stacks = parse_input(input)
 
-    for instr in instructions.strip().split("\n"):
+    for instr in instructions:
         i = Instruction.parse(instr)
         stack = stacks[i.move_from]
+
         for _ in range(i.amount):
             stacks[i.move_to].append(stack.pop())
 
@@ -46,15 +46,14 @@ def part1(input: str) -> str:
 
 @timing()
 def part2(input: str) -> str:
-    init, instructions = input.split("\n\n")
-    stacks = transform_stack(init)
+    instructions, stacks = parse_input(input)
 
-    for instr in instructions.strip().split("\n"):
+    for instr in instructions:
         i = Instruction.parse(instr)
         stack = stacks[i.move_from]
 
-        for x in stack[len(stack) - i.amount : len(stack)]:
-            stacks[i.move_to].append(x)
+        for idx in range(len(stack) - i.amount, len(stack)):
+            stacks[i.move_to].append(stack[idx])
 
         for _ in range(i.amount):
             stack.pop()
@@ -63,8 +62,8 @@ def part2(input: str) -> str:
 
 
 def main() -> int:
-    sample = read_file_all(__file__, "../../input/2022/05/sample.input")
-    puzzle = read_file_all(__file__, "../../input/2022/05/puzzle.input")
+    sample = read_file_raw(__file__, "../../input/2022/05/sample.input")
+    puzzle = read_file_raw(__file__, "../../input/2022/05/puzzle.input")
 
     check_result("CMZ", part1(sample))
     check_result("HNSNMTLHQ", part1(puzzle))
