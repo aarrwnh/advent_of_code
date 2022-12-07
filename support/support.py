@@ -38,7 +38,7 @@ def check_result(expected: Any, result: Any) -> None:
         red(output)
 
 
-def read_file_clean(__file__: str, filename: str) -> str:
+def read_file_raw(__file__: str, filename: str) -> str:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:
         return f.read()

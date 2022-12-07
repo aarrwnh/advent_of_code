@@ -1,17 +1,38 @@
-from support import adjacents, check_result, read_file_raw, timing  # type: ignore
+from support import check_result, read_file_raw, timing  # type: ignore
 
 
 def read_signal(signal: str, start: int) -> int:
     idx = 0
-    queue: list[str] = []
+    size = len(signal)
     while True:
-        char = signal[idx]
-        queue.insert(0, char)
+        if idx == size - 1:
+            break
+        chunk = signal[idx : idx + start]
+        if len(set(chunk)) == start:
+            break
         idx = idx + 1
-        if len(queue) > start:
-            queue.pop()
-            if len(set(queue)) == start:
-                return idx
+    return idx + start
+
+
+#  def read_signal(signal: str, start: int) -> int:
+#      idx = 0
+#      queue: list[str] = []
+#      while True:
+#          char = signal[idx]
+#          queue.insert(0, char)
+#          idx = idx + 1
+#          if len(queue) > start:
+#              queue.pop()
+#              if len(set(queue)) == start:
+#                  return idx
+
+#  def read_signal(signal: str, start: int) -> int:
+#      d: deque[str] = deque(maxlen=start)
+#      for i, c in enumerate(signal.strip()):
+#          d.append(c)
+#          if len(d) == start and len(set(d)) == start:
+#              return i + 1
+#      raise NotImplementedError("!")
 
 
 @timing()
