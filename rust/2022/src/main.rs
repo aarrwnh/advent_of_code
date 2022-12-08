@@ -10,7 +10,7 @@ fn main() -> Result<(), Error> {
         2 => d02::main,
         3 => d03::main,
         4 => d04::main,
-        // 5 => d05::main,
+        5 => d05::main,
         6 => d06::main,
         _ => panic!("Unimplemented"),
     };
