@@ -113,3 +113,25 @@ def adjacents_bounds(
             if not in_bounds(arr, x + x_d, y + y_d):
                 continue
             yield x + x_d, y + y_d
+
+
+def format_coords_hash(
+    coords: set[tuple[int, int]], *, flip_y=False, flip_x=False
+) -> str:
+    y: list[int] = []
+    x: list[int] = []
+    for xx, yy in coords:
+        x.append(xx)
+        y.append(yy)
+
+    min_x = min(x)
+    max_x = max(x)
+    min_y = min(y)
+    max_y = max(y)
+
+    range_x = range(max_x, min_x - 1, -1) if flip_x else range(min_x, max_x + 1)
+    range_y = range(max_y, min_y - 1, -1) if flip_y else range(min_y, max_y + 1)
+
+    return "\n".join(
+        "".join("#" if (x, y) in coords else " " for x in range_x) for y in range_y
+    )
