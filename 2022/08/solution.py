@@ -57,22 +57,31 @@ def part2(lines: list[list[int]]) -> int:
             continue
 
         tree_height = grid[(x, y)]
+        if tree_height == 9:
+            continue
+
         scenic_score = [0, 0, 0, 0]
         # right
         for x2 in range(x + 1, end_x + 1):
             scenic_score[2] = x2 - x
             if grid[(x2, y)] >= tree_height:
                 break
+
         # left
         for x3 in range(x - 1, -1, -1):
             scenic_score[1] = x - x3
             if grid[(x3, y)] >= tree_height:
                 break
+
+        if scenic_score[2] * scenic_score[1] < 4:
+            continue
+
         # down
         for y2 in range(y + 1, end_y + 1):
             scenic_score[3] = y2 - y
             if grid[(x, y2)] >= tree_height:
                 break
+
         # up
         for y3 in range(y - 1, -1, -1):
             scenic_score[0] = y - y3
