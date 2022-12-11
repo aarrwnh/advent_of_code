@@ -1,4 +1,4 @@
-import { readLines } from "../utils";
+import { check, readLines } from "../utils.ts";
 
 function sortArr(arr: number[]): number[] {
 	return arr.sort((a, b) => a > b ? -1 : a < b ? 1 : 0);
@@ -10,8 +10,7 @@ function reduce(arr: number[], max: number) {
 		const half = Math.round((range.length - 1) / 2);
 		if (curr === -1) {
 			range.splice(half, range.length - 1);
-		}
-		else if (curr === 1) {
+		} else if (curr === 1) {
 			range.splice(0, half);
 		}
 		return range;
@@ -23,7 +22,7 @@ function reduce(arr: number[], max: number) {
 function findEmptyFirstSeatInRange(
 	seats: number[],
 	columns: number[],
-	rows: number[]
+	rows: number[],
 ): number | void {
 	for (let column = columns[0]; column < columns[1]; column++) {
 		for (let row = rows[0]; row < rows[1]; row++) {
@@ -54,35 +53,27 @@ function parseGroups(groups: string[]) {
 		const seat = row * 8 + column;
 
 		seats.push(seat);
-		// if (row >= maxRows) {
-		// 	maxRows = row;
-		// }
 	}
-	console.log("max:", sortArr(seats)[0]);
 
-	console.log("seat:", findEmptyFirstSeatInRange(seats, [0, 7], [14, 102]));
+	return [sortArr(seats)[0], findEmptyFirstSeatInRange(seats, [0, 7], [14, 102])]
+		.toString();
 }
 
-async function parse(file: string) {
-	const lines = await readLines<string>(file);
-	parseGroups(lines);
-}
+// parseGroups([
+// 	"FBFBBFFRLR",
+// 	"BFFFBBFRRR",
+// 	"FFFBBBFRRR",
+// 	"BBFFBBFRLL"
+// ]);
+// FBFBBFFRLR row: 44 column: 5 seat: 357
+// BFFFBBFRRR row: 70 column: 7 seat: 567
+// FFFBBBFRRR row: 14 column: 7 seat: 119
+// BBFFBBFRLL row: 102 column: 4 seat: 820
 
 async function main() {
-	await parse("05/puzzle.txt");
-	// part1: 871
-	// part2: 640
+	const puzzle = await readLines<string>("../input/2020/05/puzzle.input");
 
-	// parseGroups([
-	// 	"FBFBBFFRLR",
-	// 	"BFFFBBFRRR",
-	// 	"FFFBBBFRRR",
-	// 	"BBFFBBFRLL"
-	// ]);
-	// FBFBBFFRLR row: 44 column: 5 seat: 357
-	// BFFFBBFRRR row: 70 column: 7 seat: 567
-	// FFFBBBFRRR row: 14 column: 7 seat: 119
-	// BBFFBBFRLL row: 102 column: 4 seat: 820
+	check([871, 640].toString(), parseGroups(puzzle));
 }
 
 main();

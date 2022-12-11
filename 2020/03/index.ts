@@ -1,6 +1,6 @@
-import { readLines } from "../utils";
+import { check, readLines } from "../utils.ts";
 
-const tree = "#";
+const TREE = "#";
 
 function countTrees(lines: string[], slope: number[]) {
 	let countTrees = 0;
@@ -12,47 +12,56 @@ function countTrees(lines: string[], slope: number[]) {
 		}
 		const nextPosition = position + slope[0];
 		const nextRow = lines[i + slope[1]].split("");
-		if (nextRow[position] === tree) {
+		if (nextRow[position] === TREE) {
 			countTrees++;
 			nextRow[position] = "X";
-		}
-		else {
+		} else {
 			nextRow[position] = "O";
 		}
 		if (nextPosition > lineMaxIndex) {
 			position = nextPosition - lineMaxIndex - 1;
-		}
-		else {
+		} else {
 			position += slope[0];
 		}
 	}
 	return countTrees;
 }
 
-async function parse(file: string) {
-	const lines = await readLines<string>(file);
+const SLOPES = [
+	[1, 1],
+	[3, 1],
+	[5, 1],
+	[7, 1],
+	[1, 2],
+];
+
+function part1(lines: string[]) {
 	const results = [];
-	for (const slope of [
-		[1, 1],
-		[3, 1],
-		[5, 1],
-		[7, 1],
-		[1, 2]
-	]) {
+	for (const slope of SLOPES) {
 		results.push(countTrees(lines, slope));
 	}
 
-	console.log(file, "\t", results[1], results.reduce((acc, curr) => acc * curr, 1), results);
+	return results[1];
+}
+
+function part2(lines: string[]) {
+	const results = [];
+	for (const slope of SLOPES) {
+		results.push(countTrees(lines, slope));
+	}
+
+	return results.reduce((acc, curr) => acc * curr, 1);
 }
 
 async function main() {
-	await parse("03/puzzle.txt");
-	// 216
-	//  [ 79, 216, 91, 96, 45 ] => 6708199680
+	const sample = await readLines<string>("../input/2020/03/sample.input");
+	const puzzle = await readLines<string>("../input/2020/03/puzzle.input");
 
-	await parse("03/example.txt");
-	// part1: 7
-	// part2: [ 2, 7, 3, 4, 2 ] => 336
+	check(7, part1(sample));
+	check(216, part1(puzzle));
+
+	check(336, part2(sample));
+	check(6708199680, part2(puzzle));
 }
 
 main();

@@ -1,6 +1,6 @@
-import { readLines } from "../utils";
+import { check, readLines } from "../utils.ts";
 
-/* 
+/*
 	 byr (Birth Year) - four digits; at least 1920 and at most 2002.
 	 iyr (Issue Year) - four digits; at least 2010 and at most 2020.
 	 eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
@@ -20,17 +20,20 @@ const passportValidationRules: Record<string, any> = {
 	"hgt": {
 		type: "range",
 		rules: { "cm": [150, 193], "in": [59, 76] },
-		range: { "cm": 193 - 150, "in": 76 - 59 }
+		range: { "cm": 193 - 150, "in": 76 - 59 },
 	},
 	"hcl": { type: "regex", rules: /^#[0-9a-f]{6}$/ },
-	"ecl": { type: "includes", rules: ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"] },
+	"ecl": {
+		type: "includes",
+		rules: ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"],
+	},
 	"pid": { type: "regex", rules: /^[0-9]{9}$/ },
 	// "cid" : ""
 };
 
 const validPassportKeys = Object.keys(passportValidationRules);
 
-function isRange(min: number, max: number): ((val: number) => boolean) {
+function isRange(min: number, max: number): (val: number) => boolean {
 	return (value: number) => {
 		return min <= value && max >= value;
 	};
@@ -51,10 +54,11 @@ function validateField(field: string, value: string): boolean {
 				const height = value.match(/^([0-9]+)([cmin]+)$/);
 				if (height !== null) {
 					const type = height[2];
-					return isRange(rule.rules[type][0], rule.rules[type][1])(Number(height[1]));
+					return isRange(rule.rules[type][0], rule.rules[type][1])(
+						Number(height[1]),
+					);
 				}
-			}
-			else {
+			} else {
 				return isRange(rule.rules[0], rule.rules[1])(Number(value));
 			}
 		}
@@ -88,15 +92,11 @@ function countValidPassports(passports: Record<string, string | number>[]): numb
 				validCount++;
 			}
 		}
-
 	}
 	return [count, validCount];
 }
 
-
-
-async function parse(file: string) {
-	const lines = await readLines<string>(file);
+function parse(lines: string[]) {
 	const passports: Record<string, string | number>[] = [];
 	passports.push({ count: 0, validCount: 0 });
 	let pointer = 0;
@@ -110,17 +110,15 @@ async function parse(file: string) {
 		parseFields(passports[pointer], line);
 	}
 
-	console.log(file, "\t", countValidPassports(passports));
+	return countValidPassports(passports).toString();
 }
 
 async function main() {
-	await parse("04/puzzle.txt");
-	// 170
-	// 103
+	const sample = await readLines<string>("../input/2020/04/sample.input");
+	const puzzle = await readLines<string>("../input/2020/04/puzzle.input");
 
-	await parse("04/example.txt");
-	// 2
-	// 2
+	check([2, 2].toString(), parse(sample));
+	check([170, 103].toString(), parse(puzzle));
 }
 
 main();

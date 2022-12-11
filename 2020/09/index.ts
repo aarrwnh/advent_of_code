@@ -1,25 +1,4 @@
-const example = [
-	35,
-	20,
-	15,
-	25,
-	47,
-	40,
-	62,
-	55,
-	65,
-	95,
-	102,
-	117,
-	150,
-	182,
-	127,
-	219,
-	299,
-	277,
-	309,
-	576,
-];
+import { check, readLines } from "../utils.ts";
 
 function part1(inputData: number[], preamble = 5): number {
 	const invalid: number[] = [];
@@ -72,24 +51,14 @@ function part2(inputData: number[], invalidNumber: number): number {
 	return currentNumbers[0] + currentNumbers[currentNumbers.length - 1];
 }
 
-function check(expected: number, result: number): void {
-	console.log(expected == result, expected, result);
-}
-
 async function main() {
-	const __dirname = new URL(".", import.meta.url).pathname;
-	const puzzle = await Deno.readTextFile(
-		__dirname.slice(__dirname.startsWith("/") ? 1 : 0) + "puzzle.txt",
-	).then((
-		data,
-	) => data.trim().split("\n").map((x) => Number(x)));
+	const sample = await readLines<number>("../input/2020/09/sample.input");
+	const puzzle = await readLines<number>("../input/2020/09/puzzle.input");
 
-	// part1
-	check(127, part1(example, 5));
+	check(127, part1(sample, 5));
 	check(3199139634, part1(puzzle, 25));
 
-	// part2
-	check(62, part2(example, 127));
+	check(62, part2(sample, 127));
 	check(438559930, part2(puzzle, 3199139634));
 }
 

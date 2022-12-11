@@ -1,24 +1,4 @@
-const example = [
-	"light red bags contain 1 bright white bag, 2 muted yellow bags.",
-	"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
-	"bright white bags contain 1 shiny gold bag.",
-	"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
-	"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
-	"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
-	"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
-	"faded blue bags contain no other bags.",
-	"dotted black bags contain no other bags.",
-];
-
-const part2Example2 = [
-	"shiny gold bags contain 2 dark red bags.",
-	"dark red bags contain 2 dark orange bags.",
-	"dark orange bags contain 2 dark yellow bags.",
-	"dark yellow bags contain 2 dark green bags.",
-	"dark green bags contain 2 dark blue bags.",
-	"dark blue bags contain 2 dark viole bags.",
-	"dark violet bags contain no other bags.",
-];
+import { check, readLines } from "../utils.ts";
 
 interface BagContents {
 	color: string;
@@ -96,40 +76,49 @@ function countChildBags(
 	return count;
 }
 
-function parse(inputData: string[], part2 = false): number {
-	const { parents, children } = filterPuzzle(inputData);
+function part1(inputData: string[]): number {
+	const { parents } = filterPuzzle(inputData);
 	const parentBags = new Set(collectParentColors(parents, "shiny gold"));
-	if (part2) {
-		const bagCount = (countChildBags(children, 1, "shiny gold"));
-		return bagCount - 1;
-	} else {
-		return parentBags.size - 1;
-	}
+	return parentBags.size - 1;
 }
 
-function check(expected: number, result: number): void {
-	console.log(expected == result, expected, result);
+function part2(inputData: string[]): number {
+	const { children } = filterPuzzle(inputData);
+	const bagCount = (countChildBags(children, 1, "shiny gold"));
+	return bagCount - 1;
 }
 
 async function main() {
-	const __dirname = new URL(".", import.meta.url).pathname;
-	const puzzle = await Deno.readTextFile(
-		__dirname.slice(__dirname.startsWith("/") ? 1 : 0) + "puzzle.txt",
-	).then((
-		data,
-	) => data.trim().split("\n"));
+	const sample = [
+		"light red bags contain 1 bright white bag, 2 muted yellow bags.",
+		"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
+		"bright white bags contain 1 shiny gold bag.",
+		"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
+		"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
+		"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
+		"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
+		"faded blue bags contain no other bags.",
+		"dotted black bags contain no other bags.",
+	];
 
-	// part1
-	check(4, parse(example));
-	check(268, parse(puzzle));
+	const sample2 = [
+		"shiny gold bags contain 2 dark red bags.",
+		"dark red bags contain 2 dark orange bags.",
+		"dark orange bags contain 2 dark yellow bags.",
+		"dark yellow bags contain 2 dark green bags.",
+		"dark green bags contain 2 dark blue bags.",
+		"dark blue bags contain 2 dark viole bags.",
+		"dark violet bags contain no other bags.",
+	];
 
-	// part2
-	check(32, parse(example, true));
-	check(126, parse(part2Example2, true));
-	check(7867, parse(puzzle, true));
+	const puzzle = await readLines<string>("../input/2020/07/puzzle.input");
+
+	check(4, part1(sample));
+	check(268, part1(puzzle));
+
+	check(32, part2(sample));
+	check(126, part2(sample2));
+	check(7867, part2(puzzle));
 }
 
 main();
-
-// Redir !set NO_COLOR=true && deno run --allow-all 2020\07\index.ts
-// !deno fmt --config .\deno.json 07\index.ts

@@ -1,5 +1,4 @@
-import { readLines } from "../utils";
-
+import { check, readLines } from "../utils.ts";
 
 function part1(lines: string[]) {
 	const ret = [];
@@ -18,7 +17,6 @@ function part1(lines: string[]) {
 	return ret.length;
 }
 
-
 function part2(lines: string[]) {
 	let count = 0;
 	for (let i = 0; i < lines.length; i++) {
@@ -29,7 +27,9 @@ function part2(lines: string[]) {
 		const position2 = Number(a[1]);
 		const bit = a[2];
 
-		const bits = [password[position1], password[position2]].filter((x) => x === bit);
+		const bits = [password[position1], password[position2]].filter((x) =>
+			x === bit
+		);
 		if (bits.length === 1) {
 			count++;
 		}
@@ -37,16 +37,15 @@ function part2(lines: string[]) {
 	return count;
 }
 
-async function main(file: string) {
-	const lines = await readLines<string>(file);
-	const result1 = part1(lines);
-	const result2 = part2(lines);
-	console.log(file, "\t", [result1, result2]);
+async function main() {
+	const sample = await readLines<string>("../input/2020/02/sample.input");
+	const puzzle = await readLines<string>("../input/2020/02/puzzle.input");
+
+	check(2, part1(sample));
+	check(586, part1(puzzle));
+
+	check(1, part2(sample));
+	check(352, part2(puzzle));
 }
 
-main("02/example.txt");
-// 2
-// 1
-main("02/puzzle.txt");
-// 586
-// 352
+main();
