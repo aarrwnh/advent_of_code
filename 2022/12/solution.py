@@ -1,3 +1,4 @@
+import curses  # type: ignore
 import heapq
 from typing import Callable, Generator, NewType
 
@@ -45,7 +46,7 @@ def search(
             best_at[last_coord] = length
 
         for next_coord in adjacents(*last_coord):
-            if next_coord in grid:
+            if next_coord in grid and next_coord not in path:
                 if fn(grid[next_coord], grid[last_coord]):
                     heapq.heappush(
                         queue,
@@ -65,16 +66,54 @@ def print_grid_path(grid: list[str], path: set[tuple[int, int]]) -> None:
         print("".join(new_row))
 
 
+def draw(stdscr, grid, paths) -> int:
+    curses.curs_set(0)
+    curses.use_default_colors()
+    curses.init_pair(1, 69, 232)
+    curses.init_pair(2, 255, -1)
+
+    #  if curses.can_change_color():
+    #      curses.init_color(
+    #          255, 0x1E * 1000 // 0xFF, 0x77 * 1000 // 0xFF, 0xD3 * 1000 // 0xFF
+    #      )
+    #      curses.init_pair(3, 255, -1)
+
+    while True:
+
+        for path in paths:
+            stdscr.clear()
+            for y, row in enumerate(grid):
+                for x, p in enumerate(row):
+                    stdscr.addstr(
+                        y,
+                        x,
+                        p if (x, y) in path else " ",
+                        curses.color_pair(1) if (x, y) in path else curses.COLOR_WHITE,
+                    )
+
+            stdscr.refresh()
+            curses.delay_output(1)
+
+        char = stdscr.get_wch()
+        if char:
+            break
+
+    return 0
+
+
 @timing()
 def part1(input: str) -> int:
     lines = input.strip().splitlines()
     grid, start, end = create_grid(lines)
 
     def check(n: int, p: int) -> bool:
-        return n - p <= 1
+        return -5 <= n - p <= 1
 
+    visited = []
     for length, pos, path in search(grid, start, check):
+        visited.append(path)
         if pos == end:
+            #  curses.wrapper(draw, lines, visited)
             print_grid_path(lines, path)  # type: ignore
             return length
 
@@ -87,10 +126,13 @@ def part2(input: str) -> int:
     grid, _, end = create_grid(lines)
 
     def check(n: int, p: int) -> bool:
-        return n - p >= -1
+        return 5 >= n - p >= -1
 
+    visited = []
     for length, pos, path in search(grid, end, check):
+        visited.append(path)
         if grid[pos] == ord("a"):
+            #  curses.wrapper(draw, lines, visited)
             print_grid_path(lines, path)  # type: ignore
             return length
 
