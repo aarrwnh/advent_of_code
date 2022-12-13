@@ -1,19 +1,10 @@
-from support import check_result, read_file_int, timing  # type: ignore
-
-
-def create_grid(lines: list[list[int]]) -> dict[tuple[int, int], int]:
-    grid: dict[tuple[int, int], int] = {}
-
-    for y, row in enumerate(lines):
-        for x, p in enumerate(row):
-            grid[(x, y)] = int(p)
-
-    return grid
+from support import create_number_grid  # type: ignore
+from support import check_result, read_file_int, timing
 
 
 @timing()
 def part1(lines: list[list[int]]) -> int:
-    grid = create_grid(lines)
+    grid = create_number_grid(lines)
 
     end_x, end_y = max(grid)
     visible_trees = set()
@@ -48,7 +39,7 @@ def prod(iterable: list[int]) -> int:
 
 @timing()
 def part2(lines: list[list[int]]) -> int:
-    grid = create_grid(lines)
+    grid = create_number_grid(lines)
     score = 0
     end_x, end_y = max(grid)
 

@@ -69,6 +69,12 @@ def read_file_int(__file__: str, filename: str) -> list[list[int]]:
         return [[int(x) for x in line.strip()] for line in f.readlines()]
 
 
+def read_file_int2(__file__: str, filename: str) -> list[int]:
+    path = os.path.join(os.path.dirname(__file__), filename)
+    with open(path, "r") as f:
+        return [int(line) for line in f.readlines()]
+
+
 #  def adjacents(x: int, y: int) -> Generator[tuple[int, int], None, None]:
 #      yield x, y + 1
 #      yield x + 1, y
@@ -135,3 +141,23 @@ def format_coords_hash(
     return "\n".join(
         "".join("#" if (x, y) in coords else " " for x in range_x) for y in range_y
     )
+
+
+def create_number_grid(lines: list[list[int]]) -> dict[tuple[int, int], int]:
+    grid: dict[tuple[int, int], int] = {}
+
+    for y, row in enumerate(lines):
+        for x, p in enumerate(row):
+            grid[(x, y)] = int(p)
+
+    return grid
+
+
+def create_grid(lines: list[list[str]]) -> dict[tuple[int, int], str]:
+    grid: dict[tuple[int, int], str] = {}
+
+    for y, row in enumerate(lines):
+        for x, p in enumerate(row):
+            grid[(x, y)] = p
+
+    return grid
