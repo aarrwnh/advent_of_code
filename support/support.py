@@ -2,7 +2,17 @@ import contextlib
 import os.path
 import sys
 import time
-from typing import Any, Generator
+from typing import Any, Callable, Generator, NamedTuple
+
+
+class Point(NamedTuple):
+    x: int
+    y: int
+
+    @classmethod
+    def parse(cls, s: str):
+        x, y = s.split(",")
+        return cls(int(x), int(y))
 
 
 @contextlib.contextmanager
@@ -121,8 +131,44 @@ def adjacents_bounds(
             yield x + x_d, y + y_d
 
 
+def make_point_range(start: int, stop: int):
+    is_reverse = -1 if start > stop else 1
+    return [*range(start, stop + is_reverse, is_reverse)]
+    #  return [*range(min(start, stop), max(start, stop) + 1)]
+
+
+def fill_points(x1: int, y1: int, x2: int, y2: int, diagonals: bool = False):
+    x_points = make_point_range(x1, y1)
+    y_points = make_point_range(x2, y2)
+    len_x = len(x_points)
+    len_y = len(y_points)
+
+    if diagonals:
+        pass
+        #  if len_x > len_y:
+        #      y_points = [y1] * len_x
+        #  elif len_x < len_y:
+        #      x_points = [x1] * len_y
+    else:
+        if x1 == y1:
+            x_points = [x1] * len_y
+        elif x2 == y2:
+            y_points = [x2] * len_x
+        else:
+            return []
+
+    if len(x_points) != len(y_points):
+        raise AssertionError("x and y are not equal")
+
+    return zip(x_points, y_points)
+
+
 def format_coords_hash(
-    coords: set[tuple[int, int]], *, flip_y=False, flip_x=False
+    coords: set[tuple[int, int]] | set[Point],
+    *,
+    flip_y=False,
+    flip_x=False,
+    cb: Callable[[int, int], str],
 ) -> str:
     y: list[int] = []
     x: list[int] = []
@@ -139,7 +185,8 @@ def format_coords_hash(
     range_y = range(max_y, min_y - 1, -1) if flip_y else range(min_y, max_y + 1)
 
     return "\n".join(
-        "".join("#" if (x, y) in coords else " " for x in range_x) for y in range_y
+        "".join(cb(x, y) if cb else "#" if (x, y) in coords else " " for x in range_x)
+        for y in range_y
     )
 
 
