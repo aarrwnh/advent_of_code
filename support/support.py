@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import contextlib
 import os.path
 import sys
@@ -8,6 +10,9 @@ from typing import Any, Callable, Generator, NamedTuple
 class Point(NamedTuple):
     x: int
     y: int
+
+    def dist_to(self, x: int, y: int) -> int:
+        return abs(self.x - x) + abs(self.y - y)
 
     @classmethod
     def parse(cls, s: str):
@@ -33,11 +38,11 @@ def timing(name: str = "") -> Generator[None, None, None]:
 
 
 def red(s: str):
-    print(f"\033[41m\033[30m{s}\033[0m")
+    print(f"  \x1b[41m\x1b[30m {s} \x1b[0m")
 
 
 def green(s: str):
-    print(f"\033[42m\033[30m{s}\033[0m")
+    print(f"  \x1b[48;5;28m\x1b[97m {s} \x1b[0m")
 
 
 def check_result(expected: Any, result: Any) -> None:
@@ -168,7 +173,7 @@ def format_coords_hash(
     *,
     flip_y=False,
     flip_x=False,
-    cb: Callable[[int, int], str],
+    cb: Callable[[int, int], str] | None = None,
 ) -> str:
     y: list[int] = []
     x: list[int] = []

@@ -5,4 +5,3 @@ __bare__/
 __pycache__/
 *.egg-info/
 /target
-input/
