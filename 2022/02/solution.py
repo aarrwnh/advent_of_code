@@ -19,7 +19,7 @@ RES = {
     "B": {"X": -1, "Z": 1, "Y": 0},
     "C": {"Y": -1, "X": 1, "Z": 0},
 }
-REV = {x: dict((v, k) for k, v in RES[x].items()) for x in RES}
+REV = {x: {v: k for k, v in RES[x].items()} for x in RES}
 
 
 @timing()

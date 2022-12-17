@@ -20,7 +20,7 @@ def parse_lines(lines: list[str]):
     parsed: list[Sensor] = []
 
     for line in lines:
-        sx, sy, bx, by = [int(x) for x in COORDS.findall(line)]
+        sx, sy, bx, by = (int(x) for x in COORDS.findall(line))
         sensor = Point(sx, sy)
         beacon = Point(bx, by)
 
