@@ -1,7 +1,6 @@
 import itertools
 
-from support import format_coords_hash  # type: ignore
-from support import check_result, read_file_raw, timing
+from support import check_result, read_file_raw, timing  # type: ignore
 
 MAGIC = 69
 WIDTH = 7
@@ -167,8 +166,7 @@ def compute(input: str, tower_height: int = 1_000_000_000_000) -> int:
                 occupied |= shape_to_coords(x, y, current)
                 max_height = max(y for _, y in occupied)
                 # trim far and unreachable points
-                obsolete = set(p for p in occupied if p[1] + MAGIC < max_height)
-                occupied -= obsolete
+                occupied -= set(p for p in occupied if p[1] + MAGIC < max_height)
                 break
             else:
                 y = next_y
