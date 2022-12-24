@@ -7,6 +7,26 @@ import time
 from typing import Any, Callable, Generator, NamedTuple
 
 
+class Directions(NamedTuple):
+    N = (0, 1)
+    NW = (-1, 1)
+    NE = (1, 1)
+    S = (0, -1)
+    SE = (1, -1)
+    SW = (-1, -1)
+    E = (1, 0)
+    W = (-1, 0)
+
+
+class Point3D(NamedTuple):
+    x: int
+    y: int
+    z: int
+
+    def rotate(self):
+        raise NotImplementedError()
+
+
 class Point(NamedTuple):
     x: int
     y: int
@@ -18,6 +38,12 @@ class Point(NamedTuple):
     def parse(cls, s: str):
         x, y = s.split(",")
         return cls(int(x), int(y))
+
+    def __repr__(self) -> str:
+        return f"({self.x}, {self.y})"
+
+    def move_by(self, x: int, y: int) -> Point:
+        return Point(self.x + x, self.y + y)
 
 
 @contextlib.contextmanager
@@ -106,8 +132,9 @@ def in_bounds(arr: list[list[int]], y: int, x: int) -> bool:
 def adjacents(
     x: int,
     y: int,
+    *,
     diagonals: bool = False,
-) -> Generator[tuple[int, int], None, None]:
+) -> Generator[Point, None, None]:
     coords = (-1, 0, 1)
     for x_d in coords:
         for y_d in coords:
@@ -115,7 +142,7 @@ def adjacents(
                 continue
             if diagonals is False and abs(x_d) == abs(y_d):
                 continue
-            yield x + x_d, y + y_d
+            yield Point(x + x_d, y + y_d)
 
 
 def adjacents_bounds(
@@ -166,6 +193,15 @@ def fill_points(x1: int, y1: int, x2: int, y2: int, diagonals: bool = False):
         raise AssertionError("x and y are not equal")
 
     return zip(x_points, y_points)
+
+
+def parse_coords_hash(input: str, *, char: str = "#") -> set[tuple[int, int]]:
+    coords = set()
+    for y, row in enumerate(input.splitlines()):
+        for x, p in enumerate(row):
+            if p == char:
+                coords.add(Point(x, y))
+    return coords
 
 
 def format_coords_hash(

@@ -5,3 +5,6 @@ __bare__/
 __pycache__/
 *.egg-info/
 /target
+a*.py
+t*.py
+q*.py
