@@ -17,6 +17,11 @@ class Directions(NamedTuple):
     E = (1, 0)
     W = (-1, 0)
 
+    UP = (0, -1)
+    DOWN = (0, 1)
+    RIGHT = (1, 0)
+    LEFT = (-1, 0)
+
 
 class Point3D(NamedTuple):
     x: int
