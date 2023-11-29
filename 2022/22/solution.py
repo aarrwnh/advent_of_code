@@ -1,31 +1,49 @@
 import collections
+import re
 
-from dash.dash import re
-
-from support import Point  # type: ignore
-from support import Directions, check_result, read_file_raw, timing
+from support import (
+    Directions,
+    Point,
+    check_result,
+    read_file_raw,
+    timing,
+)
 
 RE_DIRECTIONS = re.compile(r"([0-9]+)([RL])?")
+# right=0 down=1 left=2 up=3
+DIRS = [Point(1, 0), Point(0, 1), Point(-1, 0), Point(0, -1)]
 
 
-def parse_input(input: str):
+def parse_input(
+    input: str, tile_size: int = 4
+) -> tuple[collections.defaultdict[int, set[Point]], set[Point], str, ]:
+    maze, instructions = input.split("\n\n")
+
     walls = set()
-    empty = set()
-    maze, path = input.split("\n\n")
+    coords: collections.defaultdict[int, set[Point]]
+    coords = collections.defaultdict(set)
+
+    # r_grid = collections.defaultdict(list)
+
+    tile = 0
     for y, row in enumerate(maze.splitlines()):
+        j = tile
         for x, p in enumerate(row):
-            if p == ".":
-                empty.add(Point(x, y))
-            elif p == "#":
+            if p in ".#":
+                coords[j].add(Point(x, y))
+            if p == "#":
                 walls.add(Point(x, y))
+            if x % tile_size == 3:
+                j += 1
+        if y % tile_size == 3:
+            # r_grid[j].append(tile)
+            tile = j
 
-    print(max(x, y) + 1)
-
-    return walls, empty, path
+    return coords, walls, instructions
 
 
 @timing("part1")
-def part1(input: str) -> int:
+def part1(input: str, tile_size: int) -> int:
     dirs: list[tuple[int, int]] = [
         Directions.RIGHT,
         Directions.DOWN,
@@ -33,12 +51,11 @@ def part1(input: str) -> int:
         Directions.UP,
     ]
 
-    blocked, empty, path = parse_input(input)
-
-    grid = empty | blocked
+    coords, blocked, path = parse_input(input, tile_size)
+    grid = set(p for it in coords.values() for p in it)
 
     min_y = 0
-    min_x = min(x for x, y in empty if y == min_y)
+    min_x = min(x for x, y in grid if y == min_y)
     pos = Point(min_x, min_y)
 
     # TODO: drop deque
@@ -86,19 +103,133 @@ def part1(input: str) -> int:
 
 
 @timing("part2")
-def part2(input: str) -> int:
-    return 0
+def part2(input: str, tile_size: int) -> int:
+    coords, blocked, instructions = parse_input(input, tile_size)
+    grid = set(p for it in coords.values() for p in it)
+    pos = min(p for p in grid if p.y == 0)
+
+    direction = 0
+
+    for step in re.split("([RL])", instructions.rstrip()):
+        match step:
+            case "L":
+                direction = (direction + 4 - 1) % 4
+            case "R":
+                direction = (direction + 1) % 4
+            case _:
+                for _ in range(0, int(step)):
+                    next_pos = pos.add(DIRS[direction])
+
+                    if next_pos in blocked:
+                        break
+
+                    if next_pos in grid:
+                        pos = next_pos
+                    else:
+                        # wrap magic
+                        current_dir_i = (pos.x // tile_size) + (pos.y // tile_size) * 3
+                        if tile_size == 50:
+                            current_tile = [0, 1, 2, 0, 3, 0, 4, 5, 0, 6][current_dir_i]
+                        else:
+                            current_tile = [0, 0, 1, 2, 3, 4, 0, 0, 5, 6][current_dir_i]
+
+                        if current_tile == 0:
+                            raise AssertionError("wrong tile")
+
+                        (_, new_direction, new_x, new_y) = teleporter(
+                            current_tile, direction, pos.x, pos.y, tile_size
+                        )
+                        new_pos = Point(new_x, new_y)
+                        if new_pos not in blocked:
+                            direction = new_direction
+                            pos = new_pos
+
+    # TODO: simulate this someday?
+    return 1000 * (pos.y + 1) + 4 * (pos.x + 1) + direction
+
+
+def teleporter(
+    cur_tile: int, direction: int, x: int, y: int, tile_size: int
+) -> tuple[int, int, int, int]:
+    if tile_size == 50:
+        return resolve_size_50(cur_tile, direction, x, y)
+    if tile_size == 4:
+        return resolve_size_4(cur_tile, direction, x, y)
+    raise AssertionError("tile size not supported")
+
+
+def resolve_size_4(
+    cur_tile: int, direction: int, col: int, row: int
+) -> tuple[int, int, int, int]:
+    match (cur_tile, direction):
+        case (1, 0):
+            return 6, 1, 8, row + 3
+        case (4, 0):
+            return 6, 1, col + 3, 8
+        case (5, 1):
+            return 2, 3, col - 9, 7
+        case (3, 3):
+            return 1, 0, 8, col - 4
+        case _:
+            raise AssertionError("unknown wrap")
+
+
+def resolve_size_50(
+    cur_tile: int, direction: int, x: int, y: int
+) -> tuple[int, int, int, int]:
+    #    ╭─────────╮   ╭─────╮
+    #    |       ─────────   |
+    #    | ╭─────| 1 | 2 | ╮ |
+    #    | |     ───────── | |
+    #    | |   ╭─| 3 |─╯   | |
+    #    | | ─────────     | |
+    #    | ╰─| 4 | 5 |─────╯ |
+    #    |   ─────────       |
+    #    ╰───| 6 |─╯         |
+    #        ─────           |
+    #          ╰─────────────╯
+    match (cur_tile, direction):
+        case (1, 3):
+            return 6, 0, 0, x + 100
+        case (6, 2):
+            return 1, 1, y - 100, 0
+        case (6, 0):
+            return 5, 3, y - 100, 149
+        case (5, 1):
+            return 6, 2, 49, x + 100
+        case (6, 1):
+            return 2, 1, x + 100, 0
+        case (2, 1):
+            return 3, 2, 99, x - 50
+        case (3, 0):
+            return 2, 3, y + 50, 49
+        case (2, 0):
+            return 5, 2, 99, 149 - y
+        case (5, 0):
+            return 2, 2, 149, 149 - y
+        case (1, 2):
+            return 4, 0, 0, 149 - y
+        case (4, 2):
+            return 1, 0, 50, 149 - y
+        case (4, 3):
+            return 3, 0, 50, x + 50
+        case (3, 2):
+            return 4, 1, y - 50, 100
+        case (2, 3):
+            return 6, 3, x - 100, 199
+        case _:
+            raise AssertionError("unknown wrap")
 
 
 def main() -> int:
-    sample = read_file_raw(__file__, "../../input/2022/22/sample.input")
-    puzzle = read_file_raw(__file__, "../../input/2022/22/puzzle.input")
+    sample = read_file_raw(__file__, "../../input/2022/22/sample")
+    puzzle = read_file_raw(__file__, "../../input/2022/22/puzzle")
 
-    check_result(6032, part1(sample))
-    check_result(50412, part1(puzzle))
+    check_result(6032, part1(sample, 4))
+    check_result(50412, part1(puzzle, 50))
 
-    #  check_result(0, part2(sample))
-    #  check_result(0, part2(puzzle))
+    check_result(5031, part2(sample, 4))
+    check_result(130068, part2(puzzle, 50))
 
     return 0
 

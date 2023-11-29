@@ -1,7 +1,8 @@
 import collections
 import math
+from typing import Callable
 
-from support import check_result  # type: ignore
+from support import check_result
 from support import Directions, Point, read_file_raw, timing
 
 DIRS = {
@@ -21,7 +22,7 @@ class Blizzard:
     def move_by(self, x: int, y: int) -> tuple[int, int]:
         return (self.x + x, self.y + y)
 
-    def shift(self, walls: set[Point], max_x: int, max_y: int):
+    def shift(self, walls: set[Point], max_x: int, max_y: int) -> None:
         self.x, self.y = self.move_by(*DIRS[self.direction])
         # reset blizzard position after reaching wall
         if (self.x, self.y) in walls:
@@ -36,7 +37,7 @@ class Blizzard:
                     self.x = max_x
 
 
-def parse_grid(input: str):
+def parse_grid(input: str) -> tuple[dict[Point, list[Blizzard]], set[Point]]:
     coords: dict[Point, list[Blizzard]] = collections.defaultdict(list)
     walls: set[Point] = set()
     for y, row in enumerate(input.splitlines()):
@@ -56,7 +57,7 @@ def make_grid_states(
     walls: set[Point],
     max_x: int,
     max_y: int,
-):
+) -> list[set[Point]]:
     states: list[set[Point]] = []
     for _ in range(lcm):
         states.append(set(coords.keys()))
@@ -71,7 +72,7 @@ def make_grid_states(
     return states
 
 
-def trip_planner(input: str):
+def trip_planner(input: str) -> tuple[Callable[[int, Point, Point], int], Point, Point]:
     coords, walls = parse_grid(input)
     max_wall = max(walls)
     max_x = max_wall.x
@@ -83,7 +84,7 @@ def trip_planner(input: str):
     possible: list[tuple[int, int]]
     possible = [(0, 0)] + [x for x in DIRS.values()]
 
-    def start_trip(total_time: int, start: Point, end: Point):
+    def start_trip(total_time: int, start: Point, end: Point) -> int:
         start_pos = (start.x, start.y, total_time)
         seen: dict[tuple[int, ...], int] = {start_pos: 0}
         todo: collections.deque[tuple[int, ...]]
@@ -109,10 +110,9 @@ def trip_planner(input: str):
 
         raise AssertionError("unreachable")
 
-    start_point = Point(1, 0)
-    end_point = Point(max_wall.x - 1, max_wall.y)
-
-    return start_trip, start_point, end_point
+    start = Point(1, 0)
+    end = Point(max_wall.x - 1, max_wall.y)
+    return start_trip, start, end
 
 
 @timing("part1")
@@ -124,7 +124,6 @@ def part1(input: str) -> int:
 @timing("part2")
 def part2(input: str) -> int:
     make_trip, start, end = trip_planner(input)
-
     trip1 = make_trip(0, start, end)
     trip2 = make_trip(trip1, end, start)
     trip3 = make_trip(trip2, start, end)
@@ -132,8 +131,8 @@ def part2(input: str) -> int:
 
 
 def main() -> int:
-    sample = read_file_raw(__file__, "../../input/2022/24/sample.txt")
-    puzzle = read_file_raw(__file__, "../../input/2022/24/puzzle.txt")
+    sample = read_file_raw(__file__, "../../input/2022/24/sample")
+    puzzle = read_file_raw(__file__, "../../input/2022/24/puzzle")
 
     check_result(18, part1(sample))
     check_result(322, part1(puzzle))

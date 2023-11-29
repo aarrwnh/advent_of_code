@@ -7,7 +7,7 @@ import time
 from typing import Any, Callable, Generator, NamedTuple
 
 
-class Directions(NamedTuple):
+class Directions:
     N = (0, 1)
     NW = (-1, 1)
     NE = (1, 1)
@@ -28,7 +28,7 @@ class Point3D(NamedTuple):
     y: int
     z: int
 
-    def rotate(self):
+    def rotate(self) -> None:
         raise NotImplementedError()
 
 
@@ -40,7 +40,7 @@ class Point(NamedTuple):
         return abs(self.x - x) + abs(self.y - y)
 
     @classmethod
-    def parse(cls, s: str):
+    def parse(cls, s: str) -> Point:
         x, y = s.split(",")
         return cls(int(x), int(y))
 
@@ -49,6 +49,12 @@ class Point(NamedTuple):
 
     def move_by(self, x: int, y: int) -> Point:
         return Point(self.x + x, self.y + y)
+
+    def add(self, n: Point) -> Point:
+        return Point(self.x + n.x, self.y + n.y)
+
+    def sub(self, n: Point) -> Point:
+        return Point(self.x - n.x, self.y - n.y)
 
 
 @contextlib.contextmanager
@@ -68,11 +74,11 @@ def timing(name: str = "") -> Generator[None, None, None]:
         print(f"> {int(t)} {unit}{name}", file=sys.stderr, flush=True)
 
 
-def red(s: str):
+def red(s: str) -> None:
     print(f"  \x1b[41m\x1b[30m {s} \x1b[0m")
 
 
-def green(s: str):
+def green(s: str) -> None:
     print(f"  \x1b[48;5;28m\x1b[97m {s} \x1b[0m")
 
 
@@ -168,13 +174,19 @@ def adjacents_bounds(
             yield x + x_d, y + y_d
 
 
-def make_point_range(start: int, stop: int):
+def make_point_range(start: int, stop: int) -> list[int]:
     is_reverse = -1 if start > stop else 1
     return [*range(start, stop + is_reverse, is_reverse)]
     #  return [*range(min(start, stop), max(start, stop) + 1)]
 
 
-def fill_points(x1: int, y1: int, x2: int, y2: int, diagonals: bool = False):
+def fill_points(
+    x1: int,
+    y1: int,
+    x2: int,
+    y2: int,
+    diagonals: bool = False,
+) -> list[tuple[int, int]]:
     x_points = make_point_range(x1, y1)
     y_points = make_point_range(x2, y2)
     len_x = len(x_points)
@@ -197,10 +209,10 @@ def fill_points(x1: int, y1: int, x2: int, y2: int, diagonals: bool = False):
     if len(x_points) != len(y_points):
         raise AssertionError("x and y are not equal")
 
-    return zip(x_points, y_points)
+    return list(zip(x_points, y_points))
 
 
-def parse_coords_hash(input: str, *, char: str = "#") -> set[tuple[int, int]]:
+def parse_coords_hash(input: str, *, char: str = "#") -> set[Point]:
     coords = set()
     for y, row in enumerate(input.splitlines()):
         for x, p in enumerate(row):
@@ -212,8 +224,8 @@ def parse_coords_hash(input: str, *, char: str = "#") -> set[tuple[int, int]]:
 def format_coords_hash(
     coords: set[tuple[int, int]] | set[Point],
     *,
-    flip_y=False,
-    flip_x=False,
+    flip_y: bool = False,
+    flip_x: bool = False,
     cb: Callable[[int, int], str] | None = None,
 ) -> str:
     y: list[int] = []
