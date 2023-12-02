@@ -18,8 +18,10 @@ def part2(lines: list[str]) -> int:
     digits = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
     pattern = re.compile("(?=(\\d|" + "|".join(digits) + "))")
     for line in lines:
-        m = [digits.index(a[1]) + 1 if a[1] in digits else a[1]
-             for a in pattern.finditer(line)]
+        m = [
+            digits.index(a[1]) + 1 if a[1] in digits else a[1]
+            for a in pattern.finditer(line)
+        ]
         sum += int(m[0]) * 10 + int(m[-1])
     return sum
 

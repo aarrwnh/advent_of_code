@@ -4,7 +4,7 @@ import contextlib
 import os.path
 import sys
 import time
-from typing import Any, Callable, Generator, NamedTuple
+from typing import Any, Callable, Generator, NamedTuple, ValuesView
 
 
 class Directions:
@@ -266,3 +266,10 @@ def create_grid(lines: list[list[str]]) -> dict[tuple[int, int], str]:
             grid[(x, y)] = p
 
     return grid
+
+
+def mul(a: list[int] | ValuesView[int]) -> int:
+    total = 1
+    for b in a:
+        total *= b
+    return total
