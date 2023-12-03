@@ -134,7 +134,7 @@ def read_file_int2(__file__: str, filename: str) -> list[int]:
 #      yield x, y - 1
 
 
-def in_bounds(arr: list[list[int]], y: int, x: int) -> bool:
+def in_bounds(arr: list[str] | list[list[int | str]], y: int, x: int) -> bool:
     height = len(arr)
     width = len(arr[0])
     return x >= 0 and x < width and y >= 0 and y < height
@@ -157,7 +157,7 @@ def adjacents(
 
 
 def adjacents_bounds(
-    arr: list[list[int]],
+    arr: list[str] | list[list[int | str]],
     x: int,
     y: int,
     diagonals: bool = False,

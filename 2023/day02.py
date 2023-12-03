@@ -16,15 +16,15 @@ def number_and_color(cube: list[str]) -> tuple[int, str]:
 @timing("part1")
 def part1(lines: list[str]) -> int:
     limit = {"red": 12, "green": 13, "blue": 14}
-    possible: list[int] = []
+    total = 0
     for i, line in enumerate(lines):
-        possible.append(i + 1)
         for subset in get_subsets(line):
             num, color = number_and_color(subset)
-            if num > limit[color]:
-                possible.pop()
+            if num > limit["red"] and num > limit[color]:
                 break
-    return sum(possible)
+        else:
+            total += i + 1
+    return total
 
 
 @timing("part2")

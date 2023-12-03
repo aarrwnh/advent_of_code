@@ -5,16 +5,17 @@ from support import check_result, read_file_lines, timing
 
 @timing("part1")
 def part1(lines: list[str]) -> int:
-    sum = 0
+    total = 0
     for line in lines:
-        m = [int(c) for c in line if c in "123456789"]
-        sum += m[0] * 10 + m[-1]
-    return sum
+        m = [int(c) for c in line if c.isdigit()]
+        total += m[0] * 10 + m[-1]
+    return total
+    # [line.strip(string.ascii_lowercase) for line in lines]
 
 
 @timing("part2")
 def part2(lines: list[str]) -> int:
-    sum = 0
+    total = 0
     digits = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
     pattern = re.compile("(?=(\\d|" + "|".join(digits) + "))")
     for line in lines:
@@ -22,8 +23,8 @@ def part2(lines: list[str]) -> int:
             digits.index(a[1]) + 1 if a[1] in digits else a[1]
             for a in pattern.finditer(line)
         ]
-        sum += int(m[0]) * 10 + int(m[-1])
-    return sum
+        total += int(m[0]) * 10 + int(m[-1])
+    return total
 
 
 def main() -> int:
