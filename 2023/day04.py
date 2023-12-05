@@ -4,33 +4,28 @@ from typing import Generator
 from support import check_result, read_file_lines, timing
 
 
-def parse(lines: list[str]) -> Generator[tuple[set[str], set[str]], None, None]:
+def parse(lines: list[str]) -> Generator[int, None, None]:
     for line in lines:
         _, l_s = line.split(":")
         left_s, right_s = l_s.replace("  ", " ").strip().split(" | ")
         winning = set(left_s.split(" "))
-        got = set(right_s.split(" "))
-        yield winning, got
+        have = set(right_s.split(" "))
+        matches = winning.intersection(have)
+        yield len(matches)
 
 
 @timing("part1")
 def part1(lines: list[str]) -> int:
-    total = 0
-    for won, got in parse(lines):
-        matches = won.intersection(got)
-        if len(matches) > 0:
-            total += 1 << len(matches) - 1
-    return total
+    return sum(1 << count - 1 for count in parse(lines) if count > 0)
 
 
 @timing("part2")
 def part2(lines: list[str]) -> int:
     inst: collections.defaultdict[int, int]
     inst = collections.defaultdict(int)
-    for i, (won, got) in enumerate(parse(lines)):
-        matches = len(won.intersection(got))
+    for i, count in enumerate(parse(lines)):
         inst[i] += 1  # original card
-        for j in range(1 + i, 1 + i + matches):
+        for j in range(1 + i, 1 + i + count):
             inst[j] += inst[i]
     return sum(inst.values())
 

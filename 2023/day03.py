@@ -1,6 +1,5 @@
 from support import adjacents_bounds, check_result, read_file_lines, timing
 
-
 Point = tuple[int, int]
 Parsed = list[tuple[int, set[Point]]]
 
@@ -9,8 +8,9 @@ Parsed = list[tuple[int, set[Point]]]
 def parse(lines: list[str]) -> tuple[dict[Point, str], Parsed]:
     symbols: dict[Point, str] = {}
     parsed: Parsed = []
-    max_y = len(lines)
-    max_x = len(lines[0])
+    max_y = len(lines) - 1
+    max_x = len(lines[0]) - 1
+
     for y, row in enumerate(lines):
         num = 0
         points = set()
@@ -22,9 +22,9 @@ def parse(lines: list[str]) -> tuple[dict[Point, str], Parsed]:
                         points.add(pd)
             else:
                 if num > 0:
-                    parsed.append((num, points))
+                    parsed.append((num, points.copy()))
                     num = 0
-                    points = set()
+                    points.clear()
                 if p != ".":
                     symbols[(x, y)] = p
     return symbols, parsed
@@ -33,7 +33,7 @@ def parse(lines: list[str]) -> tuple[dict[Point, str], Parsed]:
 @timing("part1")
 def part1(symbols: dict[Point, str], parsed: Parsed) -> int:
     total = 0
-    for (n, p) in parsed:
+    for n, p in parsed:
         if len(p.intersection(symbols)) > 0:
             total += n
     return total
@@ -42,7 +42,7 @@ def part1(symbols: dict[Point, str], parsed: Parsed) -> int:
 @timing("part2")
 def part2(symbols: dict[Point, str], parsed: Parsed) -> int:
     total = 0
-    for (g, symbol) in symbols.items():
+    for g, symbol in symbols.items():
         if symbol != "*":
             continue
         a = [n for (n, p) in parsed if g in p]

@@ -59,19 +59,19 @@ class Point(NamedTuple):
 
 @contextlib.contextmanager
 def timing(name: str = "") -> Generator[None, None, None]:
-    before = time.time()
+    before = time.perf_counter()
     try:
         yield
     finally:
-        after = time.time()
-        t = (after - before) * 1000
+        after = time.perf_counter()
+        t = (after - before) * 1000.0
         unit = "ms"
         if t < 100:
-            t *= 1000
+            t *= 1000.0
             unit = "μs"
         if name:
             name = f" ({name})"
-        print(f"> {int(t)} {unit}{name}", file=sys.stderr, flush=True)
+        print(f"> {t:.2f} {unit}{name}", file=sys.stderr, flush=True)
 
 
 def red(s: str) -> None:
@@ -165,7 +165,7 @@ def adjacents_bounds(
                 continue
             if diagonals is False and abs(x_d) == abs(y_d):
                 continue
-            if not (0 < x + x_d < max_x and 0 < y + y_d < max_y):
+            if not (0 <= x + x_d <= max_x and 0 <= y + y_d <= max_y):
                 continue
             yield x + x_d, y + y_d
 
