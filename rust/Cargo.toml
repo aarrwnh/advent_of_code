@@ -2,3 +2,5 @@
 members = [
 	"2022"
 ]
+
+resolver = "1"

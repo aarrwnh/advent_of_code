@@ -128,8 +128,8 @@ def ff(x: tuple[int, int, list[list[tuple[int, int, int]]]]) -> int:
 
 
 def main() -> int:
-    sample = read_file_raw(__file__, "../input/2023/05/sample")
-    puzzle = read_file_raw(__file__, "../input/2023/05/puzzle")
+    sample = read_file_raw(__file__, "../../input/2023/05/sample")
+    puzzle = read_file_raw(__file__, "../../input/2023/05/puzzle")
 
     check_result(35, part1(sample))
     check_result(486613012, part1(puzzle))

@@ -53,8 +53,8 @@ def part2(symbols: dict[Point, str], parsed: Parsed) -> int:
 
 @timing("total")
 def main() -> int:
-    sample = parse(read_file_lines(__file__, "../input/2023/03/sample"))
-    puzzle = parse(read_file_lines(__file__, "../input/2023/03/puzzle"))
+    sample = parse(read_file_lines(__file__, "../../input/2023/03/sample"))
+    puzzle = parse(read_file_lines(__file__, "../../input/2023/03/puzzle"))
 
     check_result(4361, part1(*sample))
     check_result(546312, part1(*puzzle))

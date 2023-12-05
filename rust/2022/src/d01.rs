@@ -24,8 +24,8 @@ fn part2(input: &str) -> u32 {
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
-    let sample = read_to_string("../input/2022/01/sample.input").unwrap();
-    let puzzle = read_to_string("../input/2022/01/puzzle.input").unwrap();
+    let sample = read_to_string("../../input/2022/01/sample.input").unwrap();
+    let puzzle = read_to_string("../../input/2022/01/puzzle.input").unwrap();
 
     check_values!(24000, part1, &sample);
     check_values!(71924, part1, &puzzle);

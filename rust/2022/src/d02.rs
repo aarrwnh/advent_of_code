@@ -7,8 +7,8 @@ use support::check_values;
 fn parse_lines<'a>(input: &'a str) -> Vec<Vec<&'a str>> {
     return input
         .trim_end()
-        .split("\n")
-        .map(|x| x.split(" ").collect::<Vec<&'a str>>())
+        .split('\n')
+        .map(|x| x.split(' ').collect::<Vec<&'a str>>())
         .collect::<Vec<Vec<&'a str>>>();
 }
 
@@ -103,17 +103,17 @@ fn new_hand(letter: &str) -> HandShape {
 }
 
 fn part1(input: &str) -> u32 {
-    return parse_lines(&input).iter().fold(0, |acc, x| {
+    return parse_lines(input).iter().fold(0, |acc, x| {
         let elf_hand = new_hand(x[0]);
         let my_hand = new_hand(x[1]);
         let mut result = one_normal_round(my_hand, elf_hand);
         result += my_hand.value();
-        return acc + (result as u32);
+        acc + (result as u32)
     });
 }
 
 fn part2(input: &str) -> u32 {
-    return parse_lines(&input).iter().fold(0, |acc, x| {
+    return parse_lines(input).iter().fold(0, |acc, x| {
         let elf_hand = new_hand(x[0]);
         let planned_result = match x[1] {
             "X" => Lose,
@@ -122,14 +122,14 @@ fn part2(input: &str) -> u32 {
             _ => unreachable!(),
         };
         let result = one_intentional_round(planned_result, elf_hand);
-        return acc + (result as u32);
+        acc + (result as u32)
     });
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
     // [["A", "Y"], ["B", "X"], ["C", "Z"]];
     let sample = "A Y\nB X\nC Z";
-    let puzzle = read_to_string("../input/2022/02/puzzle.input").unwrap();
+    let puzzle = read_to_string("../../input/2022/02/puzzle.input").unwrap();
 
     check_values!(15, part1, &sample);
     check_values!(11841, part1, &puzzle);

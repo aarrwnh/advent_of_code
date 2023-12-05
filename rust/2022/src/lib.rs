@@ -2,9 +2,6 @@
 #![allow(unused_variables)]
 #![allow(unused_imports)]
 #![allow(unused_must_use)]
-#![feature(iterator_try_collect)]
-#![feature(iter_array_chunks)]
-#![feature(array_chunks)]
 
 extern crate array_tool;
 

@@ -23,9 +23,9 @@ impl TryFrom<&u8> for Item {
 
     fn try_from(value: &u8) -> Result<Self, Self::Error> {
         let value = if *value > b'a' {
-            *value as u8 - b'a' + 1
+            *value - b'a' + 1
         } else {
-            *value as u8 - b'A' + 27
+            *value - b'A' + 27
         };
 
         Ok(Self {
@@ -54,7 +54,7 @@ fn part1_by_cod3monk(input: &Vec<&str>) -> usize {
             }
         }
     }
-    return sum;
+    sum
 }
 
 fn part2_by_cod3monk(input: &[&str]) -> usize {
@@ -79,7 +79,7 @@ fn check_group(chunk: &[&str]) -> usize {
             }
         }
     }
-    return sum;
+    sum
 }
 
 /// average: 742 µs
@@ -87,18 +87,18 @@ fn part2(input: &[&str]) -> u32 {
     let mut total = 0;
     for idx in (0..input.len()).step_by(3) {
         let group = &input[idx..idx + 3];
-        let g1 = group.get(0).unwrap();
+        let g1 = group.first().unwrap();
         let g2 = group.get(1).unwrap();
         let g3 = group.get(2).unwrap();
         for c in g1.chars() {
             let m2 = g2.matches(c);
             let a2 = m2.collect::<Vec<&str>>();
-            if a2.len() == 0 {
+            if a2.is_empty() {
                 continue;
             }
             let m3 = g3.matches(c);
             let a3 = m3.collect::<Vec<&str>>();
-            if a3.len() > 0 {
+            if !a3.is_empty() {
                 let w = c as u32;
                 let ord = match c.is_uppercase() {
                     true => w - 38,
@@ -109,10 +109,10 @@ fn part2(input: &[&str]) -> u32 {
             }
         }
     }
-    return total;
+    total
 }
 
-fn part1_p(input: &Vec<&str>) -> u32 {
+fn part1_p(input: &[&str]) -> u32 {
     input
         .iter()
         .map(|line| {
@@ -122,11 +122,11 @@ fn part1_p(input: &Vec<&str>) -> u32 {
             b.chars()
                 .filter(move |char| a.contains(char))
                 .map(|char| {
-                    return if char.is_lowercase() {
+                    if char.is_lowercase() {
                         char as u32 - LOWERCASE_ITEM
                     } else {
                         char as u32 - UPPERCASE_ITEM
-                    };
+                    }
                 })
                 .last()
                 .unwrap()
@@ -148,7 +148,7 @@ fn part1_slow(input: &Vec<&str>) -> u32 {
             };
         }
     }
-    return total;
+    total
 }
 
 /// adapted from ThePrimeagen
@@ -181,14 +181,13 @@ fn part2_theprimeagen(input: &[&str]) -> u32 {
 fn part1_fast(input: &Vec<&str>) -> u32 {
     let mut total = 0;
     for line in input {
-        let count: usize = line.len().try_into().unwrap();
-        let half = count / 2;
+        let half = line.len() / 2;
         let right = line.get(half..).unwrap();
         let left = line.get(..half).unwrap();
         for c in left.chars() {
             let m = right.matches(c);
             let a = m.collect::<Vec<&str>>();
-            if a.len() > 0 {
+            if !a.is_empty() {
                 let w = c as u32;
                 let ord = match c.is_uppercase() {
                     true => w - 38,
@@ -199,7 +198,7 @@ fn part1_fast(input: &Vec<&str>) -> u32 {
             }
         }
     }
-    return total;
+    total
 }
 
 fn part2_2(input: &[&str]) -> u32 {
@@ -221,9 +220,9 @@ fn part2_2(input: &[&str]) -> u32 {
     total
 }
 pub fn main() -> Result<(), Box<dyn Error>> {
-    let sample: String = read_to_string("../input/2022/03/sample.input")?.parse()?;
+    let sample: String = read_to_string("../../input/2022/03/sample.input")?.parse()?;
     let sample = sample.lines().collect::<Vec<&str>>();
-    let puzzle: String = read_to_string("../input/2022/03/puzzle.input")?.parse()?;
+    let puzzle: String = read_to_string("../../input/2022/03/puzzle.input")?.parse()?;
     let puzzle = puzzle.lines().collect::<Vec<&str>>();
 
     print!("\n  part1_fast\n");

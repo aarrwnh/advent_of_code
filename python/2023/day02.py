@@ -35,8 +35,8 @@ def part2(lines: list[str]) -> int:
 
 
 def main() -> int:
-    sample = read_file_lines(__file__, "../input/2023/02/sample")
-    puzzle = read_file_lines(__file__, "../input/2023/02/puzzle")
+    sample = read_file_lines(__file__, "../../input/2023/02/sample")
+    puzzle = read_file_lines(__file__, "../../input/2023/02/puzzle")
 
     check_result(8, part1(sample))
     check_result(2207, part1(puzzle))

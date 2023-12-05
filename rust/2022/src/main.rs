@@ -3,7 +3,7 @@ use std::{env, fmt::Error};
 
 fn main() -> Result<(), Error> {
     let args: Vec<String> = env::args().collect();
-    let day = args[1].parse::<u32>().unwrap();
+    let day = args[1].parse().unwrap();
 
     let solve = match day {
         1 => d01::main,
@@ -15,9 +15,8 @@ fn main() -> Result<(), Error> {
         _ => panic!("Unimplemented"),
     };
 
-    match solve() {
-        Err(e) => println!("{:?}", e),
-        _ => (),
+    if let Err(e) = solve() {
+        println!("{:?}", e)
     }
 
     Ok(())
