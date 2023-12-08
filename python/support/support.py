@@ -96,8 +96,14 @@ def read_file_raw(__file__: str, filename: str) -> str:
         return f.read()
 
 
-def read_file_lines(__file__: str, filename: str) -> list[str]:
-    path = os.path.join(os.path.dirname(__file__), filename)
+def read_file_lines(path__: str, filename: str = "") -> list[str]:
+    if path__ and filename != "":
+        path = os.path.join(os.path.dirname(path__), filename)
+    else:
+        path = os.path.normpath(
+            os.path.join(os.path.dirname(__file__), "..", "..", path__)
+        )
+
     with open(path, "r") as f:
         return [line.strip() for line in f.readlines()]
 

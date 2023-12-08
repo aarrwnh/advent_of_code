@@ -37,27 +37,30 @@ def count_to_kind(count: list[int]) -> int:
 
 
 def measure_hand_part1(hand: str, mapping: str) -> tuple[int, list[int], int]:
-    cards = [mapping.index(x) for x in hand]
-    h = {mapping.index(c): hand.count(c) for c in set(hand) if hand.count(c) > 1}
-    hand_kind = count_to_kind(list(h.values()))
+    nums = [mapping.index(x) for x in hand]
+    hand_kind = sum([len([0 for y in nums if x == y]) for x in nums])
+    return hand_kind, nums, 0
 
-    score = hand_kind
-    for x in cards:
-        score = (score << 4) | x
+    # h = {mapping.index(c): hand.count(c) for c in set(hand) if hand.count(c) > 1}
+    # hand_kind = count_to_kind(list(h.values()))
 
-    return hand_kind, cards, score
+    # score = hand_kind
+    # for x in cards:
+    #     score = (score << 4) | x
+
+    # return hand_kind, cards, score
 
 
 @timing("part1")
 def part1(lines: list[str]) -> int:
     total = 0
-    data: list[tuple[str, int, int, list[int], int]] = []
+    data: list[tuple[int, int, list[int], int]] = []
     for line in lines:
         hand, bid_s = line.split(" ")
-        data.append((hand, int(bid_s), *measure_hand_part1(hand, STR1)))
+        data.append((int(bid_s), *measure_hand_part1(hand, STR1)))
 
-    data = sorted(data, key=lambda x: (x[4],))
-    for j, (_, bid, _, _, _) in enumerate(data, 1):
+    data = sorted(data, key=lambda x: (x[1], x[2]))
+    for j, (bid, _, _, _) in enumerate(data, 1):
         total += j * bid
 
     return total
@@ -104,13 +107,13 @@ def combinator(hand: str) -> set[str]:
 
 
 def measure_hand_part2(hand: str, mapping: str) -> tuple[int, list[int]]:
-    cards = [mapping.index(x) for x in hand]
-    rest_letters = sorted([len([0 for y in cards if x == y]) for x in cards if x != 1])
+    nums = [mapping.index(x) for x in hand]
+    rest_letters = sorted([len([0 for y in nums if x == y]) for x in nums if x != 1])
     j_count = 5 - len(rest_letters)
     rest_max = rest_letters[-1] if len(rest_letters) > 0 else 0
     rest_score = sum(rest_letters)
     score = (j_count * rest_max) + (rest_max + j_count) * j_count
-    return score + rest_score, cards
+    return score + rest_score, nums
 
 
 @timing("part2")
@@ -118,7 +121,7 @@ def part2(lines: list[str]) -> int:
     # TODO: ?
     def find_best(hand: str) -> tuple[int, list[int]]:
         possible: list[tuple[int, list[int], int]] = []
-        _, joker_cards, _ = measure_hand_part1(hand, STR2)
+        _, joker_nums, _ = measure_hand_part1(hand, STR2)
 
         for possible_hand in combinator(hand):
             possible.append((*measure_hand_part1(possible_hand, STR2),))
@@ -128,24 +131,24 @@ def part2(lines: list[str]) -> int:
         # print(hand, "=>", found_hand)
         return (
             score,
-            joker_cards,
+            joker_nums,
         )
 
-    data: list[tuple[str, int, int, list[int]]] = []
+    data: list[tuple[int, int, list[int]]] = []
     for line in lines:
         hand, bid_s = line.split(" ")
         # if "J" in hand:
         #     data.append((hand, int(bid_s), *find_best(hand)))
         # else:
-        data.append((hand, int(bid_s), *measure_hand_part2(hand, STR2)))
+        data.append((int(bid_s), *measure_hand_part2(hand, STR2)))
 
     total = 0
-    for j, (_, bid, _, _) in enumerate(
+    for j, (bid, _, _) in enumerate(
         sorted(
             data,
             key=lambda x: (
+                x[1],
                 x[2],
-                x[3],
             ),
         ),
         1,
