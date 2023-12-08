@@ -1,6 +1,6 @@
 import itertools
 
-from support import check_result, read_file_raw, timing  # type: ignore
+from support import assert_result, read_file_raw, timing  # type: ignore
 
 MAGIC = 69
 WIDTH = 7
@@ -188,11 +188,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/17/sample.input").strip()
     puzzle = read_file_raw(__file__, "../../input/2022/17/puzzle.input").strip()
 
-    check_result(3068, part1(sample))
-    check_result(3227, part1(puzzle))
+    assert_result(3068, part1(sample))
+    assert_result(3227, part1(puzzle))
 
-    check_result(1514285714288, part2(sample))
-    check_result(1597714285698, part2(puzzle))
+    assert_result(1514285714288, part2(sample))
+    assert_result(1597714285698, part2(puzzle))
 
     return 0
 

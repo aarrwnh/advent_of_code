@@ -1,6 +1,6 @@
 import os
 from typing import Any
-from support import timing, check_result
+from support import timing, assert_result
 
 CTBL = {
     "0": "0000",
@@ -170,24 +170,24 @@ def part2(hex: str) -> int:
 def main() -> int:
     puzzle = read_file("puzzle.input")
 
-    check_result(6, part1("D2FE28"))
-    check_result(9, part1("38006F45291200"))
-    check_result(14, part1("EE00D40C823060"))
-    check_result(16, part1("8A004A801A8002F478"))
-    check_result(12, part1("620080001611562C8802118E34"))
-    check_result(23, part1("C0015000016115A2E0802F182340"))
-    check_result(31, part1("A0016C880162017C3686B18A3D4780"))
-    check_result(852, part1(puzzle))
+    assert_result(6, part1("D2FE28"))
+    assert_result(9, part1("38006F45291200"))
+    assert_result(14, part1("EE00D40C823060"))
+    assert_result(16, part1("8A004A801A8002F478"))
+    assert_result(12, part1("620080001611562C8802118E34"))
+    assert_result(23, part1("C0015000016115A2E0802F182340"))
+    assert_result(31, part1("A0016C880162017C3686B18A3D4780"))
+    assert_result(852, part1(puzzle))
 
-    check_result(3, part2("C200B40A82"))
-    check_result(54, part2("04005AC33890"))
-    check_result(7, part2("880086C3E88112"))
-    check_result(9, part2("CE00C43D881120"))
-    check_result(1, part2("D8005AC2A8F0"))
-    check_result(0, part2("F600BC2D8F"))
-    check_result(0, part2("9C005AC2F8F0"))
-    check_result(1, part2("9C0141080250320F1802104A08"))
-    check_result(19348959966392, part2(puzzle))
+    assert_result(3, part2("C200B40A82"))
+    assert_result(54, part2("04005AC33890"))
+    assert_result(7, part2("880086C3E88112"))
+    assert_result(9, part2("CE00C43D881120"))
+    assert_result(1, part2("D8005AC2A8F0"))
+    assert_result(0, part2("F600BC2D8F"))
+    assert_result(0, part2("9C005AC2F8F0"))
+    assert_result(1, part2("9C0141080250320F1802104A08"))
+    assert_result(19348959966392, part2(puzzle))
 
     return 0
 

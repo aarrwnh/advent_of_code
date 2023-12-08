@@ -1,6 +1,6 @@
 from collections import deque
 
-from support import check_result, read_file_lines, timing
+from support import InputReader, assert_result, timing
 
 STR1 = "  23456789TJQKA"
 STR2 = " J23456789T QKA"
@@ -159,14 +159,15 @@ def part2(lines: list[str]) -> int:
 
 
 def main() -> int:
-    sample = read_file_lines(__file__, "../../input/2023/07/sample")
-    puzzle = read_file_lines(__file__, "../../input/2023/07/puzzle")
+    i = InputReader(2023, 7)
+    sample = i.lines("sample")
+    puzzle = i.lines("puzzle")
 
-    check_result(6440, part1(sample))
-    check_result(250058342, part1(puzzle))
+    assert_result(6440, part1(sample))
+    assert_result(250058342, part1(puzzle))
 
-    check_result(5905, part2(sample))
-    check_result(250506580, part2(puzzle))
+    assert_result(5905, part2(sample))
+    assert_result(250506580, part2(puzzle))
 
     return 0
 

@@ -1,6 +1,6 @@
 from typing import Callable
 
-from support import check_result, read_file_raw, timing  # type: ignore
+from support import assert_result, read_file_raw, timing  # type: ignore
 
 
 def add(rhs: int):
@@ -99,11 +99,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/11/sample.input")
     puzzle = read_file_raw(__file__, "../../input/2022/11/puzzle.input")
 
-    check_result(10605, part1(sample))
-    check_result(61503, part1(puzzle))
+    assert_result(10605, part1(sample))
+    assert_result(61503, part1(puzzle))
 
-    check_result(2713310158, part2(sample))
-    check_result(14081365540, part2(puzzle))
+    assert_result(2713310158, part2(sample))
+    assert_result(14081365540, part2(puzzle))
 
     return 0
 

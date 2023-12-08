@@ -1,7 +1,7 @@
 import collections
 import re
 
-from support import Directions, Point, check_result, read_file_raw, timing
+from support import Directions, Point, assert_result, read_file_raw, timing
 
 RE_DIRECTIONS = re.compile(r"([0-9]+)([RL])?")
 # right=0 down=1 left=2 up=3
@@ -214,11 +214,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/22/sample")
     puzzle = read_file_raw(__file__, "../../input/2022/22/puzzle")
 
-    check_result(6032, part1(sample, 4))
-    check_result(50412, part1(puzzle, 50))
+    assert_result(6032, part1(sample, 4))
+    assert_result(50412, part1(puzzle, 50))
 
-    check_result(5031, part2(sample, 4))
-    check_result(130068, part2(puzzle, 50))
+    assert_result(5031, part2(sample, 4))
+    assert_result(130068, part2(puzzle, 50))
 
     return 0
 

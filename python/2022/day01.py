@@ -1,4 +1,4 @@
-from support import check_result, read_file, timing  # type: ignore
+from support import assert_result, read_file, timing  # type: ignore
 
 
 def compute(lines: list[str]) -> list[int]:
@@ -30,11 +30,11 @@ def main() -> int:
     sample.append("")
     puzzle.append("")
 
-    check_result(24000, part1(sample))
-    check_result(71924, part1(puzzle))
+    assert_result(24000, part1(sample))
+    assert_result(71924, part1(puzzle))
 
-    check_result(45000, part2(sample))
-    check_result(210406, part2(puzzle))
+    assert_result(45000, part2(sample))
+    assert_result(210406, part2(puzzle))
 
     return 0
 

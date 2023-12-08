@@ -1,4 +1,4 @@
-from support import check_result, read_file_lines, timing  # type: ignore
+from support import assert_result, read_file_lines, timing  # type: ignore
 
 SPACE_AVAILABLE = 70000000
 SPACE_NEEDED = 30000000
@@ -78,11 +78,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2022/07/sample.input")
     puzzle = read_file_lines(__file__, "../../input/2022/07/puzzle.input")
 
-    check_result(95437, part1(sample))
-    check_result(1648397, part1(puzzle))
+    assert_result(95437, part1(sample))
+    assert_result(1648397, part1(puzzle))
 
-    check_result(24933642, part2(sample))
-    check_result(1815525, part2(puzzle))
+    assert_result(24933642, part2(sample))
+    assert_result(1815525, part2(puzzle))
 
     return 0
 

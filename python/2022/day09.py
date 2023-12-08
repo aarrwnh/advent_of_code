@@ -1,6 +1,6 @@
 import math
 
-from support import check_result, read_file_lines, timing  # type: ignore
+from support import assert_result, read_file_lines, timing  # type: ignore
 
 MOVEMENTS: dict[str, tuple[int, int]] = {
     "R": (1, 0),
@@ -85,12 +85,12 @@ U 20
         "\n"
     )
 
-    check_result(13, part1(sample))
-    check_result(6175, part1(puzzle))
+    assert_result(13, part1(sample))
+    assert_result(6175, part1(puzzle))
 
-    check_result(1, part2(sample))
-    check_result(36, part2(sample2))
-    check_result(2578, part2(puzzle))
+    assert_result(1, part2(sample))
+    assert_result(36, part2(sample2))
+    assert_result(2578, part2(puzzle))
 
     return 0
 

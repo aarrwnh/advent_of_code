@@ -1,4 +1,4 @@
-from support import Point, check_result, make_point_range, read_file_lines, timing
+from support import Point, assert_result, make_point_range, read_file_lines, timing
 
 
 def fill_points_diag(x1: int, y1: int, x2: int, y2: int, diagonals: bool = False):
@@ -64,11 +64,11 @@ def main() -> int:
     sample = parse_input("../../input/2021/05/sample.input")
     puzzle = parse_input("../../input/2021/05/puzzle.input")
 
-    check_result(5, draw_pipes(sample, 10, paint=True))
-    check_result(3990, draw_pipes(puzzle, 1000))
+    assert_result(5, draw_pipes(sample, 10, paint=True))
+    assert_result(3990, draw_pipes(puzzle, 1000))
 
-    check_result(12, draw_pipes(sample, 10, diagonal=True, paint=True))
-    check_result(21305, draw_pipes(puzzle, 1000, diagonal=True))
+    assert_result(12, draw_pipes(sample, 10, diagonal=True, paint=True))
+    assert_result(21305, draw_pipes(puzzle, 1000, diagonal=True))
 
     return 0
 

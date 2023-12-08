@@ -1,7 +1,7 @@
 import functools
 from ast import literal_eval
 
-from support import check_result, read_file_raw, timing  # type: ignore
+from support import assert_result, read_file_raw, timing  # type: ignore
 
 
 def compare(left, right):
@@ -61,11 +61,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/13/sample.input")
     puzzle = read_file_raw(__file__, "../../input/2022/13/puzzle.input")
 
-    check_result(13, part1(sample))
-    check_result(5682, part1(puzzle))
+    assert_result(13, part1(sample))
+    assert_result(5682, part1(puzzle))
 
-    check_result(140, part2(sample))
-    check_result(20304, part2(puzzle))
+    assert_result(140, part2(sample))
+    assert_result(20304, part2(puzzle))
 
     return 0
 

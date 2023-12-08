@@ -1,7 +1,7 @@
 import math
 import re
 
-from support import check_result, read_file_raw, timing
+from support import assert_result, read_file_raw, timing
 
 
 def race(time: int, dist: int) -> int:
@@ -55,11 +55,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2023/06/sample")
     puzzle = read_file_raw(__file__, "../../input/2023/06/puzzle")
 
-    check_result(288, part1(sample))
-    check_result(1312850, part1(puzzle))
+    assert_result(288, part1(sample))
+    assert_result(1312850, part1(puzzle))
 
-    check_result(71503, part2(sample))
-    check_result(36749103, part2(puzzle))
+    assert_result(71503, part2(sample))
+    assert_result(36749103, part2(puzzle))
 
     return 0
 

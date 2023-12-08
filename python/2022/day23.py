@@ -4,7 +4,7 @@ from support import (
     Directions,
     Point,
     adjacents,
-    check_result,
+    assert_result,
     parse_coords_hash,
     read_file_raw,
     timing,
@@ -81,11 +81,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/23/sample")
     puzzle = read_file_raw(__file__, "../../input/2022/23/puzzle")
 
-    check_result(110, part1(sample))
-    check_result(3996, part1(puzzle))
+    assert_result(110, part1(sample))
+    assert_result(3996, part1(puzzle))
 
-    check_result(20, part2(sample))
-    check_result(908, part2(puzzle))
+    assert_result(20, part2(sample))
+    assert_result(908, part2(puzzle))
 
     return 0
 

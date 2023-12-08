@@ -1,4 +1,4 @@
-from support import check_result, read_file_split, timing  # type: ignore
+from support import assert_result, read_file_split, timing  # type: ignore
 
 
 @timing()
@@ -76,11 +76,11 @@ def main() -> int:
     sample = read_file_split(__file__, "../../input/2022/10/sample.input")
     puzzle = read_file_split(__file__, "../../input/2022/10/puzzle.input")
 
-    check_result(13140, part1(sample))
-    check_result(13520, part1(puzzle))
+    assert_result(13140, part1(sample))
+    assert_result(13520, part1(puzzle))
 
-    check_result(part2_sample_res, part2(sample))
-    check_result(part2_puzzle_res, part2(puzzle))
+    assert_result(part2_sample_res, part2(sample))
+    assert_result(part2_puzzle_res, part2(puzzle))
 
     return 0
 

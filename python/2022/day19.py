@@ -1,6 +1,6 @@
 import math
 
-from support import check_result, read_file_lines, timing  # type: ignore
+from support import assert_result, read_file_lines, timing  # type: ignore
 
 D = dict[str, int]
 DD = dict[str, D]
@@ -145,11 +145,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2022/19/sample.input")
     puzzle = read_file_lines(__file__, "../../input/2022/19/puzzle.input")
 
-    check_result(33, part1(sample))
-    check_result(960, part1(puzzle))
+    assert_result(33, part1(sample))
+    assert_result(960, part1(puzzle))
 
-    check_result(56 * 62, part2(sample))
-    check_result(2040, part2(puzzle))
+    assert_result(56 * 62, part2(sample))
+    assert_result(2040, part2(puzzle))
 
     return 0
 

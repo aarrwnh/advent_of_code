@@ -1,4 +1,4 @@
-from support import check_result, read_file, timing  # type: ignore
+from support import assert_result, read_file, timing  # type: ignore
 
 
 def get_most_bit_recurrences(arr: list[str]):
@@ -67,11 +67,11 @@ def main() -> int:
     sample = read_file(__file__, "sample.input")
     lines = read_file(__file__, "puzzle.input")
 
-    check_result(198, part1(sample))
-    check_result(230, part2(sample))
+    assert_result(198, part1(sample))
+    assert_result(230, part2(sample))
 
-    check_result(1025636, part1(lines))
-    check_result(793873, part2(lines))
+    assert_result(1025636, part1(lines))
+    assert_result(793873, part2(lines))
 
     return 0
 

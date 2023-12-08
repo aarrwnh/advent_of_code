@@ -2,7 +2,7 @@ import math
 import re
 from typing import Match
 
-from support import check_result, read_file, timing  # type: ignore
+from support import assert_result, read_file, timing  # type: ignore
 
 RE_PAIR = re.compile(r"\[(\d+),(\d+)\]")
 RE_NUM_LEFT = re.compile(r"\d+(?!.*\d)")
@@ -84,18 +84,18 @@ def main() -> int:
     sample2 = read_file(__file__, "sample2.input")
     puzzle = read_file(__file__, "puzzle.input")
 
-    check_result(143, part1(["[[1, 2], [[3, 4], 5]]"]))
-    check_result(1384, part1(["[[[[4,3],4],4],[7,[[8,4],9]]]", "[1,1]"]))
-    check_result(445, part1(["[[[[1,1],[2,2]],[3,3]],[4,4]]"]))
-    check_result(791, part1(["[[[[3,0],[5,3]],[4,4]],[5,5]]"]))
-    check_result(1137, part1(["[[[[5,0],[7,4]],[5,5]],[6,6]]"]))
-    check_result(3488, part1(sample1))
+    assert_result(143, part1(["[[1, 2], [[3, 4], 5]]"]))
+    assert_result(1384, part1(["[[[[4,3],4],4],[7,[[8,4],9]]]", "[1,1]"]))
+    assert_result(445, part1(["[[[[1,1],[2,2]],[3,3]],[4,4]]"]))
+    assert_result(791, part1(["[[[[3,0],[5,3]],[4,4]],[5,5]]"]))
+    assert_result(1137, part1(["[[[[5,0],[7,4]],[5,5]],[6,6]]"]))
+    assert_result(3488, part1(sample1))
 
-    check_result(4140, part1(sample2))
-    check_result(3691, part1(puzzle))
+    assert_result(4140, part1(sample2))
+    assert_result(3691, part1(puzzle))
 
-    check_result(3993, part2(sample2))
-    check_result(4756, part2(puzzle))
+    assert_result(3993, part2(sample2))
+    assert_result(4756, part2(puzzle))
 
     return 0
 

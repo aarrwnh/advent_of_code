@@ -1,6 +1,6 @@
 import re
 
-from support import check_result, read_file, timing  # type: ignore
+from support import assert_result, read_file, timing  # type: ignore
 
 NON_NUMBER = re.compile(r"[-,]")
 
@@ -39,11 +39,11 @@ def main() -> int:
     sample = read_file(__file__, "../../input/2022/04/sample.input")
     puzzle = read_file(__file__, "../../input/2022/04/puzzle.input")
 
-    check_result(2, part1(sample))
-    check_result(569, part1(puzzle))
+    assert_result(2, part1(sample))
+    assert_result(569, part1(puzzle))
 
-    check_result(4, part2(sample))
-    check_result(936, part2(puzzle))
+    assert_result(4, part2(sample))
+    assert_result(936, part2(puzzle))
 
     return 0
 

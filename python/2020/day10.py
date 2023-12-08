@@ -1,6 +1,6 @@
 import collections
 
-from support import check_result, read_file_int2, timing  # type: ignore
+from support import assert_result, read_file_int2, timing  # type: ignore
 
 
 @timing()
@@ -50,13 +50,13 @@ def main() -> int:
     sample2 = sorted(read_file_int2(__file__, "../../input/2020/10/sample2.input"))
     puzzle = sorted(read_file_int2(__file__, "../../input/2020/10/puzzle.input"))
 
-    check_result(35, part1(sample1))
-    check_result(220, part1(sample2))
-    check_result(2760, part1(puzzle))
+    assert_result(35, part1(sample1))
+    assert_result(220, part1(sample2))
+    assert_result(2760, part1(puzzle))
 
-    check_result(8, part2(sample1))
-    check_result(19208, part2(sample2))
-    check_result(13816758796288, part2(puzzle))
+    assert_result(8, part2(sample1))
+    assert_result(19208, part2(sample2))
+    assert_result(13816758796288, part2(puzzle))
 
     return 0
 

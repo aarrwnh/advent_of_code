@@ -4,7 +4,7 @@ import re
 from pprint import pprint
 from typing import NamedTuple
 
-from support import check_result, read_file_lines, timing  # type: ignore
+from support import assert_result, read_file_lines, timing  # type: ignore
 
 RE_LINE = re.compile(
     r"Valve ([A-Z]+) has flow rate=([0-9]+); tunnels? leads? to valves? ([\s,A-Z]+)"
@@ -115,11 +115,11 @@ def main() -> int:
     sample = parse_input(read_file_lines(__file__, "../../input/2022/16/sample.input"))
     puzzle = parse_input(read_file_lines(__file__, "../../input/2022/16/puzzle.input"))
 
-    check_result(1651, part1(sample))
-    check_result(1376, part1(puzzle))
+    assert_result(1651, part1(sample))
+    assert_result(1376, part1(puzzle))
 
-    check_result(1707, part2(sample))
-    check_result(1933, part2(puzzle))
+    assert_result(1707, part2(sample))
+    assert_result(1933, part2(puzzle))
 
     return 0
 

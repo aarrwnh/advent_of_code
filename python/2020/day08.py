@@ -1,4 +1,4 @@
-from support import check_result, read_file_split, timing  # type: ignore
+from support import assert_result, read_file_split, timing  # type: ignore
 
 
 def accumulate(arr: list[list[str]], check_visited: bool = True) -> int:
@@ -45,11 +45,11 @@ def main() -> int:
     sample = read_file_split(__file__, "../../input/2020/08/sample.input")
     puzzle = read_file_split(__file__, "../../input/2020/08/puzzle.input")
 
-    check_result(5, part1(sample))
-    check_result(1832, part1(puzzle))
+    assert_result(5, part1(sample))
+    assert_result(1832, part1(puzzle))
 
-    check_result(8, part2(sample))
-    check_result(662, part2(puzzle))
+    assert_result(8, part2(sample))
+    assert_result(662, part2(puzzle))
 
     return 0
 

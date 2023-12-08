@@ -1,5 +1,5 @@
 from support import fill_points  # type: ignore
-from support import Point, check_result, format_coords_hash, read_file_lines, timing
+from support import Point, assert_result, format_coords_hash, read_file_lines, timing
 
 
 class Sand:
@@ -119,11 +119,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2022/14/sample.input")
     puzzle = read_file_lines(__file__, "../../input/2022/14/puzzle.input")
 
-    check_result(24, part1(sample, True))
-    check_result(644, part1(puzzle))
+    assert_result(24, part1(sample, True))
+    assert_result(644, part1(puzzle))
 
-    check_result(93, part2(sample, True))
-    check_result(27324, part2(puzzle))
+    assert_result(93, part2(sample, True))
+    assert_result(27324, part2(puzzle))
 
     return 0
 

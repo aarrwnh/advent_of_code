@@ -1,6 +1,6 @@
 import re
 
-from support import check_result, read_file_lines, timing
+from support import assert_result, timing, InputReader
 from math import lcm
 
 
@@ -54,17 +54,18 @@ def part2(map: Map) -> int:
 
 
 def main() -> int:
-    sample = Map(read_file_lines("input/2023/08/sample"))
-    sample2 = Map(read_file_lines("input/2023/08/sample2"))
-    sample3 = Map(read_file_lines("input/2023/08/sample3"))
-    puzzle = Map(read_file_lines("input/2023/08/puzzle"))
+    i = InputReader(2023, 8)
+    sample1 = Map(i.lines("sample"))
+    sample2 = Map(i.lines("sample2"))
+    sample3 = Map(i.lines("sample3"))
+    puzzle = Map(i.lines("puzzle"))
 
-    check_result(2, part1(sample))
-    check_result(6, part1(sample2))
-    check_result(22411, part1(puzzle))
+    assert_result(2, part1(sample1))
+    assert_result(6, part1(sample2))
+    assert_result(22411, part1(puzzle))
 
-    check_result(6, part2(sample3))
-    check_result(11188774513823, part2(puzzle))
+    assert_result(6, part2(sample3))
+    assert_result(11188774513823, part2(puzzle))
 
     return 0
 

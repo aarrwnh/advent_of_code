@@ -1,4 +1,4 @@
-from support import adjacents_bounds, check_result, read_file_lines, timing
+from support import adjacents_bounds, assert_result, read_file_lines, timing
 
 Point = tuple[int, int]
 Parsed = list[tuple[int, set[Point]]]
@@ -56,11 +56,11 @@ def main() -> int:
     sample = parse(read_file_lines(__file__, "../../input/2023/03/sample"))
     puzzle = parse(read_file_lines(__file__, "../../input/2023/03/puzzle"))
 
-    check_result(4361, part1(*sample))
-    check_result(546312, part1(*puzzle))
+    assert_result(4361, part1(*sample))
+    assert_result(546312, part1(*puzzle))
 
-    check_result(467835, part2(*sample))
-    check_result(87449461, part2(*puzzle))
+    assert_result(467835, part2(*sample))
+    assert_result(87449461, part2(*puzzle))
 
     return 0
 

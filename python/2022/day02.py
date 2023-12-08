@@ -1,4 +1,4 @@
-from support import check_result, read_file_split, timing  # type: ignore
+from support import assert_result, read_file_split, timing  # type: ignore
 
 """
 A - rock    - X -- 1
@@ -63,11 +63,11 @@ def main() -> int:
     ]
     puzzle = read_file_split(__file__, "../../input/2022/02/puzzle.input")
 
-    check_result(15, part1(sample))
-    check_result(11841, part1(puzzle))
+    assert_result(15, part1(sample))
+    assert_result(11841, part1(puzzle))
 
-    check_result(12, part2(sample))
-    check_result(13022, part2(puzzle))
+    assert_result(12, part2(sample))
+    assert_result(13022, part2(puzzle))
 
     return 0
 

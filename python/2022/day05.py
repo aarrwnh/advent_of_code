@@ -2,7 +2,7 @@ import math
 import re
 from typing import NamedTuple
 
-from support import check_result, read_file_raw, timing  # type: ignore
+from support import assert_result, read_file_raw, timing  # type: ignore
 
 
 class Instruction(NamedTuple):
@@ -65,11 +65,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/05/sample.input")
     puzzle = read_file_raw(__file__, "../../input/2022/05/puzzle.input")
 
-    check_result("CMZ", part1(sample))
-    check_result("HNSNMTLHQ", part1(puzzle))
+    assert_result("CMZ", part1(sample))
+    assert_result("HNSNMTLHQ", part1(puzzle))
 
-    check_result("MCD", part2(sample))
-    check_result("RNLFDJMCT", part2(puzzle))
+    assert_result("MCD", part2(sample))
+    assert_result("RNLFDJMCT", part2(puzzle))
 
     return 0
 

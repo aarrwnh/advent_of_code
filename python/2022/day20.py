@@ -1,4 +1,4 @@
-from support import check_result, read_file_int2, timing  # type: ignore
+from support import assert_result, read_file_int2, timing  # type: ignore
 
 
 def shuffle(original: list[int], indices: list[int]):
@@ -38,11 +38,11 @@ def main() -> int:
     sample = read_file_int2(__file__, "../../input/2022/20/sample.input")
     puzzle = read_file_int2(__file__, "../../input/2022/20/puzzle.input")
 
-    check_result(3, part1(sample))
-    check_result(9687, part1(puzzle))
+    assert_result(3, part1(sample))
+    assert_result(9687, part1(puzzle))
 
-    check_result(1623178306, part2(sample))
-    check_result(1338310513297, part2(puzzle))
+    assert_result(1623178306, part2(sample))
+    assert_result(1338310513297, part2(puzzle))
 
     return 0
 

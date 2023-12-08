@@ -82,7 +82,7 @@ def green(s: str) -> None:
     print(f"  \x1b[48;5;28m\x1b[97m {s} \x1b[0m")
 
 
-def check_result(expected: Any, result: Any) -> None:
+def assert_result(expected: Any, result: Any) -> None:
     output = f"{result} == {expected}"
     if result == expected:
         green(output)
@@ -106,6 +106,30 @@ def read_file_lines(path__: str, filename: str = "") -> list[str]:
 
     with open(path, "r") as f:
         return [line.strip() for line in f.readlines()]
+
+
+class InputReader:
+    y: str
+    d: str
+    _path: str
+
+    def __init__(self, year: int, day: int) -> None:
+        self.y = str(year)
+        self.d = str(day).rjust(2, "0")
+        self._path = os.path.dirname(__file__)
+
+    def _normpath(self, filename: str) -> str:
+        return os.path.normpath(
+            os.path.join(self._path, "..", "..", "input", self.y, self.d, filename)
+        )
+
+    def lines(self, filename: str) -> list[str]:
+        with open(self._normpath(filename), "r") as f:
+            return [line.strip() for line in f.readlines()]
+
+    def raw(self, filename: str) -> str:
+        with open(self._normpath(filename), "r") as f:
+            return f.read()
 
 
 def read_file(__file__: str, filename: str) -> list[str]:

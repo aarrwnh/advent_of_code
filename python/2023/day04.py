@@ -1,7 +1,7 @@
 import collections
 from typing import Generator
 
-from support import check_result, read_file_lines, timing
+from support import assert_result, read_file_lines, timing
 
 
 def parse(lines: list[str]) -> Generator[int, None, None]:
@@ -34,11 +34,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2023/04/sample")
     puzzle = read_file_lines(__file__, "../../input/2023/04/puzzle")
 
-    check_result(13, part1(sample))
-    check_result(17803, part1(puzzle))
+    assert_result(13, part1(sample))
+    assert_result(17803, part1(puzzle))
 
-    check_result(30, part2(sample))
-    check_result(5554894, part2(puzzle))
+    assert_result(30, part2(sample))
+    assert_result(5554894, part2(puzzle))
 
     return 0
 

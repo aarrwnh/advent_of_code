@@ -1,6 +1,6 @@
 import re
 
-from support import check_result, timing
+from support import assert_result, timing
 
 
 @timing()
@@ -45,8 +45,8 @@ def main() -> int:
     sample = "target area: x=20..30, y=-10..-5"  # [5..14] [-4..9]
     puzzle = "target area: x=79..137, y=-176..-117"  # [13..69] [-87..86,116..175]
 
-    check_result([45, 112], compute(sample))
-    check_result([15400, 5844], compute(puzzle))
+    assert_result([45, 112], compute(sample))
+    assert_result([15400, 5844], compute(puzzle))
 
     return 0
 

@@ -1,6 +1,6 @@
 import sys
 
-from support import check_result, read_file_raw, timing
+from support import assert_result, read_file_raw, timing
 
 # class Node:
 #     def __init__(self, name: str) -> None:
@@ -169,19 +169,19 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2023/05/sample")
     puzzle = read_file_raw(__file__, "../../input/2023/05/puzzle")
 
-    check_result(35, part1(sample))
-    check_result(486613012, part1(puzzle))
+    assert_result(35, part1(sample))
+    assert_result(486613012, part1(puzzle))
 
     if len(sys.argv) == 2:
         print("!!!!BRUTE FORCE!!!!", sys.argv[1])  # ~10 mins / 4 cores
-        check_result(46, part2_brutal(sample, sys.argv[1]))
-        check_result(56931769, part2_brutal(puzzle, sys.argv[1]))
+        assert_result(46, part2_brutal(sample, sys.argv[1]))
+        assert_result(56931769, part2_brutal(puzzle, sys.argv[1]))
     else:
-        check_result(46, part2_1(sample))
-        check_result(56931769, part2_1(puzzle))
+        assert_result(46, part2_1(sample))
+        assert_result(56931769, part2_1(puzzle))
 
-        check_result(46, part2_2(sample))
-        check_result(56931769, part2_2(puzzle))
+        assert_result(46, part2_2(sample))
+        assert_result(56931769, part2_2(puzzle))
 
     return 0
 

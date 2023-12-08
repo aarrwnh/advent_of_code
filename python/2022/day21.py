@@ -1,6 +1,6 @@
 import functools
 
-from support import check_result, read_file_lines, timing
+from support import assert_result, read_file_lines, timing
 
 REV = {"/": "*", "*": "/", "-": "+", "+": "-"}
 
@@ -139,11 +139,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2022/21/sample.input")
     puzzle = read_file_lines(__file__, "../../input/2022/21/puzzle.input")
 
-    check_result(152, part1(sample))
-    check_result(155708040358220, part1(puzzle))
+    assert_result(152, part1(sample))
+    assert_result(155708040358220, part1(puzzle))
 
-    check_result(301, part2(sample))
-    check_result(3342154812537, part2(puzzle))
+    assert_result(301, part2(sample))
+    assert_result(3342154812537, part2(puzzle))
 
     return 0
 

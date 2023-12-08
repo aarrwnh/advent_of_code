@@ -1,4 +1,4 @@
-from support import check_result, read_file, timing  # type: ignore
+from support import assert_result, read_file, timing  # type: ignore
 
 
 def priority():
@@ -42,11 +42,11 @@ def main() -> int:
     sample = read_file(__file__, "../../input/2022/03/sample.input")
     puzzle = read_file(__file__, "../../input/2022/03/puzzle.input")
 
-    check_result(157, part1(sample))
-    check_result(7908, part1(puzzle))
+    assert_result(157, part1(sample))
+    assert_result(7908, part1(puzzle))
 
-    check_result(70, part2(sample))
-    check_result(2838, part2(puzzle))
+    assert_result(70, part2(sample))
+    assert_result(2838, part2(puzzle))
 
     return 0
 

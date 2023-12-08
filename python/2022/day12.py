@@ -2,7 +2,7 @@ import curses  # type: ignore
 import heapq
 from typing import Callable, Generator, NewType
 
-from support import check_result  # type: ignore
+from support import assert_result  # type: ignore
 from support import adjacents, read_file_raw, timing
 
 Point = NewType("Point", tuple[int, int])
@@ -143,11 +143,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/12/sample.input")
     puzzle = read_file_raw(__file__, "../../input/2022/12/puzzle.input")
 
-    check_result(31, part1(sample))
-    check_result(339, part1(puzzle))
+    assert_result(31, part1(sample))
+    assert_result(339, part1(puzzle))
 
-    check_result(29, part2(sample))
-    check_result(332, part2(puzzle))
+    assert_result(29, part2(sample))
+    assert_result(332, part2(puzzle))
 
     return 0
 

@@ -1,6 +1,6 @@
 import re
 
-from support import check_result, read_file_lines, timing
+from support import assert_result, read_file_lines, timing
 
 
 @timing("part1")
@@ -54,12 +54,12 @@ def main() -> int:
     sample2 = read_file_lines(__file__, "../../input/2023/01/sample2")
     puzzle = read_file_lines(__file__, "../../input/2023/01/puzzle")
 
-    check_result(142, part1(sample1))
-    check_result(55607, part1(puzzle))
+    assert_result(142, part1(sample1))
+    assert_result(55607, part1(puzzle))
 
-    check_result(281, part2b(sample2))
-    check_result(55291, part2b(puzzle))
-    check_result(55291, part2(puzzle))
+    assert_result(281, part2b(sample2))
+    assert_result(55291, part2b(puzzle))
+    assert_result(55291, part2(puzzle))
 
     return 0
 

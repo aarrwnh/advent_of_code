@@ -2,7 +2,7 @@ import collections
 import math
 from typing import Callable
 
-from support import check_result
+from support import assert_result
 from support import Directions, Point, read_file_raw, timing
 
 DIRS = {
@@ -134,11 +134,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/24/sample")
     puzzle = read_file_raw(__file__, "../../input/2022/24/puzzle")
 
-    check_result(18, part1(sample))
-    check_result(322, part1(puzzle))
+    assert_result(18, part1(sample))
+    assert_result(322, part1(puzzle))
 
-    check_result(54, part2(sample))
-    check_result(974, part2(puzzle))
+    assert_result(54, part2(sample))
+    assert_result(974, part2(puzzle))
 
     return 0
 

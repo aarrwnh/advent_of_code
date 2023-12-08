@@ -1,4 +1,4 @@
-from support import check_result, read_file_raw, timing  # type: ignore
+from support import assert_result, read_file_raw, timing  # type: ignore
 
 
 def read_signal(signal: str, start: int) -> int:
@@ -49,15 +49,15 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/06/sample.input")
     puzzle = read_file_raw(__file__, "../../input/2022/06/puzzle.input")
 
-    check_result(7, part1(sample))
-    check_result(5, part1("bvwbjplbgvbhsrlpgdmjqwftvncz"))
-    check_result(6, part1("nppdvjthqldpwncqszvftbrmjlhg"))
-    check_result(10, part1("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"))
-    check_result(11, part1("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"))
-    check_result(1093, part1(puzzle))
+    assert_result(7, part1(sample))
+    assert_result(5, part1("bvwbjplbgvbhsrlpgdmjqwftvncz"))
+    assert_result(6, part1("nppdvjthqldpwncqszvftbrmjlhg"))
+    assert_result(10, part1("nznrnfrfntjfmvfwmzdfjlvtqnbhcprsg"))
+    assert_result(11, part1("zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw"))
+    assert_result(1093, part1(puzzle))
 
-    check_result(19, part2("mjqjpqmgbljsphdztnvjfqwrcgsmlb"))
-    check_result(3534, part2(puzzle))
+    assert_result(19, part2("mjqjpqmgbljsphdztnvjfqwrcgsmlb"))
+    assert_result(3534, part2(puzzle))
 
     return 0
 

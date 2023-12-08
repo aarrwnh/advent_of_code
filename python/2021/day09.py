@@ -2,7 +2,7 @@ import collections
 import os
 from typing import Union
 
-from support import check_result, timing  # type: ignore
+from support import assert_result, timing  # type: ignore
 
 
 def parse_input(filename: str) -> list[list[int]]:
@@ -127,12 +127,12 @@ def main() -> int:
     sample = parse_input("sample.input")
     puzzle = parse_input("puzzle.input")
 
-    check_result(15, part1(sample))
-    check_result(564, part1(puzzle))
+    assert_result(15, part1(sample))
+    assert_result(564, part1(puzzle))
 
-    check_result(1134, part2("sample.input"))
+    assert_result(1134, part2("sample.input"))
     #  check_result(1038240, part2("puzzle.input"))
-    check_result(1038240, part2_first_attempt(puzzle))
+    assert_result(1038240, part2_first_attempt(puzzle))
 
     return 0
 

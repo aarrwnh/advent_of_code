@@ -1,5 +1,5 @@
 from support import create_number_grid  # type: ignore
-from support import check_result, read_file_int, timing
+from support import assert_result, read_file_int, timing
 
 
 @timing()
@@ -88,11 +88,11 @@ def main() -> int:
     sample = read_file_int(__file__, "../../input/2022/08/sample.input")
     puzzle = read_file_int(__file__, "../../input/2022/08/puzzle.input")
 
-    check_result(21, part1(sample))
-    check_result(1717, part1(puzzle))
+    assert_result(21, part1(sample))
+    assert_result(1717, part1(puzzle))
 
-    check_result(8, part2(sample))
-    check_result(321975, part2(puzzle))
+    assert_result(8, part2(sample))
+    assert_result(321975, part2(puzzle))
 
     return 0
 

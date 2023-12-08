@@ -1,6 +1,6 @@
 from typing import Generator
 
-from support import check_result, mul, read_file_lines, timing
+from support import assert_result, mul, read_file_lines, timing
 
 
 def parse(line: str) -> Generator[tuple[int, str], None, None]:
@@ -38,11 +38,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2023/02/sample")
     puzzle = read_file_lines(__file__, "../../input/2023/02/puzzle")
 
-    check_result(8, part1(sample))
-    check_result(2207, part1(puzzle))
+    assert_result(8, part1(sample))
+    assert_result(2207, part1(puzzle))
 
-    check_result(2286, part2(sample))
-    check_result(62241, part2(puzzle))
+    assert_result(2286, part2(sample))
+    assert_result(62241, part2(puzzle))
 
     return 0
 

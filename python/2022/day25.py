@@ -1,4 +1,4 @@
-from support import check_result, read_file_lines, timing
+from support import assert_result, read_file_lines, timing
 
 
 def to_dec(p: str) -> int:
@@ -33,8 +33,8 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2022/25/sample")
     puzzle = read_file_lines(__file__, "../../input/2022/25/puzzle")
 
-    check_result("2=-1=0", part1(sample))
-    check_result("122-0==-=211==-2-200", part1(puzzle))
+    assert_result("2=-1=0", part1(sample))
+    assert_result("122-0==-=211==-2-200", part1(puzzle))
 
     return 0
 

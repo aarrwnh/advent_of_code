@@ -1,6 +1,6 @@
 import heapq
 
-from support import timing, adjacents, check_result, read_file
+from support import timing, adjacents, assert_result, read_file
 
 
 def print_grid_path(
@@ -100,12 +100,12 @@ def main() -> int:
     puzzle = read_file(__file__, "puzzle.input")
 
     # part1
-    check_result(40, find_path(sample, 1))
-    check_result(811, find_path(puzzle, 1, False))
+    assert_result(40, find_path(sample, 1))
+    assert_result(811, find_path(puzzle, 1, False))
 
     # part2
-    check_result(315, find_path(sample, 5))
-    check_result(3012, find_path(puzzle, 5, False))
+    assert_result(315, find_path(sample, 5))
+    assert_result(3012, find_path(puzzle, 5, False))
 
     return 0
 

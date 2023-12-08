@@ -2,7 +2,7 @@
 import sys
 from typing import Generator
 
-from support import check_result, read_file_raw, timing  # type: ignore
+from support import assert_result, read_file_raw, timing  # type: ignore
 
 
 def parse_input(input: str) -> set[tuple[int, int, int]]:
@@ -99,11 +99,11 @@ def main() -> int:
     sample = read_file_raw(__file__, "../../input/2022/18/sample.txt")
     puzzle = read_file_raw(__file__, "../../input/2022/18/puzzle.txt")
 
-    check_result(64, part1(sample))
-    check_result(3636, part1(puzzle))
+    assert_result(64, part1(sample))
+    assert_result(3636, part1(puzzle))
 
-    check_result(58, part2(sample))
-    check_result(2102, part2(puzzle))
+    assert_result(58, part2(sample))
+    assert_result(2102, part2(puzzle))
 
     return 0
 

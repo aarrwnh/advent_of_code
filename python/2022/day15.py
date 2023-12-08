@@ -2,7 +2,7 @@ import re
 from typing import NamedTuple
 
 from support import Point  # type: ignore
-from support import check_result, make_point_range, read_file_lines, timing
+from support import assert_result, make_point_range, read_file_lines, timing
 
 
 class Sensor(NamedTuple):
@@ -81,11 +81,11 @@ def main() -> int:
     sample = read_file_lines(__file__, "../../input/2022/15/sample.input")
     puzzle = read_file_lines(__file__, "../../input/2022/15/puzzle.input")
 
-    check_result(26, part1(sample, 10))
-    check_result(4861076, part1(puzzle, 2000000))
+    assert_result(26, part1(sample, 10))
+    assert_result(4861076, part1(puzzle, 2000000))
 
-    check_result(56000011, part2(sample, 20))
-    check_result(10649103160102, part2(puzzle, 4000000))
+    assert_result(56000011, part2(sample, 20))
+    assert_result(10649103160102, part2(puzzle, 4000000))
 
     return 0
 
