@@ -1,6 +1,6 @@
 from collections import deque
 
-from support import InputReader, assert_result, timing
+from support import InputReader, asserter, timing
 
 STR1 = "  23456789TJQKA"
 STR2 = " J23456789T QKA"
@@ -51,6 +51,7 @@ def measure_hand_part1(hand: str, mapping: str) -> tuple[int, list[int], int]:
     # return hand_kind, cards, score
 
 
+@asserter
 @timing("part1")
 def part1(lines: list[str]) -> int:
     total = 0
@@ -116,6 +117,7 @@ def measure_hand_part2(hand: str, mapping: str) -> tuple[int, list[int]]:
     return score + rest_score, nums
 
 
+@asserter
 @timing("part2")
 def part2(lines: list[str]) -> int:
     # TODO: ?
@@ -143,16 +145,8 @@ def part2(lines: list[str]) -> int:
         data.append((int(bid_s), *measure_hand_part2(hand, STR2)))
 
     total = 0
-    for j, (bid, _, _) in enumerate(
-        sorted(
-            data,
-            key=lambda x: (
-                x[1],
-                x[2],
-            ),
-        ),
-        1,
-    ):
+    data = sorted(data, key=lambda x: (x[1], x[2]))
+    for j, (bid, _, _) in enumerate(data, 1):
         total += j * bid
 
     return total
@@ -163,11 +157,11 @@ def main() -> int:
     sample = i.lines("sample")
     puzzle = i.lines("puzzle")
 
-    assert_result(6440, part1(sample))
-    assert_result(250058342, part1(puzzle))
+    part1(sample)(6440)
+    part1(puzzle)(250058342)
 
-    assert_result(5905, part2(sample))
-    assert_result(250506580, part2(puzzle))
+    part2(sample)(5905)
+    part2(puzzle)(250506580)
 
     return 0
 

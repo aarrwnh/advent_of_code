@@ -1,0 +1,32 @@
+from support import asserter, timing, InputReader
+
+
+@asserter
+@timing("part1")
+def part1(lines: list[str]) -> int:
+    return 0
+
+
+@asserter
+@timing("part2")
+def part2(lines: list[str]) -> int:
+    return 0
+
+
+def main() -> int:
+    i = InputReader(%year%, %day%)
+
+    sample = i.lines("sample")
+    puzzle = i.lines("puzzle")
+
+    part1(sample)(0)
+    # part1(puzzle)(0)
+
+    # part2(sample)(0)
+    # part2(puzzle)(0)
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

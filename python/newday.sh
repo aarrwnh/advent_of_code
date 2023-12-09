@@ -12,10 +12,10 @@ if [[ -n "$1" && -n "$2" ]]; then
 	else
 		mkdir -p "$1"
 		mkdir -p "../input/$1/${day}"
-		cp "../template__/puzzle" "../input/$1/${day}/"
-		cp "../template__/sample" "../input/$1/${day}/"
-		cp "../template__/day-python" "$1/day${day}.py"
-		sed -i "s/0000\/00/$1\/${day}/" "$1/day${day}.py"
+		touch "../input/$1/${day}/sample"
+		touch "../input/$1/${day}/puzzle"
+		cp "../templates__/python" "$1/day${day}.py"
+		sed -i "s/%year%, %day%/$1, $2/" "$1/day${day}.py"
 	fi
 else
 	echo "no command"

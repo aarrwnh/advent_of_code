@@ -1,7 +1,7 @@
 import re
-
-from support import assert_result, timing, InputReader
 from math import lcm
+
+from support import InputReader, asserter, timing
 
 
 class Map:
@@ -36,36 +36,34 @@ class Map:
             n = self.nodes[cand]
             count += 1
 
-        return count
+        return count + 1
 
 
+@asserter
 @timing("part1")
 def part1(map: Map) -> int:
-    return map.walk("AAA", "ZZZ") + 1
+    return map.walk("AAA", "ZZZ")
 
 
+@asserter
 @timing("part2")
 def part2(map: Map) -> int:
-    total = 1
-    for curr in map.start_nodes:
-        total = lcm(total, map.walk(curr, "Z") + 1)
-
-    return total
+    return lcm(*(map.walk(curr, "Z") for curr in map.start_nodes))
 
 
 def main() -> int:
     i = InputReader(2023, 8)
+
     sample1 = Map(i.lines("sample"))
     sample2 = Map(i.lines("sample2"))
     sample3 = Map(i.lines("sample3"))
     puzzle = Map(i.lines("puzzle"))
 
-    assert_result(2, part1(sample1))
-    assert_result(6, part1(sample2))
-    assert_result(22411, part1(puzzle))
-
-    assert_result(6, part2(sample3))
-    assert_result(11188774513823, part2(puzzle))
+    part1(sample1)(2)
+    part1(sample2)(6)
+    part1(puzzle)(22411)
+    part2(sample3)(6)
+    part2(puzzle)(11188774513823)
 
     return 0
 

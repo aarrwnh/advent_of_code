@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+import argparse
 import contextlib
 import os.path
 import sys
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
 from typing import Any, Callable, Generator, NamedTuple, ValuesView
+
+HERE = os.path.dirname(os.path.abspath(__file__))
 
 
 class Directions:
@@ -71,7 +77,7 @@ def timing(name: str = "") -> Generator[None, None, None]:
             unit = "μs"
         if name:
             name = f" ({name})"
-        print(f"> {t:.2f} {unit}{name}", file=sys.stderr, flush=True)
+        print(f"> {t:.0f} {unit}{name}", file=sys.stderr, flush=True)
 
 
 def red(s: str) -> None:
@@ -90,6 +96,13 @@ def assert_result(expected: Any, result: Any) -> None:
         red(output)
 
 
+def asserter(f: Callable[..., Any]) -> Any:
+    def wrap(*args: Any, **kwargs: Any) -> Any:
+        return lambda b: assert_result(f(*args, **kwargs), b)
+
+    return wrap
+
+
 def read_file_raw(__file__: str, filename: str) -> str:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:
@@ -98,6 +111,7 @@ def read_file_raw(__file__: str, filename: str) -> str:
 
 def read_file_lines(path__: str, filename: str = "") -> list[str]:
     if path__ and filename != "":
+        # TODO: remove block and filename var
         path = os.path.join(os.path.dirname(path__), filename)
     else:
         path = os.path.normpath(
@@ -116,11 +130,10 @@ class InputReader:
     def __init__(self, year: int, day: int) -> None:
         self.y = str(year)
         self.d = str(day).rjust(2, "0")
-        self._path = os.path.dirname(__file__)
 
     def _normpath(self, filename: str) -> str:
         return os.path.normpath(
-            os.path.join(self._path, "..", "..", "input", self.y, self.d, filename)
+            os.path.join(HERE, "..", "..", "input", self.y, self.d, filename)
         )
 
     def lines(self, filename: str) -> list[str]:
@@ -292,6 +305,56 @@ def create_grid(lines: list[list[str]]) -> dict[tuple[int, int], str]:
             grid[(x, y)] = p
 
     return grid
+
+
+def _get_cookie_headers() -> dict[str, str]:
+    with open(os.path.normpath(os.path.join(HERE, "../../.env"))) as f:
+        contents = f.read().strip()
+    return {"Cookie": contents, "User-Agent": "nothing to see here"}
+
+
+def get_input(year: int, day: int) -> str:
+    url = f"https://adventofcode.com/{year}/day/{day}/input"
+    req = urllib.request.Request(url, headers=_get_cookie_headers())
+    return urllib.request.urlopen(req).read().decode()
+
+
+def download_input() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("year", type=str)
+    parser.add_argument("day", type=int)
+    args = parser.parse_args()
+
+    year, day = args.year, args.day
+
+    day = str(day).rjust(2, "0")
+    filename = f"../input/{year}/{day}/puzzle"
+    os.chmod(filename, 0o700)
+
+    with open(filename, "w+", newline="\n", encoding="utf-8") as f:
+        for _ in range(5):
+            try:
+                s = get_input(args.year, args.day)
+                f.write(s.strip())
+            except urllib.error.URLError as _:
+                time.sleep(1)
+            else:
+                break
+        else:
+            raise SystemExit("timed out after attempting many times")
+        f.close()
+
+    os.chmod(filename, 0o400)
+
+    lines = s.splitlines()
+    if len(lines) > 10:
+        for line in lines[:10]:
+            print(line)
+    else:
+        print(lines[0][:80])
+    print("...")
+
+    return 0
 
 
 def mul(a: list[int] | ValuesView[int]) -> int:
