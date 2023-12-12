@@ -106,20 +106,26 @@ def part2_2(input: str) -> int:
             for dest, src, r in map:
                 src_range_end = src + r
                 offset = dest - src
-                # in range
-                if src <= r_start < src_range_end and src <= r_end < src_range_end:
+
+                if src <= r_start <= r_end < src_range_end:
+                    #      rrrrr
+                    #    ccccccccc
                     n.append((r_start + offset, r_end + offset))
                     break
-                # cut left
                 elif src <= r_start < src_range_end:
+                    #      rrrrr
+                    #   ccccc
                     n.append((r_start + offset, dest + r))
                     r_start = src + r
-                elif r_start <= src < r_end and r_start <= src_range_end < r_end:
+                elif r_start <= src <= src_range_end < r_end:
+                    #      rrrrrrrrr
+                    #        ccccc
                     n.append((r_start, src))
                     n.append((dest, dest + r))
                     r_start = src + r
-                # cut right
                 elif r_start <= src < r_end:
+                    #      rrrrr
+                    #        ccccc
                     n.append((r_start, src))
                     n.append((dest, dest + r_end - src))
                     break

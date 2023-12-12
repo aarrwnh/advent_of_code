@@ -8,7 +8,8 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
-from typing import Any, Callable, Generator, NamedTuple, ValuesView
+from collections.abc import Callable, Generator, ValuesView
+from typing import Any, NamedTuple
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -103,6 +104,27 @@ def asserter(f: Callable[..., Any]) -> Any:
     return wrap
 
 
+def maybe_asserter_chain(f: Callable[..., Any]) -> Any:
+    params: list[Any] = []
+
+    def exec(*d: Any) -> list[Any]:
+        # assert len(d) == len(params), "input/output args length don't match"
+        ret = []
+        for i, o in enumerate(d):
+            (arg, k) = params[i]
+            v = f(arg, **k)
+            ret.append(v)
+            assert_result(v, o)
+        return ret
+
+    def wrap(*args: Any, **kwargs: Any) -> Any:
+        for a in args:
+            params.append((a, kwargs))
+        return exec
+
+    return wrap
+
+
 def read_file_raw(__file__: str, filename: str) -> str:
     path = os.path.join(os.path.dirname(__file__), filename)
     with open(path, "r") as f:
@@ -140,9 +162,22 @@ class InputReader:
         with open(self._normpath(filename), "r") as f:
             return [line.strip() for line in f.readlines()]
 
+    def numbers(self, filename: str) -> list[list[int]]:
+        with open(self._normpath(filename), "r") as f:
+            return [[int(x) for x in line.strip()] for line in f.readlines()]
+
     def raw(self, filename: str) -> str:
         with open(self._normpath(filename), "r") as f:
             return f.read()
+
+    def grid(self, filename: str) -> dict[Point, str]:
+        grid: dict[Point, str] = {}
+        with open(self._normpath(filename), "r") as f:
+            for y, row in enumerate(f.readlines()):
+                for x, p in enumerate(row.strip()):
+                    grid[Point(x, y)] = p
+
+        return grid
 
 
 def read_file(__file__: str, filename: str) -> list[str]:
