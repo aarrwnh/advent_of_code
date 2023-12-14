@@ -63,6 +63,10 @@ class Point(NamedTuple):
     def sub(self, n: Point) -> Point:
         return Point(self.x - n.x, self.y - n.y)
 
+    @property
+    def hypot(self):
+        return (self.x**2 + self.y**2) ** 0.5
+
 
 @contextlib.contextmanager
 def timing(name: str = "") -> Generator[None, None, None]:
@@ -77,7 +81,7 @@ def timing(name: str = "") -> Generator[None, None, None]:
             t *= 1000.0
             unit = "μs"
         if name:
-            name = f" ({name})"
+            name = f" \x1b[38;5;240m({name})\x1b[0m"
         print(f"> {t:.0f} {unit}{name}", file=sys.stderr, flush=True)
 
 
@@ -127,7 +131,7 @@ def maybe_asserter_chain(f: Callable[..., Any]) -> Any:
 
 def read_file_raw(__file__: str, filename: str) -> str:
     path = os.path.join(os.path.dirname(__file__), filename)
-    with open(path, "r") as f:
+    with open(path) as f:
         return f.read()
 
 
@@ -140,7 +144,7 @@ def read_file_lines(path__: str, filename: str = "") -> list[str]:
             os.path.join(os.path.dirname(__file__), "..", "..", path__)
         )
 
-    with open(path, "r") as f:
+    with open(path) as f:
         return [line.strip() for line in f.readlines()]
 
 
@@ -159,25 +163,34 @@ class InputReader:
         )
 
     def lines(self, filename: str) -> list[str]:
-        with open(self._normpath(filename), "r") as f:
+        with open(self._normpath(filename)) as f:
             return [line.strip() for line in f.readlines()]
 
     def numbers(self, filename: str) -> list[list[int]]:
-        with open(self._normpath(filename), "r") as f:
+        with open(self._normpath(filename)) as f:
             return [[int(x) for x in line.strip()] for line in f.readlines()]
 
     def raw(self, filename: str) -> str:
-        with open(self._normpath(filename), "r") as f:
+        with open(self._normpath(filename)) as f:
             return f.read()
 
-    def grid(self, filename: str) -> dict[Point, str]:
+    def grid(
+        self, filename: str, *, find_start: None | str = None
+    ) -> tuple[dict[Point, str], int, int, None | Point]:
         grid: dict[Point, str] = {}
-        with open(self._normpath(filename), "r") as f:
-            for y, row in enumerate(f.readlines()):
+        max_x = max_y = 0
+        start_pos = None
+        with open(self._normpath(filename)) as f:
+            lines = f.readlines()
+            max_y = len(lines)
+            max_x = len(lines[0])
+            for y, row in enumerate(lines):
                 for x, p in enumerate(row.strip()):
                     grid[Point(x, y)] = p
+                    if find_start and p == find_start:
+                        start_pos = Point(x, y)
 
-        return grid
+        return grid, max_x, max_y, start_pos
 
 
 def read_file(__file__: str, filename: str) -> list[str]:
@@ -189,19 +202,19 @@ def read_file(__file__: str, filename: str) -> list[str]:
 
 def read_file_split(__file__: str, filename: str) -> list[list[str]]:
     path = os.path.join(os.path.dirname(__file__), filename)
-    with open(path, "r") as f:
+    with open(path) as f:
         return [line.strip().split() for line in f.readlines()]
 
 
 def read_file_int(__file__: str, filename: str) -> list[list[int]]:
     path = os.path.join(os.path.dirname(__file__), filename)
-    with open(path, "r") as f:
+    with open(path) as f:
         return [[int(x) for x in line.strip()] for line in f.readlines()]
 
 
 def read_file_int2(__file__: str, filename: str) -> list[int]:
     path = os.path.join(os.path.dirname(__file__), filename)
-    with open(path, "r") as f:
+    with open(path) as f:
         return [int(line) for line in f.readlines()]
 
 
