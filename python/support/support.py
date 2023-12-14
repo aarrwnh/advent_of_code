@@ -183,14 +183,14 @@ class InputReader:
         with open(self._normpath(filename)) as f:
             lines = f.readlines()
             max_y = len(lines)
-            max_x = len(lines[0])
+            max_x = len(lines[0].strip())
             for y, row in enumerate(lines):
                 for x, p in enumerate(row.strip()):
                     grid[Point(x, y)] = p
                     if find_start and p == find_start:
                         start_pos = Point(x, y)
 
-        return grid, max_x, max_y, start_pos
+        return grid, max_x - 1, max_y - 1, start_pos
 
 
 def read_file(__file__: str, filename: str) -> list[str]:

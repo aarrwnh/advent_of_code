@@ -141,9 +141,9 @@ def part2(m: Map) -> int:
     # TODO: try flood fill???
     # TODO: make | into 1 and everything else to 0?
 
-    for y in range(m.max_y):
+    for y in range(m.max_y + 1):
         pipe = " "
-        for x in range(m.max_x):
+        for x in range(m.max_x + 1):
             p = Point(x, y)
             if p in visited:
                 ch = m.grid.get(p, " ")
