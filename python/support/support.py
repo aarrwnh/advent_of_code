@@ -46,6 +46,9 @@ class Point(NamedTuple):
     def dist_to(self, x: int, y: int) -> int:
         return abs(self.x - x) + abs(self.y - y)
 
+    def apply(self, n: Point) -> Point:
+        return Point(self.x + n.x, self.y + n.y)
+
     @classmethod
     def parse(cls, s: str) -> Point:
         x, y = s.split(",")
