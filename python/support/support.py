@@ -179,10 +179,10 @@ class InputReader:
 
     def grid(
         self, filename: str, *, find_start: None | str = None
-    ) -> tuple[dict[Point, str], int, int, None | Point]:
+    ) -> tuple[dict[Point, str], int, int, Point]:
         grid: dict[Point, str] = {}
         width = height = 0
-        start_pos = None
+        start_pos = Point(0, 0)
         with open(self._normpath(filename)) as f:
             lines = f.readlines()
             height = len(lines)
