@@ -1,5 +1,5 @@
 import enum
-from collections.abc import Generator
+from collections.abc import Iterable
 
 from support import InputReader, Point, asserter, timing
 
@@ -56,7 +56,7 @@ def tilt(grid: dict[Point, str], dir: Dirs, width: int, height: int) -> None:
                     grid[Point(col, row)] = "."
 
 
-def total_load(height: int, grid: Generator[Point, None, None]) -> int:
+def total_load(height: int, grid: Iterable[Point]) -> int:
     total = 0
     for p in grid:
         total += height - p.y
@@ -66,13 +66,14 @@ def total_load(height: int, grid: Generator[Point, None, None]) -> int:
 @asserter
 @timing("part1")
 def part1(grid_data: tuple[dict[Point, str], int, int, int]) -> int:
-    (grid, max_x, max_y, _) = grid_data
+    (grid, width, height, _) = grid_data
+
     grid = grid.copy()
 
-    tilt(grid, Dirs.North, max_x + 1, max_y + 1)
+    tilt(grid, Dirs.North, width, height)
 
     return total_load(
-        max_y + 1,
+        height,
         (p for p in grid if grid[p] == "O"),
     )
 
@@ -80,15 +81,15 @@ def part1(grid_data: tuple[dict[Point, str], int, int, int]) -> int:
 @asserter
 @timing("part2")
 def part2(grid_data: tuple[dict[Point, str], int, int, int]) -> int:
-    (grid, max_x, max_y, _) = grid_data
+    (grid, width, height, _) = grid_data
 
     grid = grid.copy()
     total_cycles = 1000000000
-    fingerprints: dict[frozenset[tuple[int, int]], int] = {}
+    fingerprints: dict[frozenset[Point], int] = {}
 
     for cycle in range(total_cycles):
-        for dir in Dirs:
-            tilt(grid, dir, max_x + 1, max_y + 1)
+        for d in Dirs:
+            tilt(grid, d, width, height)
 
         key = frozenset(p for p in grid if grid[p] == "O")
         if key in fingerprints:
@@ -98,9 +99,9 @@ def part2(grid_data: tuple[dict[Point, str], int, int, int]) -> int:
             phase = remaining % period
             done_at = start_i + phase - 1
 
-            for u, p in enumerate(fingerprints):
-                if u == done_at:
-                    return total_load(max_y + 1, p)  # type: ignore
+            for idx, p in enumerate(fingerprints):
+                if idx == done_at:
+                    return total_load(height, p)
         else:
             fingerprints[key] = cycle
 

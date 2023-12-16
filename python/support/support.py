@@ -178,19 +178,19 @@ class InputReader:
         self, filename: str, *, find_start: None | str = None
     ) -> tuple[dict[Point, str], int, int, None | Point]:
         grid: dict[Point, str] = {}
-        max_x = max_y = 0
+        width = height = 0
         start_pos = None
         with open(self._normpath(filename)) as f:
             lines = f.readlines()
-            max_y = len(lines)
-            max_x = len(lines[0].strip())
+            height = len(lines)
+            width = len(lines[0].strip())
             for y, row in enumerate(lines):
                 for x, p in enumerate(row.strip()):
                     grid[Point(x, y)] = p
                     if find_start and p == find_start:
                         start_pos = Point(x, y)
 
-        return grid, max_x - 1, max_y - 1, start_pos
+        return grid, width, height, start_pos
 
 
 def read_file(__file__: str, filename: str) -> list[str]:
