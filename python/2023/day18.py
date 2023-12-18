@@ -1,50 +1,49 @@
 import sys
-from collections.abc import Callable
 
 from support import InputReader, asserter, timing
 
-DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-TRANSLATE = ["R", "D", "L", "U"]
 
-
-def areas(lines: list[str], f: Callable[[str], tuple[int, ...]]) -> int:
+def area(instructions: list[tuple[int, ...]]) -> int:
+    # Shoelace formula
     total = 0.0
     boundary = 0
     prev = (0, 0)
-
-    # Shoelace formula
-    for line in lines:
-        dist, dx, dy = f(line)
-        assert isinstance(dist, int)
-
+    for dist, dx, dy in instructions:
         n = (prev[0] + dy * dist, prev[1] + dx * dist)
         total += ((prev[1] * n[0]) - (prev[0] * n[1])) / 2
         prev = n
+
         boundary += dist
 
     # Pick's theorem
     return int(total) + (boundary // 2) + 1
 
 
+DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+TRANSLATE = ["R", "D", "L", "U"]
+
+
 @asserter
 @timing("part1")
 def part1(lines: list[str]) -> int:
-    def instruction(line: str) -> tuple[int, ...]:
+    instructions: list[tuple[int, ...]] = []
+    for line in lines:
         instruction, length_s, _ = line.split(" ")
-        return int(length_s), *DIRS[TRANSLATE.index(instruction)]
-
-    return areas(lines, instruction)
+        dist = int(length_s)
+        instructions.append((dist, *DIRS[TRANSLATE.index(instruction)]))
+    return area(instructions)
 
 
 @asserter
 @timing("part2")
 def part2(lines: list[str]) -> int:
-    def instruction(line: str) -> tuple[int, ...]:
+    instructions: list[tuple[int, ...]] = []
+    for line in lines:
         _, _, rgb = line.split(" ")
+        dist = int(rgb[2:7], 16)
         instruction = int(rgb[7:8])
-        return int(rgb[2:7], 16), *DIRS[instruction]
-
-    return areas(lines, instruction)
+        instructions.append((dist, *DIRS[instruction]))
+    return area(instructions)
 
 
 @asserter
