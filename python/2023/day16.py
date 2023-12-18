@@ -1,55 +1,9 @@
-import enum
 import sys
 
 from support import InputReader, Point, asserter, timing
 
 
-class Direction(enum.Enum):
-    UP = Point(0, -1)  # "^"
-    DOWN = Point(0, 1)  # "v"
-    LEFT = Point(-1, 0)  # "<"
-    RIGHT = Point(1, 0)  # ">"
-
-
-MIRRORS_MAP = {
-    ".": [
-        (Direction.RIGHT, Direction.RIGHT),
-        (Direction.DOWN, Direction.DOWN),
-        (Direction.UP, Direction.UP),
-        (Direction.LEFT, Direction.LEFT),
-    ],
-    "\\": [
-        (Direction.RIGHT, Direction.DOWN),
-        (Direction.UP, Direction.LEFT),
-        (Direction.DOWN, Direction.RIGHT),
-        (Direction.LEFT, Direction.UP),
-    ],
-    "/": [
-        (Direction.RIGHT, Direction.UP),
-        (Direction.UP, Direction.RIGHT),
-        (Direction.DOWN, Direction.LEFT),
-        (Direction.LEFT, Direction.DOWN),
-    ],
-    "|": [
-        (Direction.LEFT, Direction.UP),
-        (Direction.LEFT, Direction.DOWN),
-        (Direction.RIGHT, Direction.UP),
-        (Direction.RIGHT, Direction.DOWN),
-        (Direction.DOWN, Direction.DOWN),
-        (Direction.UP, Direction.UP),
-    ],
-    "-": [
-        (Direction.LEFT, Direction.LEFT),
-        (Direction.RIGHT, Direction.RIGHT),
-        (Direction.UP, Direction.LEFT),
-        (Direction.UP, Direction.RIGHT),
-        (Direction.DOWN, Direction.LEFT),
-        (Direction.DOWN, Direction.RIGHT),
-    ],
-}
-
-
-class Map:
+class Grid:
     def __init__(self, grid_data: tuple[dict[Point, str], int, int, Point]):
         grid, width, height, start = grid_data
         self.grid = grid
@@ -57,55 +11,77 @@ class Map:
         self.height = height
         self.start = start
 
-    def beam(self, start_dir: Direction, dx: int, dy: int) -> int:
-        todo: list[tuple[Direction, Point]]
-        todo = [(start_dir, Point(dx, dy))]
+    def beam(self, start: Point, dir: Point) -> int:
+        todo: list[tuple[Point, Point]]
+        todo = [(start, dir)]
 
-        visited: set[tuple[Direction, Point]] = set()
+        visited: set[tuple[int, ...]] = set()
         energized_tiles = set()
 
         while todo:
-            (prev_dir, prev_p) = todo.pop()
-            n = prev_p.apply(prev_dir.value)
-            if not (0 <= n.x < self.width and 0 <= n.y < self.height):
+            (prev_p, prev_dir) = todo.pop()
+            x, y = prev_p.x, prev_p.y
+            dx, dy = prev_dir.x, prev_dir.y
+            if (x, y, dx, dy) in visited:
                 continue
+            visited.add((x, y, dx, dy))
 
-            if (prev_dir, n) in visited:
-                continue
+            while True:
+                if not (0 <= x < self.width and 0 <= y < self.height):
+                    break
 
-            visited.add((prev_dir, n))
-            energized_tiles.add(n)
-
-            ch = self.grid[n]
-            for x in MIRRORS_MAP[ch]:
-                if x[0] == prev_dir:
-                    todo.insert(0, (x[1], n))
+                ch = self.grid[Point(x, y)]
+                energized_tiles.add((x, y))
+                match ch:
+                    case ".":
+                        x += dx
+                        y += dy
+                    case "\\":
+                        todo.insert(0, (Point(x + dy, y + dx), Point(dy, dx)))
+                        break
+                    case "/":
+                        todo.insert(0, (Point(x - dy, y - dx), Point(-dy, -dx)))
+                        break
+                    case "|":
+                        if dx != 0:
+                            # split into two beams
+                            todo.insert(0, (Point(x, y - 1), Point(0, -1)))
+                            todo.insert(0, (Point(x, y + 1), Point(0, 1)))
+                            break
+                        else:
+                            # continue path as .
+                            y += dy
+                    case "-":
+                        if dy != 0:
+                            todo.insert(0, (Point(x - 1, y), Point(-1, 0)))
+                            todo.insert(0, (Point(x + 1, y), Point(1, 0)))
+                            break
+                        else:
+                            x += dx
 
         return len(energized_tiles)
 
 
 @asserter
 @timing("part1")
-def part1(input: Map) -> int:
-    return input.beam(Direction.RIGHT, -1, 0)
+def part1(g: Grid) -> int:
+    return g.beam(Point(0, 0), Point(1, 0))
 
 
 @asserter
 @timing("part2")
-def part2(input: Map) -> int:
+def part2(g: Grid) -> int:
     best = []
-    for start_dir, xd, yd in [
-        (Direction.DOWN, 0, -1),
-        (Direction.LEFT, 0, input.width),
-        (Direction.RIGHT, -1, 0),
-        (Direction.UP, input.height, 0),
+    for x, y, d in [
+        (-2, 0, Point(0, 1)),  # DOWN
+        (0, -2, Point(1, 0)),  # RIGHT
+        (g.width, -2, Point(-1, 0)),  # LEFT
+        (-2, g.height - 1, Point(0, -1)),  # UP
     ]:
         prev_energized = 0
-        for j in range(input.height):
-            prev_energized = max(
-                prev_energized,
-                input.beam(start_dir, j if xd == 0 else xd, j if yd == 0 else yd),
-            )
+        for j in range(g.height):
+            start = Point(j if x == -2 else x, j if y == -2 else y)
+            prev_energized = max(prev_energized, g.beam(start, d))
         best.append(prev_energized)
     return max(best)
 
@@ -113,16 +89,16 @@ def part2(input: Map) -> int:
 def main() -> int:
     i = InputReader(2023, 16).grid
 
-    sample = Map(i("sample"))
-    puzzle = Map(i("puzzle"))
+    sample = Grid(i("sample"))
+    puzzle = Grid(i("puzzle"))
 
     def s1() -> None:
-        part1(sample)(46)
-        part1(puzzle)(6740)
+        assert part1(sample)(46)
+        assert part1(puzzle)(6740)
 
     def s2() -> None:
-        part2(sample)(51)
-        part2(puzzle)(7041)
+        assert part2(sample)(51)
+        assert part2(puzzle)(7041)
 
     match sys.argv:
         case [_, "1"]:
