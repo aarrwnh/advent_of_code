@@ -67,12 +67,12 @@ def main() -> int:
     puzzle = i("puzzle")
 
     def s1() -> None:
-        part1(sample)(1320)
-        part1(puzzle)(503487)
+        assert part1(sample)(1320)
+        assert part1(puzzle)(503487)
 
     def s2() -> None:
-        part2(sample)(145)
-        part2(puzzle)(261505)
+        assert part2(sample)(145)
+        assert part2(puzzle)(261505)
 
     match sys.argv:
         case [_, "1"]:

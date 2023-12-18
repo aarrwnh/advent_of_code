@@ -22,12 +22,12 @@ def main() -> int:
     puzzle = i("puzzle")
 
     def s1() -> None:
-        part1(sample)(0)
-        # part1(puzzle)(0)
+        assert part1(sample)(-1)
+        assert part1(puzzle)(-1)
 
     def s2() -> None:
-        part2(sample)(0)
-        # part2(puzzle)(0)
+        assert part2(sample)(-1)
+        assert part2(puzzle)(-1)
 
     match sys.argv:
         case [_, "1"]:

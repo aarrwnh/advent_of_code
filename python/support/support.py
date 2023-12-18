@@ -96,12 +96,14 @@ def green(s: str) -> None:
     print(f"  \x1b[48;5;28m\x1b[97m {s} \x1b[0m")
 
 
-def assert_result(expected: Any, result: Any) -> None:
+def assert_result(expected: Any, result: Any) -> bool:
     output = f"{result} == {expected}"
     if result == expected:
         green(output)
+        return True
     else:
         red(output)
+        return False
 
 
 def asserter(f: Callable[..., Any]) -> Any:
