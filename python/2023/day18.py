@@ -1,11 +1,55 @@
 import sys
+from collections.abc import Callable
 
 from support import InputReader, asserter, timing
+
+DIRS = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+TRANSLATE = ["R", "D", "L", "U"]
+
+
+def areas(lines: list[str], f: Callable[[str], tuple[int, ...]]) -> int:
+    total = 0.0
+    boundary = 0
+    prev = (0, 0)
+
+    # Shoelace formula
+    for line in lines:
+        dist, dx, dy = f(line)
+        assert isinstance(dist, int)
+
+        n = (prev[0] + dy * dist, prev[1] + dx * dist)
+        total += ((prev[1] * n[0]) - (prev[0] * n[1])) / 2
+        prev = n
+        boundary += dist
+
+    # Pick's theorem
+    return int(total) + (boundary // 2) + 1
 
 
 @asserter
 @timing("part1")
 def part1(lines: list[str]) -> int:
+    def instruction(line: str) -> tuple[int, ...]:
+        instruction, length_s, _ = line.split(" ")
+        return int(length_s), *DIRS[TRANSLATE.index(instruction)]
+
+    return areas(lines, instruction)
+
+
+@asserter
+@timing("part2")
+def part2(lines: list[str]) -> int:
+    def instruction(line: str) -> tuple[int, ...]:
+        _, _, rgb = line.split(" ")
+        instruction = int(rgb[7:8])
+        return int(rgb[2:7], 16), *DIRS[instruction]
+
+    return areas(lines, instruction)
+
+
+@asserter
+@timing("part1")
+def part1_brute(lines: list[str]) -> int:
     coords = {}
     x = 0
     y = 0
@@ -54,32 +98,6 @@ def part1(lines: list[str]) -> int:
         todo.append((p[0], p[1] - 1))
 
     return len(coords.keys())
-
-
-@asserter
-@timing("part2")
-def part2(lines: list[str]) -> int:
-    instructions = []
-    dirs = [(1, 0), (0, 1), (-1, 0), (0, -1)]
-    for line in lines:
-        _, _, rgb = line.split(" ")
-        dist = int(rgb[2:7], 16)
-        instruction = int(rgb[7:8])
-        instructions.append((dist, dirs[instruction]))
-
-    # Shoelace formula
-    total = 0.0
-    boundary = 0
-    prev = (0, 0)
-    for dist, dir in instructions:
-        n = (prev[0] + dir[1] * dist, prev[1] + dir[0] * dist)
-        total += ((prev[1] * n[0]) - (prev[0] * n[1])) / 2
-        prev = n
-
-        boundary += dist
-
-    # Pick's theorem
-    return int(total) + (boundary // 2) + 1
 
 
 def main() -> int:
