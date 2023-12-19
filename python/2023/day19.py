@@ -79,6 +79,22 @@ def part1(input: str) -> int:
     return sum(compute("in", rating) for rating in ratings)
 
 
+# slow: dont'
+class Range:
+    def __init__(self, start: int, stop: int):
+        self.start = start
+        self.stop = stop
+
+    def copy(self) -> "Range":
+        return Range(self.start, self.stop)
+
+    def __repr__(self) -> str:
+        return f"range({self.start}, {self.stop})"
+
+    def len(self) -> int:
+        return 1 + self.stop - self.start
+
+
 @asserter
 @timing("part2")
 def part2(input: str) -> int:
@@ -89,13 +105,18 @@ def part2(input: str) -> int:
         workflow = workflows[w]
         for r in workflow:
             nratings = ratings.copy()
+            # nratings = {k: v.copy() for k, v in ratings.items()}
             if r.condition is not None:
                 (key, sign, val) = r.condition
                 match sign:
                     case "<":
+                        # nratings[key].stop = val - 1
+                        # ratings[key].start = val
                         nratings[key] = range(nratings[key].start, val - 1)
                         ratings[key] = range(val, ratings[key].stop)
                     case ">":
+                        # nratings[key].start = val + 1
+                        # ratings[key].stop = val
                         nratings[key] = range(val + 1, nratings[key].stop)
                         ratings[key] = range(ratings[key].start, val)
 
