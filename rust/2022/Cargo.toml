@@ -5,6 +5,10 @@ edition = "2021"
 
 [dependencies]
 support = { path = "../support" }
+# support-macros = { path = "../support-macros" }
 timed = "0.1.5"
 log = "0.4"
 array_tool = "1.0.3"
+
+[lib]
+doctest = false

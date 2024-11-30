@@ -8,7 +8,7 @@ use std::{
     string::ParseError,
     time::SystemTime,
 };
-use support::check_values;
+use support::{check, InputReader};
 
 const LOWERCASE_ITEM: u32 = 'a' as u32 - 1; // + 1;
 const UPPERCASE_ITEM: u32 = 'A' as u32 - 27; // + 27;
@@ -220,42 +220,49 @@ fn part2_2(input: &[&str]) -> u32 {
     total
 }
 pub fn main() -> Result<(), Box<dyn Error>> {
-    let sample: String = read_to_string("../../input/2022/03/sample.input")?.parse()?;
-    let sample = sample.lines().collect::<Vec<&str>>();
-    let puzzle: String = read_to_string("../../input/2022/03/puzzle.input")?.parse()?;
-    let puzzle = puzzle.lines().collect::<Vec<&str>>();
+    let i = InputReader::new(2022, 3);
+    let e = i.as_raw("example");
+    let p = i.as_raw("puzzle");
+    let e = e.lines().collect::<Vec<&str>>();
+    let p = p.lines().collect::<Vec<&str>>();
 
-    print!("\n  part1_fast\n");
-    check_values!(157, part1_fast, &sample);
-    check_values!(7908, part1_fast, &puzzle);
+    check!("Part1" part1_by_cod3monk [157 &e] [7908 &p]);
+    check!("Part2" part2_by_cod3monk [70 &e] [2838 &p]);
 
-    print!("\n  part1_slow\n");
-    check_values!(157, part1_slow, &sample, true);
-    check_values!(7908, part1_slow, &puzzle, true);
+    check!("Part1_slow" part1_slow [157 &e] [7908 &p]);
+    check!("Part2_slow" part2_2 [70 &e] [2838 &p]);
 
-    print!("\n  part1_p\n");
-    check_values!(157, part1_p, &sample, true);
-    check_values!(7908, part1_p, &puzzle, true);
+    // print!("\n  part1_fast\n");
+    // check_values!(157, part1_fast, &sample);
+    // check_values!(7908, part1_fast, &puzzle);
 
-    print!("\n  part2\n");
-    check_values!(70, part2, &sample);
-    check_values!(2838, part2, &puzzle);
+    // print!("\n  part1_slow\n");
+    // check_values!(157, part1_slow, &sample, true);
+    // check_values!(7908, part1_slow, &puzzle, true);
 
-    print!("\n  part2_theprimeagen\n");
-    check_values!(70, part2_theprimeagen, &sample, true);
-    check_values!(2838, part2_theprimeagen, &puzzle, true);
+    // print!("\n  part1_p\n");
+    // check_values!(157, part1_p, &sample, true);
+    // check_values!(7908, part1_p, &puzzle, true);
 
-    print!("\n  part1_by_cod3monk\n");
-    check_values!(157, part1_by_cod3monk, &sample, true);
-    check_values!(7908, part1_by_cod3monk, &puzzle, true);
+    // print!("\n  part2\n");
+    // check_values!(70, part2, &sample);
+    // check_values!(2838, part2, &puzzle);
 
-    print!("\n  part2_by_cod3monk\n");
-    check_values!(157, part2_by_cod3monk, &sample, true);
-    check_values!(7908, part2_by_cod3monk, &puzzle, true);
+    // print!("\n  part2_theprimeagen\n");
+    // check_values!(70, part2_theprimeagen, &sample, true);
+    // check_values!(2838, part2_theprimeagen, &puzzle, true);
 
-    print!("\n  part2_2\n");
-    check_values!(70, part2_2, &sample, true);
-    check_values!(2838, part2_2, &puzzle, true);
+    // print!("\n  part1_by_cod3monk\n");
+    // check_values!(157, part1_by_cod3monk, &sample, true);
+    // check_values!(7908, part1_by_cod3monk, &puzzle, true);
+
+    // print!("\n  part2_by_cod3monk\n");
+    // check_values!(157, part2_by_cod3monk, &sample, true);
+    // check_values!(7908, part2_by_cod3monk, &puzzle, true);
+
+    // print!("\n  part2_2\n");
+    // check_values!(70, part2_2, &sample, true);
+    // check_values!(2838, part2_2, &puzzle, true);
 
     Ok(())
 }

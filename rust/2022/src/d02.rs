@@ -1,16 +1,66 @@
 use self::HandShape::*;
+use self::Letter::*;
 use self::RoundResult::*;
 use std::error::Error;
-use std::{fs::read_to_string, time::SystemTime};
-use support::check_values;
+use std::fs::read_to_string;
+use std::str::FromStr;
+use support::*;
 
-fn parse_lines<'a>(input: &'a str) -> Vec<Vec<&'a str>> {
-    return input
-        .trim_end()
-        .split('\n')
-        .map(|x| x.split(' ').collect::<Vec<&'a str>>())
-        .collect::<Vec<Vec<&'a str>>>();
+#[derive(Debug, Copy, Clone, PartialEq, PartialOrd, Eq, Ord)]
+enum Letter {
+    A,
+    B,
+    C,
+    X,
+    Y,
+    Z,
 }
+
+impl TryFrom<&str> for Letter {
+    type Error = String;
+
+    fn try_from(ch: &str) -> Result<Self, Self::Error> {
+        Ok(match ch {
+            "A" => A,
+            "B" => B,
+            "C" => C,
+            "X" => X,
+            "Y" => Y,
+            "Z" => Z,
+            _ => unreachable!(),
+        })
+    }
+}
+
+#[derive(Debug)]
+struct Input(Vec<(Letter, Letter)>);
+
+impl FromStr for Input {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(Self(
+            s.trim_end()
+                .split('\n')
+                .map(|x| {
+                    let a = x
+                        .split(' ')
+                        .map(|c| Letter::try_from(c).ok().unwrap())
+                        .collect::<Vec<_>>();
+                    (a[0], a[1])
+                })
+                .collect::<_>(),
+        ))
+    }
+}
+
+// fn parse_lines<'a>(input: &'a str) -> Vec<Vec<&'a str>> {
+//     input
+//         .trim_end()
+//         .split('\n')
+//         .map(|x| x.split(' ').collect::<Vec<&'a str>>())
+//         .collect::<Vec<Vec<&'a str>>>()
+// }
 
 #[derive(Debug, PartialEq)]
 enum RoundResult {
@@ -93,49 +143,47 @@ fn one_intentional_round(expected_result: RoundResult, elf_hand: HandShape) -> i
     }
 }
 
-fn new_hand(letter: &str) -> HandShape {
+fn new_hand(letter: Letter) -> HandShape {
     match letter {
-        "X" | "A" => Rock,
-        "Y" | "B" => Paper,
-        "Z" | "C" => Scissors,
-        _ => unreachable!(),
+        X | A => Rock,
+        Y | B => Paper,
+        Z | C => Scissors,
     }
 }
 
-fn part1(input: &str) -> u32 {
-    return parse_lines(input).iter().fold(0, |acc, x| {
-        let elf_hand = new_hand(x[0]);
-        let my_hand = new_hand(x[1]);
+fn part1(input: &Input) -> u32 {
+    input.0.iter().fold(0, |acc, x| {
+        let elf_hand = new_hand(x.0);
+        let my_hand = new_hand(x.1);
         let mut result = one_normal_round(my_hand, elf_hand);
         result += my_hand.value();
         acc + (result as u32)
-    });
+    })
 }
 
-fn part2(input: &str) -> u32 {
-    return parse_lines(input).iter().fold(0, |acc, x| {
-        let elf_hand = new_hand(x[0]);
-        let planned_result = match x[1] {
-            "X" => Lose,
-            "Y" => Draw,
-            "Z" => Win,
+fn part2(input: &Input) -> u32 {
+    input.0.iter().fold(0, |acc, x| {
+        let elf_hand = new_hand(x.0);
+        let planned_result = match x.1 {
+            X => Lose,
+            Y => Draw,
+            Z => Win,
             _ => unreachable!(),
         };
         let result = one_intentional_round(planned_result, elf_hand);
         acc + (result as u32)
-    });
+    })
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
     // [["A", "Y"], ["B", "X"], ["C", "Z"]];
-    let sample = "A Y\nB X\nC Z";
-    let puzzle = read_to_string("../../input/2022/02/puzzle.input").unwrap();
+    let example = "A Y\nB X\nC Z";
+    let i = InputReader::new(2022, 2);
+    let p = Input::from_str(&i.as_raw("puzzle")).unwrap();
+    let e = Input::from_str(example).unwrap();
 
-    check_values!(15, part1, &sample);
-    check_values!(11841, part1, &puzzle);
-
-    check_values!(12, part2, &sample);
-    check_values!(13022, part2, &puzzle);
+    check!("Part1" part1 [15 &e] [11841 &p]);
+    check!("Part2" part2 [12 &e] [13022 &p]);
 
     Ok(())
 }

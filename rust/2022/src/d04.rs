@@ -1,5 +1,4 @@
 use std::{error::Error, fs::read_to_string, time::SystemTime};
-use support::check_values;
 
 fn split_pairs(pair: &str) -> (u16, u16, u16, u16) {
     // let aa: Vec<u16> = pair
@@ -28,7 +27,7 @@ fn part1(pairs: &[&str]) -> u32 {
             total += 1;
         };
     }
-    return total;
+    total
 }
 
 fn part2(pairs: &[&str]) -> u32 {
@@ -43,7 +42,7 @@ fn part2(pairs: &[&str]) -> u32 {
             }
         }
     }
-    return total;
+    total
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
@@ -52,11 +51,11 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     let puzzle: String = read_to_string("../input/2022/04/puzzle.input")?.parse()?;
     let puzzle = puzzle.lines().collect::<Vec<&str>>();
 
-    check_values!(2, part1, &sample);
-    check_values!(569, part1, &puzzle);
+    // check_values!(2, part1, &sample);
+    // check_values!(569, part1, &puzzle);
 
-    check_values!(4, part2, &sample);
-    check_values!(936, part2, &puzzle);
+    // check_values!(4, part2, &sample);
+    // check_values!(936, part2, &puzzle);
 
     Ok(())
 }

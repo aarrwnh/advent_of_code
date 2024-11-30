@@ -1,6 +1,8 @@
 [workspace]
 members = [
-	"2022"
+	"2022",
+	"support",
+	# "support-macros",
 ]
 
 resolver = "1"

@@ -1,5 +1,4 @@
 use std::{error::Error, fs::read_to_string, time::SystemTime};
-use support::check_values;
 
 // fn parse_stack(raw_stack: &str) -> (HashMap<u8, Vec<String>>, std::str::Split<&str>) {
 //     let (cargo, instructions) = raw_stack.split_once("\n\n").expect("should be two parts");
@@ -174,11 +173,11 @@ pub fn main() -> Result<(), Box<dyn Error>> {
     let sample: String = read_to_string("../input/2022/05/sample.input")?.parse()?;
     let puzzle: String = read_to_string("../input/2022/05/puzzle.input")?.parse()?;
 
-    check_values!("CMZ", part1, &sample);
-    check_values!("HNSNMTLHQ", part1, &puzzle);
+    // check_values!("CMZ", part1, &sample);
+    // check_values!("HNSNMTLHQ", part1, &puzzle);
 
-    check_values!("MCD", part2, &sample);
-    check_values!("RNLFDJMCT", part2, &puzzle);
+    // check_values!("MCD", part2, &sample);
+    // check_values!("RNLFDJMCT", part2, &puzzle);
 
     Ok(())
 }

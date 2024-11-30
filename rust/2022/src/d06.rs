@@ -1,21 +1,22 @@
 use std::{error::Error, fs::read_to_string, time::SystemTime};
-use support::check_values;
 
-fn read_signal(input: &str, start: usize) -> u32 {
-    let mut q: Vec<u8> = Vec::with_capacity(start);
-    for (i, &c) in input.as_bytes().iter().enumerate() {
-        q.push(c);
-        if q.len() > start {
-            q.remove(0);
-            if q.iter()
-                .all(|&c| q.iter().filter(|&&d| c == d).count() == 1)
-            {
-                return (i as u32) + 1;
-            }
-        }
-    }
-    unreachable!("1")
-}
+use support::{InputReader, check};
+
+// fn read_signal(input: &str, start: usize) -> u32 {
+//     let mut q: Vec<u8> = Vec::with_capacity(start);
+//     for (i, &c) in input.as_bytes().iter().enumerate() {
+//         q.push(c);
+//         if q.len() > start {
+//             q.remove(0);
+//             if q.iter()
+//                 .all(|&c| q.iter().filter(|&&d| c == d).count() == 1)
+//             {
+//                 return (i as u32) + 1;
+//             }
+//         }
+//     }
+//     unreachable!("1")
+// }
 
 // fn read_signal_slow_hashset(input: &str, start: usize) -> u32 {
 //     let result = input
@@ -36,23 +37,21 @@ fn read_signal(input: &str, start: usize) -> u32 {
 // }
 
 // by ThePrimeagen
-fn read_signal_bitwise(input: &str, size: usize) -> u32 {
-    let o = input.as_bytes().windows(size).position(move |set| {
-        let mut data: u32 = 0;
-        for &c in set {
-            let prev = data;
-            data |= 1 << (c - b'a');
-            if prev == data {
-                return false;
-            }
-        }
-        return true;
-    });
-    (o.unwrap() + size) as u32
-}
+// fn read_signal_bitwise(input: &str, size: usize) -> u32 {
+//     (input.as_bytes().windows(size).position(move |set| {
+//         let mut data: u32 = 0;
+//         for &c in set {
+//             let prev = data;
+//             data |= 1 << (c - b'a');
+//             if prev == data {
+//                 return false;
+//             }
+//         }
+//         true
+//     }).unwrap() + size) as u32
+// }
 
-/// by @_B_3_N_N_Y_
-fn read_signal_bitwise2(input: &str, size: usize) -> u32 {
+fn read_signal_bitwise(input: &str, size: usize) -> u32 {
     let i = input.as_bytes();
 
     let mut filter = 0u32;
@@ -77,22 +76,20 @@ fn read_signal_bitwise2(input: &str, size: usize) -> u32 {
 }
 
 fn part1(input: &str) -> u32 {
-    read_signal(input, 4)
+    read_signal_bitwise(input, 4)
 }
 
 fn part2(input: &str) -> u32 {
-    read_signal(input, 14)
+    read_signal_bitwise(input, 14)
 }
 
 pub fn main() -> Result<(), Box<dyn Error>> {
-    let sample: String = read_to_string("../input/2022/06/sample.input")?.parse()?;
-    let puzzle: String = read_to_string("../input/2022/06/puzzle.input")?.parse()?;
+    let i = InputReader::new(2022, 6);
+    let e = &i.as_raw("example");
+    let p = &i.as_raw("puzzle");
 
-    check_values!(7, part1, &sample);
-    check_values!(1093, part1, &puzzle);
-
-    check_values!(19, part2, "mjqjpqmgbljsphdztnvjfqwrcgsmlb");
-    check_values!(3534, part2, &puzzle);
+    check!("Part1" part1 [7 &e] [1093 &p]);
+    check!("Part2" part2 [19 &"mjqjpqmgbljsphdztnvjfqwrcgsmlb"] [3534 &p]);
 
     Ok(())
 }
