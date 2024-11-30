@@ -1,6 +1,6 @@
 import collections
 
-from support import assert_result, read_file_int2, timing  # type: ignore
+from support import assert_result, read_file_int2, timing
 
 
 @timing()
@@ -24,7 +24,7 @@ TRIBONACCI = {
 
 
 @timing()
-def part2(lines: list[int]):
+def part2(lines: list[int]) -> int:
     count = 1
     continuous = 0
 

@@ -1,4 +1,4 @@
-from support import assert_result, read_file_split, timing  # type: ignore
+from support import assert_result, read_file_split, timing
 
 
 def accumulate(arr: list[list[str]], check_visited: bool = True) -> int:

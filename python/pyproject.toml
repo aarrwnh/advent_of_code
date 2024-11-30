@@ -1,0 +1,15 @@
+[project]
+name = "aoc"
+version = "1"
+requires-python = ">=3.8"
+
+[tool.pyright]
+verboseOutput = true
+reportUnnecessaryTypeIgnoreComment = true
+reportUnnecessaryIsInstance = false
+reportMissingImports = false
+reportMissingModuleSource = false
+
+[[tool.pyright.executionEnvironments]]
+extraPaths = [ "support" ]
+root = "."

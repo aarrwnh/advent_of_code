@@ -13,6 +13,9 @@ class Module:
         self.state = 0
         self.conjunctions: dict[str, int] = {}
 
+    def flip(self) -> None:
+        self.state = 0 if self.state == 1 else 1
+
     def __repr__(self) -> str:
         return f"{self.dst}::{self.conjunctions}"
 
@@ -73,7 +76,7 @@ def send_pulse(
                     todo.append((dest, c, 0))
             case "%":
                 if pulse == 0:
-                    cmodule.state = not cmodule.state
+                    cmodule.flip()
                     for c in cmodule.dst:
                         todo.append((dest, c, cmodule.state))
             case "&":

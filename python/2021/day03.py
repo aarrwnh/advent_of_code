@@ -1,7 +1,7 @@
-from support import assert_result, read_file, timing  # type: ignore
+from support import assert_result, read_file, timing
 
 
-def get_most_bit_recurrences(arr: list[str]):
+def get_most_bit_recurrences(arr: list[str]) -> list[int]:
     half = len(arr) / 2 / 2
     line_len = len(arr[0])
     occ: list[int] = [0] * line_len

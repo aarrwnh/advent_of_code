@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=60.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "support"
+version = "1"
+requires-python = ">=3.8"
+
+[project.scripts]
+download-input = "support:download_input"
+
+[tool.pyright]
+reportUnnecessaryTypeIgnoreComment = true
+reportUnnecessaryIsInstance = false

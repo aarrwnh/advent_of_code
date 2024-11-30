@@ -70,15 +70,13 @@ class SeatCounter:
 @asserter
 @timing("part1")
 def part1(lines: list[str]) -> int:
-    c = SeatCounter(lines, min_visible=4).simulate()
-    return c.count()
+    return SeatCounter(lines, min_visible=4).simulate().count()
 
 
 @asserter
 @timing("part2")
 def part2(lines: list[str]) -> int:
-    c = SeatCounter(lines, adjacent_seats=False, min_visible=5).simulate()
-    return c.count()
+    return SeatCounter(lines, adjacent_seats=False, min_visible=5).simulate().count()
 
 
 def main() -> int:
