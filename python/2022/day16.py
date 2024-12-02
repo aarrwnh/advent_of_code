@@ -1,7 +1,6 @@
 import collections
 import itertools
 import re
-from pprint import pprint
 from typing import NamedTuple
 
 from support import assert_result, read_file_lines, timing  # type: ignore

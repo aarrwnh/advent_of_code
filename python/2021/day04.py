@@ -1,6 +1,5 @@
-from typing import List, NewType, TypeVar, Union
+from typing import List, NewType, Union
 import os
-from pprint import pprint
 
 Board = NewType("Board", List[List[str]])
 BoardGrid = NewType("BoardGrid", List[List[int]])

@@ -1,6 +1,6 @@
 import sys
 
-from support import asserter, timing, InputReader
+from support import InputReader, asserter, timing
 
 
 @asserter
@@ -18,15 +18,15 @@ def part2(lines: list[str]) -> int:
 def main() -> int:
     i = InputReader(%year%, %day%).lines
 
-    sample = i("sample")
+    example = i("example")
     puzzle = i("puzzle")
 
     def s1() -> None:
-        assert part1(sample)(-1)
+        assert part1(example)(-1)
         assert part1(puzzle)(-1)
 
     def s2() -> None:
-        assert part2(sample)(-1)
+        assert part2(example)(-1)
         assert part2(puzzle)(-1)
 
     match sys.argv:

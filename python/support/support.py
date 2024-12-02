@@ -67,7 +67,7 @@ class Point(NamedTuple):
         return Point(self.x - n.x, self.y - n.y)
 
     @property
-    def hypot(self):
+    def hypot(self) -> float:
         return (self.x**2 + self.y**2) ** 0.5
 
 
@@ -301,7 +301,7 @@ def fill_points(
     if len(x_points) != len(y_points):
         raise AssertionError("x and y are not equal")
 
-    return list(zip(x_points, y_points))
+    return list(zip(x_points, y_points, strict=True))
 
 
 def parse_coords_hash(input: str, *, char: str = "#") -> set[Point]:

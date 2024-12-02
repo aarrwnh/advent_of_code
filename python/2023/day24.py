@@ -1,8 +1,7 @@
 import sys
 from typing import NamedTuple
 
-from support import asserter, timing, InputReader
-
+from support import InputReader, asserter, timing
 
 P = tuple[float, float]
 

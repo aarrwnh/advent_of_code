@@ -1,23 +1,20 @@
-import collections
 import sys
+from collections import Counter, defaultdict, deque
 
 from support import InputReader, asserter, timing
 
 
 class Wires:
-    edges: collections.Counter[tuple[str, str]]
-    nodes: collections.defaultdict[str, set[str]]
-
     def __init__(self, lines: list[str]) -> None:
-        self.edges = collections.Counter()
-        self.nodes = collections.defaultdict(set)
+        self.edges: Counter[tuple[str, str]] = Counter()
+        self.nodes: defaultdict[str, list[str]] = defaultdict(list)
 
         for line in lines:
             left, right_s = line.split(": ")
             right = right_s.split(" ")
             for c in right:
-                self.nodes[left].add(c)
-                self.nodes[c].add(left)
+                self.nodes[left].append(c)
+                self.nodes[c].append(left)
 
     def find_one(self) -> tuple[str, str]:
         for src in self.nodes:  # count nodes
@@ -39,7 +36,7 @@ class Wires:
 
     def _walk_nodes(self, start: str, *, count: bool = True) -> int:
         visited = set()
-        queue = collections.deque([start])
+        queue = deque([start])
 
         while queue:
             src = queue.popleft()
@@ -67,13 +64,13 @@ class Wires:
         for val in self.nodes[src]:
             if val != dest:
                 new_edge.add(val)
-        self.nodes[src] = new_edge
+        self.nodes[src] = list(new_edge)
 
         new_edge = set()
         for val in self.nodes[dest]:
             if val != src:
                 new_edge.add(val)
-        self.nodes[dest] = new_edge
+        self.nodes[dest] = list(new_edge)
 
 
 # def _connected_components(nodes: dict[str, set[str]]) -> list[int]:

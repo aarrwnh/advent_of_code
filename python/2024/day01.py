@@ -1,59 +1,46 @@
+import collections
 import sys
 
 from support import InputReader, asserter, timing
 
+T = list[int]
 
-def parse_input(lines: list[str]) -> tuple[list[int], ...]:
-    a: list[int] = []
-    b: list[int] = []
+
+def parse_input(lines: list[str]) -> tuple[T, ...]:
+    a, b = [], []
     for line in lines:
-        left, *right = line.split(" ")
-        a.append(int(left.strip()))
-        b.append(int(right[-1].strip()))
+        left, right = line.split("   ")
+        a.append(int(left))
+        b.append(int(right))
     return a, b
 
 
 @asserter
 @timing("part1")
-def part1(lines: list[str]) -> int:
-    left, right = parse_input(lines)
-    right = sorted(right)
-    dist = 0
-    for i, val in enumerate(sorted(left)):
-        dist += abs(val - right[i])
-    return dist
+def part1(left: T, right: T) -> int:
+    return sum(abs(a - b) for a, b in zip(sorted(left), sorted(right), strict=True))
 
 
 @asserter
 @timing("part2")
-def part2(lines: list[str]) -> int:
-    score = 0
-    count: dict[int, int] = {}
-    left, right = parse_input(lines)
-    for val in right:
-        if val in count:
-            count[val] += 1
-        else:
-            count[val] = 1
-    for val in left:
-        if val in count:
-            score += val * count[val]
-    return score
+def part2(left: T, right: T) -> int:
+    count = collections.Counter(right)
+    return sum(v * count[v] for v in left if v in count)
 
 
 def main() -> int:
     i = InputReader(2024, 1).lines
 
-    sample = i("sample")
-    puzzle = i("puzzle")
+    example = parse_input(i("example"))
+    puzzle = parse_input(i("puzzle"))
 
     def s1() -> None:
-        assert part1(sample)(11)
-        assert part1(puzzle)(1579939)
+        assert part1(*example)(11)
+        assert part1(*puzzle)(1579939)
 
     def s2() -> None:
-        assert part2(sample)(31)
-        assert part2(puzzle)(20351745)
+        assert part2(*example)(31)
+        assert part2(*puzzle)(20351745)
 
     match sys.argv:
         case [_, "1"]:

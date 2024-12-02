@@ -1,7 +1,5 @@
 from typing import List
 import os
-from pprint import pprint
-import math
 from support import timing
 
 
