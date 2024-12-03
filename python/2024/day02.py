@@ -8,10 +8,10 @@ def is_safe(report: list[int]) -> bool:
     a = [report[i] - report[i + 1] for i in range(len(report) - 1)]
     return (
         # increasing
-        a[0] < 0 and all(map(lambda x: 0 > x >= -3, a))
+        a[0] < 0 and all(map(lambda x: -1 >= x >= -3, a))
     ) or (
         # decreasing
-        a[0] > 0 and all(map(lambda x: 0 < x <= 3, a))
+        a[0] > 0 and all(map(lambda x: 1 <= x <= 3, a))
     )
 
 
@@ -32,7 +32,7 @@ def part2(lines: list[str]) -> int:
     safe = 0
     for report in parse(lines):
         for i in range(len(report)):
-            if is_safe([b for j, b in enumerate(report) if j != i]):
+            if is_safe(report[:i] + report[i + 1:]):
                 safe += 1
                 break
     return safe

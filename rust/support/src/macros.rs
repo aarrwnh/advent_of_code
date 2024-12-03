@@ -48,7 +48,7 @@ macro_rules! check {
             }
             let time = now.elapsed().as_micros();
             let seconds = (time / 1000000).to_string();
-            println!(" {:5}.{} {text}   {mi}",
+            println!(" {:5}.{} {text}   {mi}ms",
                 if seconds == "0" { " " } else { &seconds },
                 $crate::truncate_and_mark_micro(time % 1000000000, 6),
                 mi = now.elapsed().as_millis(),

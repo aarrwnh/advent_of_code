@@ -7,7 +7,7 @@ pub struct InputReader(String);
 
 impl InputReader {
     pub fn new(year: usize, day: usize) -> Self {
-        Self(format!("../input/{year}/{day:0>2}/"))
+        Self(format!("../../input/{year}/{day:0>2}/"))
     }
 
     fn _get_file(&self, filename: &str) -> String {

@@ -1,6 +1,7 @@
 [workspace]
 members = [
 	"2022",
+	"2024",
 	"support",
 	# "support-macros",
 ]

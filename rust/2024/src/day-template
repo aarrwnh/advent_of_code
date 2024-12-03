@@ -1,0 +1,22 @@
+use support::{check, InputReader};
+
+fn parse(input: &str) {}
+
+fn part1(input: &str) -> u64 {
+    0
+}
+
+fn part2(input: &str) -> u64 {
+    0
+}
+
+pub fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let i = InputReader::new(2024, 2);
+    let e = &i.as_raw("example");
+    let p = &i.as_raw("puzzle");
+
+    // check!("Part1" part1 [1 &e] [1 &p]);
+    // check!("Part2" part2 [1 &e] [1 &p]);
+
+    Ok(())
+}
