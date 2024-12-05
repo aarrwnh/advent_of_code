@@ -1,10 +1,10 @@
-use std::{cmp::Ordering::Equal, collections::HashMap};
+use std::{cmp::Ordering::Equal, collections::HashMap, str::FromStr};
 
 use support::{check, InputReader};
 
 type Coord = isize;
 type P = (Coord, Coord);
-type Grid = HashMap<P, char>;
+type Grid = HashMap<P, Letter>;
 
 const DIRS_4: [P; 4] = [
     (0, 1),  // up
@@ -20,9 +20,33 @@ const DIRS_DIAG: [P; 4] = [
     (1, -1),  // bottom-right
 ];
 
-fn traverse(x: Coord, y: Coord, r: isize, dirs: &[P], mut f: impl FnMut(bool, Coord, Coord)) {
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+enum Letter {
+    X,
+    M,
+    A,
+    S,
+}
+
+use Letter::*;
+
+impl TryFrom<char> for Letter {
+    type Error = ();
+
+    fn try_from(value: char) -> Result<Self, Self::Error> {
+        Ok(match value {
+            'X' => X,
+            'M' => M,
+            'A' => A,
+            'S' => S,
+            _ => panic!("unknown letter"),
+        })
+    }
+}
+
+fn traverse(x: Coord, y: Coord, r: isize, dirs: &[P], mut f: impl FnMut(bool, P)) {
     dirs.iter().for_each(|(dx, dy)| {
-        (1..=r).for_each(|i| f(i % r == 0, x + dx * i, y + dy * i));
+        (1..=r).for_each(|i| f(i % r == 0, (x + dx * i, y + dy * i)));
     });
 }
 
@@ -31,7 +55,7 @@ fn parse(input: &str) -> Grid {
     let lines = input.lines().collect::<Vec<_>>();
     lines.iter().enumerate().for_each(|(y, row)| {
         row.chars().enumerate().for_each(|(x, p)| {
-            grid.insert((x as Coord, y as Coord), p);
+            grid.insert((x as Coord, y as Coord), Letter::try_from(p).unwrap());
         });
     });
     grid
@@ -41,15 +65,15 @@ fn part1(grid: &Grid) -> u64 {
     let dirs: [P; 8] = [&DIRS_DIAG[..], &DIRS_4].concat().try_into().unwrap();
     let (max_x, max_y) = grid.keys().max().unwrap();
     let mut total = 0;
-    let templ = vec!['M', 'A', 'S'];
+    let templ = vec![M, A, S];
     let word_size = 4; // XMAS
     let mut word = Vec::with_capacity(word_size as usize - 1);
     grid.keys().for_each(|n| {
         let ch = grid.get(n).unwrap();
-        if *ch != 'X' {
+        if *ch != X {
             return;
         }
-        traverse(n.0, n.1, word_size, &dirs, |reset, dx, dy| {
+        traverse(n.0, n.1, word_size, &dirs, |reset, (dx, dy)| {
             if reset {
                 if word.cmp(&templ) == Equal {
                     total += 1;
@@ -59,7 +83,7 @@ fn part1(grid: &Grid) -> u64 {
             if !(dx >= 0 && dx <= *max_x && dy >= 0 && dy <= *max_y) {
                 return;
             }
-            word.push(*grid.get(&(dx, dy)).unwrap());
+            word.push(grid.get(&(dx, dy)).unwrap().clone());
         });
     });
     total
@@ -68,22 +92,22 @@ fn part1(grid: &Grid) -> u64 {
 fn part2(grid: &Grid) -> u64 {
     let (max_x, max_y) = grid.keys().max().unwrap();
     let mut total = 0;
-    let templ = ['A', 'S'];
+    let templ = [A, S];
     let word_size = 3; // MAS
     let mut counter = HashMap::new();
     let mut found = Vec::with_capacity(word_size as usize - 1);
     grid.keys().for_each(|n| {
         let ch = grid.get(n).unwrap();
-        if *ch != 'M' {
+        if *ch != M {
             return;
         }
-        traverse(n.0, n.1, word_size, &DIRS_DIAG, |reset, dx, dy| {
+        traverse(n.0, n.1, word_size, &DIRS_DIAG, |reset, (dx, dy)| {
             if reset {
                 let w = found.iter().map(|p| grid.get(p).unwrap());
                 if w.cmp(&templ) == Equal {
                     let p = found[0];
                     let c = counter.entry(p).or_insert(1);
-                    if *c == 2 && grid[&p] == 'A' {
+                    if *c == 2 && grid[&p] == A {
                         total += 1;
                     }
                     *c += 1;
