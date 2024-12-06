@@ -1,4 +1,4 @@
-use std::{cmp::Ordering::Equal, collections::HashMap, str::FromStr};
+use std::collections::HashMap;
 
 use support::{check, InputReader};
 
@@ -45,9 +45,11 @@ impl TryFrom<char> for Letter {
 }
 
 fn traverse(x: Coord, y: Coord, r: isize, dirs: &[P], mut f: impl FnMut(bool, P)) {
-    dirs.iter().for_each(|(dx, dy)| {
-        (1..=r).for_each(|i| f(i % r == 0, (x + dx * i, y + dy * i)));
-    });
+    for (dx, dy) in dirs {
+        for i in 1..=r {
+            f(i % r == 0, (x + dx * i, y + dy * i));
+        }
+    }
 }
 
 fn parse(input: &str) -> Grid {
@@ -59,6 +61,10 @@ fn parse(input: &str) -> Grid {
         });
     });
     grid
+}
+
+fn in_bounds(x: Coord, y: Coord, max_x: isize, max_y: isize) -> bool {
+    x >= 0 && x <= max_x && y >= 0 && y <= max_y
 }
 
 fn part1(grid: &Grid) -> u64 {
@@ -75,12 +81,12 @@ fn part1(grid: &Grid) -> u64 {
         }
         traverse(n.0, n.1, word_size, &dirs, |reset, (dx, dy)| {
             if reset {
-                if word.cmp(&templ) == Equal {
+                if word.eq(&templ) {
                     total += 1;
                 }
                 return word.clear();
             }
-            if !(dx >= 0 && dx <= *max_x && dy >= 0 && dy <= *max_y) {
+            if !in_bounds(dx, dy, *max_x, *max_y) {
                 return;
             }
             word.push(grid.get(&(dx, dy)).unwrap().clone());
@@ -104,7 +110,7 @@ fn part2(grid: &Grid) -> u64 {
         traverse(n.0, n.1, word_size, &DIRS_DIAG, |reset, (dx, dy)| {
             if reset {
                 let w = found.iter().map(|p| grid.get(p).unwrap());
-                if w.cmp(&templ) == Equal {
+                if w.eq(&templ) {
                     let p = found[0];
                     let c = counter.entry(p).or_insert(1);
                     if *c == 2 && grid[&p] == A {
@@ -114,7 +120,7 @@ fn part2(grid: &Grid) -> u64 {
                 }
                 return found.clear();
             }
-            if !(dx >= 0 && dx <= *max_x && dy >= 0 && dy <= *max_y) {
+            if !in_bounds(dx, dy, *max_x, *max_y) {
                 return;
             }
             found.push((dx, dy));

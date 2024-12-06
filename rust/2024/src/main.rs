@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         d02::main,
         d03::main,
         d04::main,
-        // d05::main,
+        d05::main,
         // d06::main,
         // d07::main,
         // d08::main,
