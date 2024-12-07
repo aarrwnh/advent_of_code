@@ -87,7 +87,7 @@ def part2(g: Grid) -> int:
 
 
 def main() -> int:
-    i = InputReader(2023, 16).grid
+    i = InputReader(2023, 16).grid2
 
     sample = Grid(i("sample"))
     puzzle = Grid(i("puzzle"))

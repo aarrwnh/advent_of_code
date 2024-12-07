@@ -172,10 +172,10 @@ def part2(m: Map) -> int:
 def main() -> int:
     i = InputReader(2023, 10)
 
-    sample = Map(i.grid("sample", find_start="S"))
-    sample2 = Map(i.grid("sample2", find_start="S"))
-    sample3 = Map(i.grid("sample3", find_start="S"))
-    puzzle = Map(i.grid("puzzle", find_start="S"))
+    sample = Map(i.grid2("sample", find_start="S"))
+    sample2 = Map(i.grid2("sample2", find_start="S"))
+    sample3 = Map(i.grid2("sample3", find_start="S"))
+    puzzle = Map(i.grid2("puzzle", find_start="S"))
 
     part1(sample)(8)
     part1(puzzle)(6923)

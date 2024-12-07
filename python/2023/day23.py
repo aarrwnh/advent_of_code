@@ -111,7 +111,7 @@ def part2(m: Maze) -> int:
 
 
 def main() -> int:
-    i = InputReader(2023, 23).grid
+    i = InputReader(2023, 23).grid2
 
     sample = Maze(i("sample"))
     puzzle = Maze(i("puzzle"))

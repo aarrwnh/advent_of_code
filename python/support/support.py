@@ -179,7 +179,7 @@ class InputReader:
         with open(self._normpath(filename)) as f:
             return f.read()
 
-    def grid(
+    def grid2(
         self, filename: str, *, find_start: None | str = None
     ) -> tuple[dict[Point, str], int, int, Point]:
         grid: dict[Point, str] = {}
@@ -196,6 +196,46 @@ class InputReader:
                         start_pos = Point(x, y)
 
         return grid, width, height, start_pos
+
+    def grid(self, filename: str, *, find_start: None | str = None) -> Grid:
+        with open(self._normpath(filename)) as f:
+            return Grid.parse(f.read(), find_start=find_start)
+
+
+P = tuple[int, int]
+
+
+class Grid:
+    def __init__(
+        self, grid: dict[P, str], max_x: int, max_y: int, start_pos: P
+    ) -> None:
+        self.grid = grid
+        self.max_x = max_x
+        self.max_y = max_y
+        self.start_pos = start_pos
+
+    # def __iter__(self):
+    #     return iter((self.grid, self.max_x, self.max_y, self.start_pos))
+
+    @classmethod
+    def parse(cls, input: str, *, find_start: None | str = None) -> Grid:
+        lines = input.splitlines()
+        grid: dict[P, str] = {}
+        start_pos = (0, 0)
+        lines = input.strip().split("\n")
+        max_y = len(lines) - 1
+        max_x = len(lines[0].strip()) - 1
+
+        for y, row in enumerate(lines):
+            for x, p in enumerate(row.strip()):
+                grid[(x, y)] = p
+                if find_start and p == find_start:
+                    start_pos = (x, y)
+
+        return cls(grid, max_x, max_y, start_pos)
+
+    def in_bounds(self, x: int, y: int) -> bool:
+        return 0 <= x <= self.max_x and 0 <= y <= self.max_y
 
 
 def read_file(__file__: str, filename: str) -> list[str]:

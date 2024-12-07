@@ -91,7 +91,7 @@ def part2(g: Crucible) -> int:
 
 
 def main() -> int:
-    i = InputReader(2023, 17).grid
+    i = InputReader(2023, 17).grid2
 
     sample = Crucible(i("sample"))
     puzzle = Crucible(i("puzzle"))

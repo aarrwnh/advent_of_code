@@ -1,11 +1,6 @@
 import sys
-from collections.abc import Callable
 
-from support import InputReader, asserter, timing
-
-P = tuple[int, int]
-A = tuple[dict[P, str], int, int, P]
-
+from support import Grid, InputReader, P, asserter, timing
 
 DIRECTIONS: list[P] = [
     (0, -1),  # ^
@@ -15,100 +10,61 @@ DIRECTIONS: list[P] = [
 ]
 
 
-def parse_grid(input: str, start_ch: str) -> A:
-    grid: dict[P, str] = {}
-    start_pos = (0, 0)
-    lines = input.strip().split("\n")
-    max_y = len(lines) - 1
-    max_x = len(lines[0].strip()) - 1
-    for y, row in enumerate(lines):
-        for x, p in enumerate(row.strip()):
-            grid[(x, y)] = p
-            if p == start_ch:
-                start_pos = (x, y)
-    return grid, max_x, max_y, start_pos
-
-
-def in_bounds(max_x: int, max_y: int) -> Callable[[int, int], bool]:
-    def b(x: int, y: int) -> bool:
-        return 0 <= x <= max_x and 0 <= y <= max_y
-
-    return b
-
-
-def default_walk(input: A) -> set[P]:
-    grid, max_x, max_y, start = input
-
-    visited: set[P] = set()
-    x, y = start
+def walker(g: Grid, *, obstacle: None | P = None) -> set[tuple[int, ...]]:
+    visited: set[tuple[int, ...]] = set()
+    x, y = g.start_pos
     dir = 0
 
-    b = in_bounds(max_x, max_y)
+    # put another obstacle for part2
+    o = obstacle is not None
 
-    while b(x, y):
-        visited.add((x, y))
+    def move(d: int, x: int, y: int) -> tuple[int, int]:
+        dx, dy = DIRECTIONS[d]
+        return x + dx, y + dy
 
-        dx, dy = DIRECTIONS[dir]
-        nx, ny = (x + dx, y + dy)
+    while g.in_bounds(x, y):
+        a = (dir if o else 0, x, y)
+        if o and a in visited:
+            # (part2) we loopin' now
+            return set(((0, x, y),))
+        visited.add(a)
 
-        if b(nx, ny) and grid[(nx, ny)] == "#":
+        nx, ny = move(dir, x, y)
+
+        # (part2) loop dir change if two obstacles are adjacent
+        while g.in_bounds(nx, ny) and (
+            g.grid[(nx, ny)] == "#" or (o and (nx, ny) == obstacle)
+        ):
             dir = (dir + 1) % 4
-            dx, dy = DIRECTIONS[dir]
-            nx, ny = x + dx, y + dy
+            nx, ny = move(dir, x, y)
 
         x, y = nx, ny
 
-    return visited
+    return set() if o else visited
 
 
 @asserter
 @timing("part1")
-def part1(input: str) -> int:
-    g = parse_grid(input, "^")
-    return len(default_walk(g))
+def part1(g: Grid) -> int:
+    return len(walker(g))
 
 
 @asserter
 @timing("part2")
-def part2(input: str) -> int:
-    g = parse_grid(input, "^")
-    grid, max_x, max_y, start = g
-
-    b = in_bounds(max_x, max_y)
-
-    def walk(obstacle: P) -> bool:
-        visited: set[tuple[int, ...]] = set()
-        x, y = start[0], start[1]
-        dir = 0
-
-        while b(x, y):
-            if (dir, x, y) in visited:
-                # we loopin' now
-                return True
-
-            visited.add((dir, x, y))
-            dx, dy = DIRECTIONS[dir]
-            nx, ny = (x + dx, y + dy)
-
-            # loop dir change if two obstacles are adjacent
-            while b(nx, ny) and (grid[(nx, ny)] == "#" or (nx, ny) == obstacle):
-                dir = (dir + 1) % 4
-                dx, dy = DIRECTIONS[dir]
-                nx, ny = x + dx, y + dy
-
-            x, y = nx, ny
-
-        return False
-
-    path = default_walk(g)
-    return sum([1 for o in path if grid[o] == "." and walk(o)])
+def part2(g: Grid) -> int:
+    default_path = walker(g)
+    total = 0
+    for _, x, y in default_path:
+        if g.grid[(x, y)] == "." and len(walker(g, obstacle=(x, y))) == 1:
+            total += 1
+    return total
 
 
 def main() -> int:
-    i = InputReader(2024, 6).raw
+    i = InputReader(2024, 6).grid
 
-    example = i("example")
-    puzzle = i("puzzle")
+    example = i("example", find_start="^")
+    puzzle = i("puzzle", find_start="^")
 
     def s1() -> None:
         assert part1(example)(41)

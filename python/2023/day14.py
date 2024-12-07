@@ -111,8 +111,8 @@ def part2(grid_data: tuple[dict[Point, str], int, int, int]) -> int:
 def main() -> int:
     i = InputReader(2023, 14)
 
-    sample = i.grid("sample")
-    puzzle = i.grid("puzzle")
+    sample = i.grid2("sample")
+    puzzle = i.grid2("puzzle")
 
     part1(sample)(136)
     part1(puzzle)(108857)

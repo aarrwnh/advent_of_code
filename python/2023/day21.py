@@ -94,7 +94,7 @@ def part2(g: Stepper, max_steps: int = 1) -> int:
 
 
 def main() -> int:
-    i = InputReader(2023, 21).grid
+    i = InputReader(2023, 21).grid2
 
     sample = Stepper(i("sample", find_start="S"))
     puzzle = Stepper(i("puzzle", find_start="S"))
