@@ -5,8 +5,8 @@ from support import InputReader, asserter, timing
 
 
 @asserter
-@timing("part1")
-def part1(input: str) -> int:
+@timing("part1_1")
+def part1_1(input: str) -> int:
     ordering_s, numbers_s = input.split("\n\n")
     lst = [[int(x) for x in n.split(",")] for n in numbers_s.split()]
     ordering = [tuple(int(x) for x in line.split("|")) for line in ordering_s.split()]
@@ -21,11 +21,7 @@ def part1(input: str) -> int:
     return sum(u(num) for num in lst)
 
 
-@asserter
-@timing("part2")
-def part2(input: str) -> int:
-    total = 0
-
+def parse(input: str) -> tuple[list[list[int]], defaultdict[int, set[int]]]:
     ordering_s, numbers_s = input.split("\n\n")
     lst = [[int(x) for x in n.split(",")] for n in numbers_s.split()]
 
@@ -33,6 +29,29 @@ def part2(input: str) -> int:
     for line in ordering_s.split():
         x_s, y_s = line.split("|")
         edges[int(x_s)].add(int(y_s))
+
+    return (lst, edges)
+
+
+@asserter
+@timing("part1")
+def part1(input: str) -> int:
+    lst, edges = parse(input)
+
+    def u(num: list[int]) -> int:
+        for i, a in enumerate(num):
+            for b in num[i + 1 :]:
+                if b not in edges[a]:
+                    return 0
+        return num[len(num) // 2]
+
+    return sum(u(num) for num in lst)
+
+
+@asserter
+@timing("part2")
+def part2(input: str) -> int:
+    lst, edges = parse(input)
 
     def sortme(num: list[int]) -> list[int]:
         indices: defaultdict[int, int] = defaultdict(int)
@@ -68,6 +87,7 @@ def part2(input: str) -> int:
                 return int(new_n[len(new_n) // 2])
         return 0
 
+    total = 0
     for n in lst:
         for i, a in enumerate(n):
             if (v := u(n, i, a)) != 0:
@@ -86,6 +106,7 @@ def main() -> int:
     def s1() -> None:
         assert part1(example)(143)
         assert part1(puzzle)(5166)
+        # assert part1_1(puzzle)(5166)
 
     def s2() -> None:
         assert part2(example)(123)

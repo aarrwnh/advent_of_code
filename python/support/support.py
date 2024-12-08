@@ -197,9 +197,15 @@ class InputReader:
 
         return grid, width, height, start_pos
 
-    def grid(self, filename: str, *, find_start: None | str = None) -> Grid:
+    def grid(
+        self,
+        filename: str,
+        *,
+        find_start: None | str = None,
+        filter: tuple[str] | None = None,
+    ) -> Grid:
         with open(self._normpath(filename)) as f:
-            return Grid.parse(f.read(), find_start=find_start)
+            return Grid.parse(f.read(), find_start=find_start, filter=filter)
 
 
 P = tuple[int, int]
@@ -214,11 +220,20 @@ class Grid:
         self.max_y = max_y
         self.start_pos = start_pos
 
+    def __str__(self) -> str:
+        return self.grid.__str__()
+
     # def __iter__(self):
     #     return iter((self.grid, self.max_x, self.max_y, self.start_pos))
 
     @classmethod
-    def parse(cls, input: str, *, find_start: None | str = None) -> Grid:
+    def parse(
+        cls,
+        input: str,
+        *,
+        find_start: None | str = None,
+        filter: tuple[str] | None = None,
+    ) -> Grid:
         lines = input.splitlines()
         grid: dict[P, str] = {}
         start_pos = (0, 0)
@@ -228,6 +243,8 @@ class Grid:
 
         for y, row in enumerate(lines):
             for x, p in enumerate(row.strip()):
+                if filter and p in filter:
+                    continue
                 grid[(x, y)] = p
                 if find_start and p == find_start:
                     start_pos = (x, y)

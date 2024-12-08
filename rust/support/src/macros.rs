@@ -9,12 +9,14 @@
 //     result
 // }
 
-
 pub fn truncate_and_mark_micro(time: u128, n: usize) -> String {
     let mut time = time.to_string();
-    time.insert_str(0, &"0".repeat(n - time.len()));
-    time.chars()
-        .take(n)
+    if let Some(r) = n.checked_sub(time.len()) {
+        time.insert_str(0, &"0".repeat(r));
+    }
+
+    time[time.len() - n..time.len()]
+        .chars()
         .collect::<Vec<_>>()
         .chunks(3)
         .enumerate()
@@ -48,7 +50,7 @@ macro_rules! check {
             }
             let time = now.elapsed().as_micros();
             let seconds = (time / 1000000).to_string();
-            println!(" {:5}.{} {text}   {mi}ms",
+            println!(" {:>5}.{}s {text}   {mi}ms",
                 if seconds == "0" { " " } else { &seconds },
                 $crate::truncate_and_mark_micro(time % 1000000000, 6),
                 mi = now.elapsed().as_millis(),

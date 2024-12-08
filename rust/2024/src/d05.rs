@@ -1,5 +1,6 @@
 use std::{
     collections::{HashMap, VecDeque},
+    ops::Range,
     str::FromStr,
 };
 use support::{check, InputReader};
@@ -16,44 +17,49 @@ fn num(n: &str) -> u8 {
     u8::from_str(n).unwrap()
 }
 
-fn parse(input: &str) -> Manual {
-    input
-        .split_once("\n\n")
-        .map(|(rules, ordering)| {
-            let mut map: Rules = HashMap::new();
-            rules.lines().for_each(|line| {
-                let (a, b) = line.split_once("|").unwrap();
-                map.entry(num(a)).or_default().push(num(b));
-            });
+impl FromStr for Manual {
+    type Err = Box<dyn std::error::Error>;
 
-            Manual {
-                rules: map,
-                list: ordering
-                    .lines()
-                    .map(|line| line.split(",").map(num).collect::<Vec<_>>())
-                    .collect::<Vec<_>>(),
-            }
-        })
-        .unwrap()
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(s.split_once("\n\n")
+            .map(|(rules, ordering)| {
+                let mut map: Rules = HashMap::new();
+                rules.lines().for_each(|line| {
+                    let (a, b) = line.split_once("|").unwrap();
+                    map.entry(num(a)).or_default().push(num(b));
+                });
+                Self {
+                    rules: map,
+                    list: ordering
+                        .lines()
+                        .map(|line| line.split(",").map(num).collect::<Vec<_>>())
+                        .collect::<Vec<_>>(),
+                }
+            })
+            .unwrap())
+    }
 }
 
-fn check_sorted(list: &[u8], rules: &Rules) -> u64 {
-    for (i, a) in list.iter().enumerate() {
-        for b in &list[i + 1..] {
-            let Some(v) = rules.get(a) else { return 0 };
-            if !v.contains(b) {
-                return 0;
+impl Manual {
+    fn check_sorted(&self, i: usize) -> Option<u64> {
+        let list = &self.list[i];
+        for (i, a) in list.iter().enumerate() {
+            for b in &list[i + 1..] {
+                if !self.rules.get(a)?.contains(b) {
+                    return None;
+                }
             }
         }
+        Some(list[list.len() / 2].into())
     }
-    list[list.len() / 2] as u64
+
+    fn range(&self) -> Range<usize> {
+        (0..self.list.len())
+    }
 }
 
 fn part1(input: &Manual) -> u64 {
-    let Manual { rules, list } = &input;
-    (0..input.list.len())
-        .map(|i| check_sorted(&list[i], rules))
-        .sum()
+    input.range().filter_map(|i| input.check_sorted(i)).sum()
 }
 
 fn part2(input: &Manual) -> u64 {
@@ -108,30 +114,30 @@ fn part2(input: &Manual) -> u64 {
             let Some(v) = rules.get(b) else { continue };
             if v.contains(a) {
                 let n2 = sort(numbers);
-                return n2[n2.len() / 2];
+                return Some(n2[n2.len() / 2] as u64);
             }
         }
-        0
+        None
     };
 
-    (0..input.list.len())
-        .map(|i| {
+    input
+        .range()
+        .filter_map(|i| {
             let numbers = &list[i];
             for (i, a) in numbers.iter().enumerate() {
-                let v = run(numbers, i, a);
-                if v != 0 {
-                    return v as u64;
+                if let Some(v) = run(numbers, i, a) {
+                    return Some(v);
                 }
             }
-            0
+            None
         })
         .sum()
 }
 
 pub fn main() -> Result<(), Box<dyn std::error::Error>> {
     let i = InputReader::new(2024, 5);
-    let e = parse(&i.as_raw("example"));
-    let p = parse(&i.as_raw("puzzle"));
+    let e = Manual::from_str(&i.as_raw("example"))?;
+    let p = Manual::from_str(&i.as_raw("puzzle"))?;
 
     check!("Part1" part1 [143 &e] [5166 &p]);
     check!("Part2" part2 [123 &e] [4679 &p]);
