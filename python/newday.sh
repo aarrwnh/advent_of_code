@@ -15,7 +15,7 @@ if [[ -n "$1" && -n "$2" ]]; then
 		touch "../input/$1/${day}/example"
 		touch "../input/$1/${day}/puzzle"
 		cp "../templates__/python" "$1/day${day}.py"
-		sed -i "s/%year%, %day%/$1, $2/" "$1/day${day}.py"
+		sed -i -e "s/%year%/$1/" -e "s/%day%/$2/" "$1/day${day}.py"
 	fi
 else
 	echo "no command"

@@ -15,6 +15,7 @@ def part2(lines: list[str]) -> int:
     return 0
 
 
+@timing("day%day%")
 def main() -> int:
     i = InputReader(%year%, %day%).lines
 

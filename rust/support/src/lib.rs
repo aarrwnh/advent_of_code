@@ -25,7 +25,20 @@ impl InputReader {
     }
 }
 
-type Point = (isize, isize);
+#[derive(Hash, Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Point(pub isize, pub isize);
+
+impl Point {
+    pub fn dist(&self, other: &Self) -> Point {
+        (self.0 - other.0, self.1 - other.1).into()
+    }
+}
+
+impl From<(isize, isize)> for Point {
+    fn from(e: (isize, isize)) -> Self {
+        Self(e.0, e.1)
+    }
+}
 
 #[derive(Debug)]
 pub struct Grid {
@@ -81,11 +94,24 @@ impl Grid {
         (0..=self.max_x).contains(&x) && (0..=self.max_y).contains(&y)
     }
 
-    pub fn width(self) -> isize {
+    pub fn width(&self) -> isize {
         self.max_x + 1
     }
 
-    pub fn height(self) -> isize {
+    pub fn height(&self) -> isize {
         self.max_y + 1
+    }
+
+    pub fn get(&self, k: Point) -> u8 {
+        self.points.get(&k).copied().unwrap()
+    }
+}
+
+impl<'a> IntoIterator for &'a Grid {
+    type Item = <&'a HashMap<Point, u8> as IntoIterator>::Item;
+    type IntoIter = <&'a HashMap<Point, u8> as IntoIterator>::IntoIter;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.points.iter()
     }
 }

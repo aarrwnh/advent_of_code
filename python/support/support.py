@@ -72,7 +72,7 @@ class Point(NamedTuple):
 
 
 @contextlib.contextmanager
-def timing(name: str = "") -> Generator[None, None, None]:
+def timing(name: str = "", padding: str = "") -> Generator[None, None, None]:
     before = time.perf_counter()
     try:
         yield
@@ -85,7 +85,7 @@ def timing(name: str = "") -> Generator[None, None, None]:
             unit = "μs"
         if name:
             name = f" \x1b[38;5;240m({name})\x1b[0m"
-        print(f"> {t:.0f} {unit}{name}", file=sys.stderr, flush=True)
+        print(f"{padding}> {t:.0f} {unit}{name}", file=sys.stderr, flush=True)
 
 
 def red(s: str) -> None:
@@ -202,7 +202,7 @@ class InputReader:
         filename: str,
         *,
         find_start: None | str = None,
-        filter: tuple[str] | None = None,
+        filter: tuple[str, ...] | None = None,
     ) -> Grid:
         with open(self._normpath(filename)) as f:
             return Grid.parse(f.read(), find_start=find_start, filter=filter)
@@ -232,7 +232,7 @@ class Grid:
         input: str,
         *,
         find_start: None | str = None,
-        filter: tuple[str] | None = None,
+        filter: tuple[str, ...] | None = None,
     ) -> Grid:
         lines = input.splitlines()
         grid: dict[P, str] = {}
@@ -243,11 +243,11 @@ class Grid:
 
         for y, row in enumerate(lines):
             for x, p in enumerate(row.strip()):
+                if find_start and p == find_start:
+                    start_pos = (x, y)
                 if filter and p in filter:
                     continue
                 grid[(x, y)] = p
-                if find_start and p == find_start:
-                    start_pos = (x, y)
 
         return cls(grid, max_x, max_y, start_pos)
 

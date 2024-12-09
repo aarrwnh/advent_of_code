@@ -2,7 +2,7 @@ import collections
 import sys
 from collections.abc import Generator
 
-from support import InputReader, asserter, timing
+from support import Grid, InputReader, asserter, timing
 
 P = tuple[int, int]
 
@@ -28,20 +28,10 @@ def c(x: int, y: int, r: int, dirs: list[P]) -> Generator[P, None, None]:
         yield -1, -1  # trigger reset
 
 
-def parse(lines: list[str]) -> tuple[dict[P, str], int, int]:
-    grid: dict[P, str] = {}
-    height = len(lines)
-    width = len(lines[0].strip())
-    for y, row in enumerate(lines):
-        for x, p in enumerate(row):
-            grid[(x, y)] = p
-    return grid, height - 1, width - 1
-
-
 @asserter
 @timing("part1")
-def part1(lines: list[str]) -> int:
-    grid, max_y, max_x = parse(lines)
+def part1(g: Grid) -> int:
+    grid = g.grid
 
     total = 0
 
@@ -55,7 +45,7 @@ def part1(lines: list[str]) -> int:
                     total += 1
                 word = ""
                 continue
-            if not (0 <= dx <= max_x and 0 <= dy <= max_y):
+            if not g.in_bounds(dx, dy):
                 continue
             word += grid[(dx, dy)]
     return total
@@ -63,8 +53,8 @@ def part1(lines: list[str]) -> int:
 
 @asserter
 @timing("part2")
-def part2(lines: list[str]) -> int:
-    grid, max_y, max_x = parse(lines)
+def part2(g: Grid) -> int:
+    grid = g.grid
 
     templ = ["A", "S"]
     total = 0
@@ -83,14 +73,14 @@ def part2(lines: list[str]) -> int:
                         total += 1
                 found.clear()
                 continue
-            if not (0 <= dx <= max_x and 0 <= dy <= max_y):
+            if not g.in_bounds(dx, dy):
                 continue
             found.append((dx, dy))
     return total
 
 
 def main() -> int:
-    i = InputReader(2024, 4).lines
+    i = InputReader(2024, 4).grid
 
     example = i("example")
     puzzle = i("puzzle")

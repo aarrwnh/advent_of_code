@@ -8,3 +8,7 @@ support = { path = "../support" }
 
 [lints.rust]
 unused = "allow"
+
+# [debug]
+# strip = false
+# debug = true

@@ -18,10 +18,6 @@ def walker(g: Grid, *, obstacle: None | P = None) -> set[tuple[int, ...]]:
     # put another obstacle for part2
     o = obstacle is not None
 
-    def move(d: int, x: int, y: int) -> tuple[int, int]:
-        dx, dy = DIRECTIONS[d]
-        return x + dx, y + dy
-
     while g.in_bounds(x, y):
         a = (dir if o else 0, x, y)
         if o and a in visited:
@@ -29,16 +25,11 @@ def walker(g: Grid, *, obstacle: None | P = None) -> set[tuple[int, ...]]:
             return set(((0, x, y),))
         visited.add(a)
 
-        nx, ny = move(dir, x, y)
-
-        # (part2) loop dir change if two obstacles are adjacent
-        while g.in_bounds(nx, ny) and (
-            g.grid[(nx, ny)] == "#" or (o and (nx, ny) == obstacle)
-        ):
+        n = (x + DIRECTIONS[dir][0], y + DIRECTIONS[dir][1])
+        if (g.in_bounds(n[0], n[1]) and g.grid[n] == "#") or (o and n == obstacle):
             dir = (dir + 1) % 4
-            nx, ny = move(dir, x, y)
-
-        x, y = nx, ny
+        else:
+            x, y = n
 
     return set() if o else visited
 
@@ -55,7 +46,7 @@ def part2(g: Grid) -> int:
     default_path = walker(g)
     total = 0
     for _, x, y in default_path:
-        if g.grid[(x, y)] == "." and len(walker(g, obstacle=(x, y))) == 1:
+        if len(walker(g, obstacle=(x, y))) == 1:
             total += 1
     return total
 

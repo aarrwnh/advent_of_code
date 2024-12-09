@@ -7,13 +7,14 @@ def dist(x1: int, y1: int, x2: int, y2: int) -> tuple[int, int]:
     return (x1 - x2), (y1 - y2)
 
 
-def a(g: Grid, start: int, stop: int) -> int:
+def find_antinodes(g: Grid, start: int, stop: int) -> int:
     todo = [*g.grid]
     antinodes: set[P] = set()
 
     def check(p: P, d: P) -> None:
         (x, y) = p
         (dx, dy) = d
+        # could use: `stop = max_x - eucl % max_x` instead of max range
         for i in range(start, stop):
             n = (x + dx * i, y + dy * i)
             if not g.in_bounds(*n):
@@ -35,13 +36,13 @@ def a(g: Grid, start: int, stop: int) -> int:
 @asserter
 @timing("part1")
 def part1(g: Grid) -> int:
-    return a(g, 1, 2)
+    return find_antinodes(g, 1, 2)
 
 
 @asserter
 @timing("part2")
 def part2(g: Grid) -> int:
-    return a(g, 0, g.max_x)
+    return find_antinodes(g, 0, g.max_x)
 
 
 def main() -> int:

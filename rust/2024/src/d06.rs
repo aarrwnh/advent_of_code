@@ -1,6 +1,6 @@
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
-use support::{check, Grid, InputReader};
+use support::{check, Grid, InputReader, Point};
 
 const DIRS: [(i8, i8); 4] = [
     (0, -1), // ^
@@ -9,21 +9,16 @@ const DIRS: [(i8, i8); 4] = [
     (-1, 0), // <
 ];
 
-fn advance(dir: u8, x: isize, y: isize) -> (isize, isize) {
-    let (dx, dy) = DIRS[dir as usize];
-    (x.wrapping_add(dx.into()), y.wrapping_add(dy.into()))
-}
-
 enum Flow {
     Path(Box<dyn Iterator<Item = (isize, isize)>>),
     Loopin,
 }
 
-// slow?  debug: ~39s  release: ~4s  | python: 17s
+// slow?  debug: ~39s  release: ~3s  | python: 17s
 fn walk(grid: &Grid, obstacle: Option<(isize, isize)>) -> Flow {
     let mut visited = HashSet::new();
-    let (mut x, mut y) = grid.start();
-    let mut dir = 0;
+    let Point(mut x, mut y) = grid.start();
+    let mut dir = 0usize;
     let with_obstacle = obstacle.is_some();
 
     while grid.in_bounds(x, y) {
@@ -32,17 +27,17 @@ fn walk(grid: &Grid, obstacle: Option<(isize, isize)>) -> Flow {
             return Flow::Loopin;
         }
         visited.insert(state);
-        let (mut nx, mut ny) = advance(dir, x, y);
 
-        while grid.in_bounds(nx, ny)
-            && (*grid.points.get(&(nx, ny)).unwrap() == b'#'
-                || obstacle.is_some_and(|p| p == (nx, ny)))
+        let (dx, dy) = DIRS[dir];
+        let (mut nx, mut ny) = (x + dx as isize, y + dy as isize);
+
+        if grid.in_bounds(nx, ny)
+            && (grid.get((nx, ny).into()) == b'#' || obstacle.is_some_and(|p| p == (nx, ny)))
         {
             dir = (dir + 1) % 4;
-            (nx, ny) = advance(dir, x, y);
+        } else {
+            (x, y) = (nx, ny)
         }
-
-        (x, y) = (nx, ny)
     }
 
     Flow::Path(Box::new(visited.into_iter().map(|x| (x.1, x.2))))
