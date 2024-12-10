@@ -20,6 +20,8 @@ DIRS_ALL = DIRS_DIAGONAL + [
     (-1, 0),  # left
 ]
 
+LETTER = {x: ord(x) for x in "XMAS"}
+
 
 def c(x: int, y: int, r: int, dirs: list[P]) -> Generator[P, None, None]:
     for dx, dy in dirs:
@@ -36,7 +38,7 @@ def part1(g: Grid) -> int:
     total = 0
 
     for x, y in grid:
-        if grid[(x, y)] != "X":
+        if grid[(x, y)] != LETTER["X"]:
             continue
         word = ""
         for dx, dy in c(x, y, 4, DIRS_ALL):
@@ -47,7 +49,7 @@ def part1(g: Grid) -> int:
                 continue
             if not g.in_bounds(dx, dy):
                 continue
-            word += grid[(dx, dy)]
+            word += chr(grid[(dx, dy)])
     return total
 
 
@@ -56,12 +58,12 @@ def part1(g: Grid) -> int:
 def part2(g: Grid) -> int:
     grid = g.grid
 
-    templ = ["A", "S"]
+    templ = [LETTER["A"], LETTER["S"]]
     total = 0
     mas: collections.Counter[P] = collections.Counter()
 
     for x, y in grid:
-        if grid[(x, y)] != "M":
+        if grid[(x, y)] != LETTER["M"]:
             continue
         found: list[P] = []
         for dx, dy in c(x, y, 3, DIRS_DIAGONAL):
@@ -69,7 +71,7 @@ def part2(g: Grid) -> int:
                 if templ == [grid[w] for w in found]:
                     p = found[0]
                     mas[p] += 1
-                    if mas[p] == 2 and grid[p] == "A":
+                    if mas[p] == 2 and grid[p] == LETTER["A"]:
                         total += 1
                 found.clear()
                 continue

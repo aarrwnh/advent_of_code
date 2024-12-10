@@ -9,6 +9,9 @@ DIRECTIONS: list[P] = [
     (-1, 0),  # <
 ]
 
+OBSTACLE = ord("#")
+START = "^"
+
 
 def walker(g: Grid, *, obstacle: None | P = None) -> set[tuple[int, ...]]:
     visited: set[tuple[int, ...]] = set()
@@ -26,7 +29,7 @@ def walker(g: Grid, *, obstacle: None | P = None) -> set[tuple[int, ...]]:
         visited.add(a)
 
         n = (x + DIRECTIONS[dir][0], y + DIRECTIONS[dir][1])
-        if (g.in_bounds(n[0], n[1]) and g.grid[n] == "#") or (o and n == obstacle):
+        if (g.in_bounds(n[0], n[1]) and g.grid[n] == OBSTACLE) or (o and n == obstacle):
             dir = (dir + 1) % 4
         else:
             x, y = n
@@ -54,8 +57,8 @@ def part2(g: Grid) -> int:
 def main() -> int:
     i = InputReader(2024, 6).grid
 
-    example = i("example", find_start="^")
-    puzzle = i("puzzle", find_start="^")
+    example = i("example", find_start=START)
+    puzzle = i("puzzle", find_start=START)
 
     def s1() -> None:
         assert part1(example)(41)

@@ -202,7 +202,7 @@ class InputReader:
         filename: str,
         *,
         find_start: None | str = None,
-        filter: tuple[str, ...] | None = None,
+        filter: tuple[int, ...] | None = None,
     ) -> Grid:
         with open(self._normpath(filename)) as f:
             return Grid.parse(f.read(), find_start=find_start, filter=filter)
@@ -213,7 +213,7 @@ P = tuple[int, int]
 
 class Grid:
     def __init__(
-        self, grid: dict[P, str], max_x: int, max_y: int, start_pos: P
+        self, grid: dict[P, int], max_x: int, max_y: int, start_pos: P
     ) -> None:
         self.grid = grid
         self.max_x = max_x
@@ -232,10 +232,10 @@ class Grid:
         input: str,
         *,
         find_start: None | str = None,
-        filter: tuple[str, ...] | None = None,
+        filter: tuple[int, ...] | None = None,
     ) -> Grid:
         lines = input.splitlines()
-        grid: dict[P, str] = {}
+        grid: dict[P, int] = {}
         start_pos = (0, 0)
         lines = input.strip().split("\n")
         max_y = len(lines) - 1
@@ -247,7 +247,7 @@ class Grid:
                     start_pos = (x, y)
                 if filter and p in filter:
                     continue
-                grid[(x, y)] = p
+                grid[(x, y)] = ord(p)
 
         return cls(grid, max_x, max_y, start_pos)
 
