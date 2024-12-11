@@ -4,13 +4,11 @@ from support import InputReader, asserter, timing
 
 
 @asserter
-@timing("part1")
 def part1(lines: list[str]) -> int:
     return 0
 
 
 @asserter
-@timing("part2")
 def part2(lines: list[str]) -> int:
     return 0
 

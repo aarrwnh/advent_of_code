@@ -1,7 +1,7 @@
 import collections
 import sys
 
-from support import InputReader, asserter, timing
+from support import InputReader, asserter
 
 T = list[int]
 
@@ -16,13 +16,11 @@ def parse_input(lines: list[str]) -> tuple[T, ...]:
 
 
 @asserter
-@timing("part1")
 def part1(left: T, right: T) -> int:
     return sum(abs(a - b) for a, b in zip(sorted(left), sorted(right), strict=True))
 
 
 @asserter
-@timing("part2")
 def part2(left: T, right: T) -> int:
     count = collections.Counter(right)
     return sum(v * count[v] for v in left if v in count)

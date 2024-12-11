@@ -1,6 +1,6 @@
 import sys
 
-from support import Grid, InputReader, P, asserter, timing
+from support import Grid, InputReader, P, asserter
 
 
 def dist(x1: int, y1: int, x2: int, y2: int) -> tuple[int, int]:
@@ -34,13 +34,11 @@ def find_antinodes(g: Grid, start: int, stop: int) -> int:
 
 
 @asserter
-@timing("part1")
 def part1(g: Grid) -> int:
     return find_antinodes(g, 1, 2)
 
 
 @asserter
-@timing("part2")
 def part2(g: Grid) -> int:
     return find_antinodes(g, 0, g.max_x)
 

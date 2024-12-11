@@ -106,9 +106,18 @@ def assert_result(expected: Any, result: Any) -> bool:
         return False
 
 
+# def _asserter(f: Callable[..., Any]) -> Any:
+#     def wrap(*args: Any, **kwargs: Any) -> Any:
+#         return lambda b: assert_result(f(*args, **kwargs), b)
+
+#     return wrap
+
+
 def asserter(f: Callable[..., Any]) -> Any:
     def wrap(*args: Any, **kwargs: Any) -> Any:
-        return lambda b: assert_result(f(*args, **kwargs), b)
+        with timing(f.__name__):
+            res = f(*args, **kwargs)
+            return lambda b: assert_result(res, b)
 
     return wrap
 
@@ -164,7 +173,7 @@ class InputReader:
 
     def _normpath(self, filename: str) -> str:
         return os.path.normpath(
-            os.path.join(HERE, "..", "..", "input", self.y, self.d, filename)
+            os.path.join(HERE, "..", "..", "input", self.y, f"{self.d}-{filename}")
         )
 
     def lines(self, filename: str) -> list[str]:
@@ -202,7 +211,7 @@ class InputReader:
         filename: str,
         *,
         find_start: None | str = None,
-        filter: tuple[int, ...] | None = None,
+        filter: tuple[str, ...] | None = None,
     ) -> Grid:
         with open(self._normpath(filename)) as f:
             return Grid.parse(f.read(), find_start=find_start, filter=filter)
@@ -232,7 +241,7 @@ class Grid:
         input: str,
         *,
         find_start: None | str = None,
-        filter: tuple[int, ...] | None = None,
+        filter: tuple[str, ...] | None = None,
     ) -> Grid:
         lines = input.splitlines()
         grid: dict[P, int] = {}
@@ -438,7 +447,7 @@ def download_input() -> int:
     year, day = args.year, args.day
 
     day = str(day).rjust(2, "0")
-    filename = f"../input/{year}/{day}/puzzle"
+    filename = f"../input/{year}/{day}-puzzle"
     os.chmod(filename, 0o700)
 
     with open(filename, "w+", newline="\n", encoding="utf-8") as f:

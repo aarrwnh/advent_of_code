@@ -1,11 +1,10 @@
 import re
 import sys
 
-from support import InputReader, asserter, timing
+from support import InputReader, asserter
 
 
 @asserter
-@timing("part1")
 def part1(input: str) -> int:
     total = 0
     r = re.compile(r"mul\((\d+),(\d+)\)")
@@ -16,7 +15,6 @@ def part1(input: str) -> int:
 
 
 @asserter
-@timing("part2")
 def part2(input: str) -> int:
     total = 0
     enable = True

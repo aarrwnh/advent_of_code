@@ -14,14 +14,14 @@ class Calibaration(NamedTuple):
     def get(self, idx: int) -> int:
         return self.numbers[idx]
 
-    def eval(self, ops: tuple[str, ...], value: int, idx: int) -> bool:
+    def _eval(self, ops: tuple[str, ...], value: int, idx: int) -> bool:
         if idx >= self.size:
             return value == self.test_value
         for op in ops:
             n_value = operation(op, value, self.get(idx))
             if n_value > self.test_value:
                 continue
-            if self.eval(ops, n_value, idx + 1):
+            if self._eval(ops, n_value, idx + 1):
                 return True
         return False
 
@@ -83,14 +83,12 @@ def operation(op: str, a: int, b: int) -> int:
 
 
 @asserter
-@timing("part1")
 def part1(lines: list[str]) -> int:
     # ops = ("+", "*")
     return sum(c.test_value for c in parse(lines) if c.reverse_eval())
 
 
 @asserter
-@timing("part2")
 def part2(lines: list[str]) -> int:
     # ops = ("+", "*", "||")
     return sum(c.test_value for c in parse(lines) if c.reverse_eval(concat=True))

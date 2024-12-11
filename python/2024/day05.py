@@ -1,11 +1,10 @@
 import sys
 from collections import defaultdict
 
-from support import InputReader, asserter, timing
+from support import InputReader, asserter
 
 
 @asserter
-@timing("part1_1")
 def part1_1(input: str) -> int:
     ordering_s, numbers_s = input.split("\n\n")
     lst = [[int(x) for x in n.split(",")] for n in numbers_s.split()]
@@ -34,7 +33,6 @@ def parse(input: str) -> tuple[list[list[int]], defaultdict[int, set[int]]]:
 
 
 @asserter
-@timing("part1")
 def part1(input: str) -> int:
     lst, edges = parse(input)
 
@@ -49,7 +47,6 @@ def part1(input: str) -> int:
 
 
 @asserter
-@timing("part2")
 def part2(input: str) -> int:
     lst, edges = parse(input)
 

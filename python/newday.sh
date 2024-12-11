@@ -11,9 +11,9 @@ if [[ -n "$1" && -n "$2" ]]; then
 		echo "file exists"
 	else
 		mkdir -p "$1"
-		mkdir -p "../input/$1/${day}"
-		touch "../input/$1/${day}/example"
-		touch "../input/$1/${day}/puzzle"
+		# mkdir -p "../input/$1/${day}"
+		touch "../input/$1/${day}-example"
+		touch "../input/$1/${day}-puzzle"
 		cp "../templates__/python" "$1/day${day}.py"
 		sed -i -e "s/%year%/$1/" -e "s/%day%/$2/" "$1/day${day}.py"
 	fi

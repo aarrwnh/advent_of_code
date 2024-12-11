@@ -1,6 +1,6 @@
 import sys
 
-from support import Grid, InputReader, P, asserter, timing
+from support import Grid, InputReader, P, asserter
 
 DIRECTIONS: list[P] = [
     (0, -1),  # ^
@@ -38,13 +38,11 @@ def walker(g: Grid, *, obstacle: None | P = None) -> set[tuple[int, ...]]:
 
 
 @asserter
-@timing("part1")
 def part1(g: Grid) -> int:
     return len(walker(g))
 
 
 @asserter
-@timing("part2")
 def part2(g: Grid) -> int:
     default_path = walker(g)
     total = 0

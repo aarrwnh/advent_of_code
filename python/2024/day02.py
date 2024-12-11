@@ -1,7 +1,7 @@
 import sys
 from collections.abc import Generator
 
-from support import InputReader, asserter, timing
+from support import InputReader, asserter
 
 
 def is_safe(report: list[int]) -> bool:
@@ -21,18 +21,16 @@ def parse(lines: list[str]) -> Generator[list[int], None, None]:
 
 
 @asserter
-@timing("part1")
 def part1(lines: list[str]) -> int:
     return sum(is_safe(report) for report in parse(lines))
 
 
 @asserter
-@timing("part2")
 def part2(lines: list[str]) -> int:
     safe = 0
     for report in parse(lines):
         for i in range(len(report)):
-            if is_safe(report[:i] + report[i + 1:]):
+            if is_safe(report[:i] + report[i + 1 :]):
                 safe += 1
                 break
     return safe

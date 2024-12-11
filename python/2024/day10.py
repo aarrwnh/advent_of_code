@@ -32,13 +32,11 @@ def walker(g: Grid) -> list[list[P]]:
 
 
 @asserter
-@timing("part1")
 def part1(g: Grid) -> int:
     return sum(len(set(top)) for top in walker(g))
 
 
 @asserter
-@timing("part2")
 def part2(g: Grid) -> int:
     return sum(len(top) for top in walker(g))
 

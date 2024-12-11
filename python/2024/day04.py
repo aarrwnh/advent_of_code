@@ -2,7 +2,7 @@ import collections
 import sys
 from collections.abc import Generator
 
-from support import Grid, InputReader, asserter, timing
+from support import Grid, InputReader, asserter
 
 P = tuple[int, int]
 
@@ -31,7 +31,6 @@ def c(x: int, y: int, r: int, dirs: list[P]) -> Generator[P, None, None]:
 
 
 @asserter
-@timing("part1")
 def part1(g: Grid) -> int:
     grid = g.grid
 
@@ -54,7 +53,6 @@ def part1(g: Grid) -> int:
 
 
 @asserter
-@timing("part2")
 def part2(g: Grid) -> int:
     grid = g.grid
 
