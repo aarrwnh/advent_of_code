@@ -1,10 +1,12 @@
 import math
 import sys
 from collections import defaultdict
+from functools import cache
 
 from support import InputReader, asserter, timing
 
 
+@cache
 def split(num: int) -> tuple[int, ...]:
     if num == 0:
         return (1,)

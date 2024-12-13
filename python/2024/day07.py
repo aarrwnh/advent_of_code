@@ -62,6 +62,10 @@ def parse(lines: list[str]) -> Generator[Calibaration, None, None]:
         yield Calibaration(int(left_s), numbers, len(numbers))
 
 
+def m(num: int) -> int:
+    return 10 ** (math.floor(math.log10(num)) + 1)
+
+
 def operation(op: str, a: int, b: int) -> int:
     match op:
         case "/":
@@ -73,11 +77,9 @@ def operation(op: str, a: int, b: int) -> int:
         case "+":
             return a + b
         case "||":
-            f = 10 ** (math.floor(math.log10(b)) + 1)
-            return a * f + b
+            return a * m(b) + b
         case "|":
-            f = 10 ** (math.floor(math.log10(b)) + 1)
-            return (a - b) / f
+            return (a - b) / m(b)  # type: ignore
         case _:
             raise AssertionError("unreachable")
 

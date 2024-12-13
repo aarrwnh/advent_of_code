@@ -9,7 +9,7 @@ pub struct InputReader(String);
 
 impl InputReader {
     pub fn new(year: usize, day: usize) -> Self {
-        Self(format!("../../input/{year}/{day:0>2}/"))
+        Self(format!("../../input/{year}/{day:0>2}-"))
     }
 
     fn _get_file(&self, filename: &str) -> String {
@@ -29,8 +29,12 @@ impl InputReader {
 pub struct Point(pub isize, pub isize);
 
 impl Point {
-    pub fn dist(&self, other: &Self) -> Point {
+    pub fn dist(&self, other: &Self) -> Self {
         (self.0 - other.0, self.1 - other.1).into()
+    }
+
+    pub fn apply(&self, other: &Self) -> Self {
+        (self.0 + other.0, self.1 + other.1).into()
     }
 }
 
@@ -64,7 +68,7 @@ impl Grid {
 
         for (y, line) in input.lines().enumerate() {
             for (x, ch) in line.chars().enumerate() {
-                map.insert((x as isize, y as isize), ch as u8);
+                map.insert((x as isize, y as isize).into(), ch as u8);
                 max_x = x as isize;
             }
             max_y = y as isize;

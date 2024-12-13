@@ -7,22 +7,23 @@ def dist(x1: int, y1: int, x2: int, y2: int) -> tuple[int, int]:
     return (x1 - x2), (y1 - y2)
 
 
-def find_antinodes(g: Grid, start: int, stop: int) -> int:
+def find_antinodes(g: Grid, *, find_all: bool = False) -> int:
     todo = [*g.grid]
     antinodes: set[P] = set()
 
     def check(p: P, d: P) -> None:
         (x, y) = p
         (dx, dy) = d
-        # could use: `stop = max_x - eucl % max_x` instead of max range
-        for i in range(start, stop):
-            n = (x + dx * i, y + dy * i)
-            if not g.in_bounds(*n):
-                return
-            antinodes.add(n)
+        i = 0
+        while g.in_bounds(x, y):
+            if find_all or (not find_all and i == 1):
+                antinodes.add((x, y))
+            x += dx
+            y += dy
+            i += 1
 
     while todo:
-        a1 = todo.pop(0)
+        a1 = todo.pop()
         for a2 in todo:
             # only if antennas type match
             if g.grid[a2] == g.grid[a1]:
@@ -35,12 +36,12 @@ def find_antinodes(g: Grid, start: int, stop: int) -> int:
 
 @asserter
 def part1(g: Grid) -> int:
-    return find_antinodes(g, 1, 2)
+    return find_antinodes(g)
 
 
 @asserter
 def part2(g: Grid) -> int:
-    return find_antinodes(g, 0, g.max_x)
+    return find_antinodes(g, find_all=True)
 
 
 def main() -> int:

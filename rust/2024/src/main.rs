@@ -1,9 +1,30 @@
 use aoc2024::*;
-use std::{env, error::Error};
+use std::{env, error::Error, str::FromStr};
+
+#[derive(Debug)]
+enum Select {
+    All,
+    Day(usize),
+    Last,
+}
+
+impl FromStr for Select {
+    type Err = Box<dyn Error>;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        Ok(match s.parse::<usize>().ok().unwrap() {
+            0 => Self::All,
+            d @ 1..25 => Self::Day(d),
+            _ => Self::Last,
+        })
+    }
+}
 
 fn main() -> Result<(), Box<dyn Error>> {
     let args: Vec<String> = env::args().collect();
-    let day = args[1].parse()?;
+    let day = args
+        .get(1)
+        .map_or_else(|| Select::Last, |s| Select::from_str(s).unwrap());
     let lst = [
         d01::main,
         d02::main,
@@ -15,7 +36,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         d08::main,
         // d09::main,
         // d10::main,
-        // d11::main,
+        d11::main,
         // d12::main,
         // d13::main,
         // d14::main,
@@ -33,14 +54,17 @@ fn main() -> Result<(), Box<dyn Error>> {
     ];
 
     match day {
-        0 => {
+        Select::All => {
             for (i, module) in lst.iter().enumerate() {
                 println!(" == Day {} ==", i + 1);
                 module()?;
             }
         }
-        d if (1..=lst.len()).contains(&d) => lst.get(day - 1).unwrap()()?,
-        _ => panic!("Unimplemented"),
+        Select::Day(d) => {
+            println!(" == Day {} ==", d);
+            lst[d]()?
+        },
+        Select::Last => lst.last().unwrap()()?,
     };
 
     Ok(())
