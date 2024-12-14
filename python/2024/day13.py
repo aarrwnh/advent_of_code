@@ -1,4 +1,5 @@
 import sys
+from collections.abc import Generator
 
 from support import InputReader, asserter, timing
 
@@ -12,9 +13,8 @@ class P:
         return f"X={self.x} Y={self.y}"
 
 
-def parse(input: str, scale: int = 0) -> list[list[P]]:
+def parse(input: str, scale: int = 0) -> Generator[list[P], None, None]:
     groups_s = input.split("\n\n")
-    groups: list[list[P]] = []
     for g_s in groups_s:
         a: list[P] = []
         for i, g in enumerate(g_s.strip().split("\n")):
@@ -24,8 +24,7 @@ def parse(input: str, scale: int = 0) -> list[list[P]]:
                 c.x += scale
                 c.y += scale
             a.append(c)
-        groups.append(a)
-    return groups
+        yield a
 
 
 # def part1(input: str) -> int:
@@ -73,8 +72,7 @@ def calc(input: str, scale: int = 0) -> int:
     #       Ax * By - Ay * Bx
     #
     total = 0
-    for group in parse(input, scale):
-        A, B, P = group
+    for A, B, P in parse(input, scale):
         n = (A.x * P.y - A.y * P.x) // (A.x * B.y - A.y * B.x)
         m = (P.x - B.x * n) // A.x
 
