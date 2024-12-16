@@ -42,23 +42,19 @@ def part1(lines: list[str], width: int, height: int) -> int:
     for robot in robots:
         robot.move(seconds, width, height)
 
-    horz = width // 2
-    vert = height // 2
+    middle_col = width // 2
+    middle_row = height // 2
     # x = 0..=4 6..=10
     # y = 0..=3 5..=7
+
+    def cmp(x: int, y: int) -> int:
+        return (x >= middle_col) << 1 | (y >= middle_row)
+
     quadrants = [0] * 4
     for robot in robots:
         x, y = robot.nx, robot.ny
-        if 0 <= x < horz:
-            if 0 <= y < vert:
-                quadrants[0] += 1
-            elif vert < y < height:
-                quadrants[2] += 1
-        elif horz < x < width:
-            if 0 <= y < vert:
-                quadrants[1] += 1
-            elif vert < y < height:
-                quadrants[3] += 1
+        if x != middle_col and y != middle_row:
+            quadrants[cmp(x, y)] += 1
 
     return math.prod(quadrants)
 
@@ -68,11 +64,11 @@ def part2(lines: list[str], width: int, height: int) -> int:
     robots = parse(lines)
     robot_count = len(robots)
     max_cycles = width * height
-    vert = height // 2
+    middle_row = height // 2
     for sec in range(1, max_cycles):
         # v 51 187 288 389
         # h 86 154 257 360
-        if sec % height == vert:
+        if sec % height == middle_row:
             for robot in robots:
                 robot.move(sec, width, height)
             points = set((r.nx, r.ny) for r in robots)
