@@ -8,23 +8,16 @@ DIRS = [(0, 1), (1, 0), (-1, 0), (0, -1)]
 
 
 class Memory:
-    grid: set[P]
-
-    def __init__(self, corruptions: list[P], max_x: int, max_y: int) -> None:
-        self.corruptions = corruptions
-        self.max_x = max_x
-        self.max_y = max_y
-
-    @classmethod
-    def parse(cls, input: list[str], max_x: int, max_y: int) -> "Memory":
-        a = []
+    def __init__(self, input: list[str], size: int) -> None:
+        self.max_x = size
+        self.max_y = size
+        self.corruptions: list[P] = []
         for line in input:
             x, y = line.split(",")
-            a.append((int(x), int(y)))
-        return cls(a, max_x, max_y)
+            self.corruptions.append((int(x), int(y)))
 
     def fill_memory_space(self, offset: int) -> None:
-        self.grid = set(self.corruptions[0:offset])
+        self.bad_grid: set[P] = set(self.corruptions[0:offset])
 
     def find_shortest(self) -> None | int:
         start = (0, 0)
@@ -48,7 +41,7 @@ class Memory:
                     n not in visited
                     and 0 <= x <= self.max_x
                     and 0 <= y <= self.max_y
-                    and n not in self.grid
+                    and n not in self.bad_grid
                 ):
                     heapq.heappush(todo, (cost + 1, n))
                     visited.add(n)
@@ -85,8 +78,8 @@ def part2(mem: Memory, min_offset: int) -> str:
 def main() -> int:
     i = InputReader(2024, 18).lines
 
-    example = Memory.parse(i("example"), 6, 6)
-    puzzle = Memory.parse(i("puzzle"), 70, 70)
+    example = Memory(i("example"), 6)
+    puzzle = Memory(i("puzzle"), 70)
 
     def s1() -> None:
         assert part1(example, 12)(22)
