@@ -465,13 +465,11 @@ def download_input() -> int:
 
     os.chmod(filename, 0o400)
 
-    lines = s.splitlines()
-    if len(lines) > 10:
-        for line in lines[:10]:
-            print(line)
-    else:
-        print(lines[0][:80])
+    for line in s.splitlines()[:10]:
+        print(line)
     print("...")
+
+    print(f"../input/{year}/{day}-example ../input/{year}/{day}-puzzle ./{year}/day{day}.py")
 
     return 0
 

@@ -40,8 +40,6 @@ class Racetrack:
             timecost, p = heapq.heappop(todo)
             if p == self.end:
                 break
-            if p in visited:
-                continue
             visited.add(p)
             (x, y) = p
             for dx, dy in DIRS:
@@ -75,13 +73,13 @@ class Racetrack:
         #       ########v#
         #       #....b<<<#
         for i in range(s - 1):
-            for j in range(i + 1, s):
+            for j in range(i + 35, s):
                 a, b = self.path[i], self.path[j]
                 distance = abs(a[0] - b[0]) + abs(a[1] - b[1])
                 if j - i > distance <= cheat_duration:
                     cheats[(j - i) - distance] += 1
 
-        return sum([w[1] for w in cheats.items() if w[0] >= self.min_cheat_time])
+        return sum(count for dur, count in cheats.items() if dur >= self.min_cheat_time)
 
 
 @asserter
