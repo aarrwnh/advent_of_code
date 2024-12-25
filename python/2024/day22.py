@@ -1,16 +1,19 @@
 import collections
-import math
 import sys
 
 from support import InputReader, asserter, timing
 
-MODULO = 1 << 24  # 16777216
+# MODULO = 1 << 24  # 16777216
+MASK = (1 << 24) - 1
 
 
 def next_secret(n: int) -> int:
-    n = ((n * 64) ^ n) % MODULO
-    n = (math.floor(n / 32) ^ n) % MODULO
-    n = ((n * 2048) % MODULO) ^ n
+    n = (n ^ n << 6) & MASK
+    n ^= n >> 5
+    n = (n ^ n << 11) & MASK
+    # n = ((n * 64) ^ n) % MODULO
+    # n = (math.floor(n / 32) ^ n) % MODULO
+    # n = ((n * 2048) % MODULO) ^ n
     return n
 
 
@@ -44,7 +47,7 @@ def part2(lines: list[str]) -> int:
             p = m
 
         for j in range(len(diffs) - 4):
-            k = tuple(diffs[j : j + 4])
+            k = (diffs[j], diffs[j + 1], diffs[j + 2], diffs[j + 3])
             a, b = banana_sequences[k]
             if id not in a:
                 a.add(id)  # keep one banana per monkey
