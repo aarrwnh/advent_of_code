@@ -34,19 +34,17 @@ def maybe_dijkstra(grid: list[P], start: P, end: P) -> int:
     while todo:
         score, p, dir = heapq.heappop(todo)
 
-        if p == end:
-            return score
-
-        if (p, dir) in visited:
-            continue
-        visited.add((p, dir))
-
         (dx, dy) = dir
         for d, s in [((dx, dy), 1), ((dy, -dx), 1001), ((-dy, dx), 1001)]:
             n = p[0] + d[0], p[1] + d[1]
+            s += score
 
-            if n in grid:
-                heapq.heappush(todo, (score + s, n, d))
+            if n == end:
+                return s
+
+            if n in grid and (n, d) not in visited:
+                visited.add((n, d))
+                heapq.heappush(todo, (s, n, d))
 
     raise AssertionError("unreachable")
 

@@ -6,19 +6,35 @@ from support import InputReader, asserter, timing
 @asserter
 def part1(input: str) -> int:
     sch = input.split("\n\n")
-    pins = []
-    for s in sch:
-        a = set()
-        for y, row in enumerate(s.splitlines()):
-            for x, ch in enumerate(row):
-                if ch == "#":
-                    a.add((x, y))
-        pins.append(a)
+
+    locks: list[list[int]] = []
+    keys: list[list[int]] = []
+
+    m = sch[0].splitlines()
+    width, height = len(m[0]), len(m)
+
+    for pin in sch:
+        lines = pin.splitlines()
+        heights = [0] * width
+        if lines[0][0] == "#":
+            locks.append(heights)
+            c = 0
+            r = range(height - 1, -1, -1)
+        else:
+            keys.append(heights)
+            c = height - 1
+            r = range(height)
+
+        for x in range(width):
+            for y in r:
+                if lines[y][x] == "#":
+                    heights[x] = abs(y - c)
+                    break
 
     total = 0
-    for i, pin0 in enumerate(pins):
-        for pin1 in pins[i + 1 :]:
-            if len(pin0 & pin1) == 0:
+    for lock in locks:
+        for key in keys:
+            if not any(a + b > width for a, b in zip(lock, key, strict=True)):
                 total += 1
     return total
 
