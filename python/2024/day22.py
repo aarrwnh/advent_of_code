@@ -30,31 +30,37 @@ def part1(lines: list[str]) -> int:
 
 @asserter
 def part2(lines: list[str]) -> int:
-    banana_sequences: collections.defaultdict[tuple[int, ...], tuple[set[int], int]]
-    banana_sequences = collections.defaultdict(lambda: (set(), 0))
+    banana_sequences: collections.defaultdict[tuple[int, ...], int]
+    banana_sequences = collections.defaultdict(int)
 
-    for id, secret_n in enumerate(lines):
-        prices: list[int] = []
+    for _, secret_n in enumerate(lines):
+        num = int(secret_n)
+
+        seen: set[tuple[int, ...]] = set()
         diffs: list[int] = []
+        for i in range(2000):
+            n = next_secret(num)
+            diffs.append((n % 10) - (num % 10))
+            num = n
 
-        n = int(secret_n)
-        p = n % 10
-        for _ in range(2000):
-            n = next_secret(n)
-            m = n % 10
-            prices.append(m)
-            diffs.append(m - p)
-            p = m
+            if i >= 3:
+                seq = tuple(diffs)
+                diffs.pop(0)
+                if seq not in seen:
+                    banana_sequences[seq] += num % 10
+                    seen.add(seq)
 
-        for j in range(len(diffs) - 4):
-            k = (diffs[j], diffs[j + 1], diffs[j + 2], diffs[j + 3])
-            a, b = banana_sequences[k]
-            if id not in a:
-                a.add(id)  # keep one banana per monkey
-                banana_sequences[k] = (a, b + prices[j + 3])
+    return max(banana_sequences.values())
 
-    best_seq = max(banana_sequences, key=lambda x: banana_sequences[x][1])
-    return banana_sequences[best_seq][1]
+    #     for j in range(len(diffs) - 4):
+    #         k = (diffs[j], diffs[j + 1], diffs[j + 2], diffs[j + 3])
+    #         a, b = banana_sequences[k]
+    #         if id not in a:
+    #             a.add(id)  # keep one banana per monkey
+    #             banana_sequences[k] = (a, b + prices[j + 3])
+    #
+    # best_seq = max(banana_sequences, key=lambda x: banana_sequences[x][1])
+    # return banana_sequences[best_seq][1]
 
 
 @timing("day22")
