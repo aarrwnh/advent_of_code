@@ -19,10 +19,8 @@ def part1(moves: str) -> int:
 
 @asserter
 def part2(moves: str) -> int:
-    start = (0, 0)
-    santa = start
-    robo = start
-    visited: set[P] = set((start,))
+    pos = [(0, 0)] * 2
+    visited: set[P] = set((pos[0],))
 
     def move(p: P, m: str) -> P:
         dx, dy = DIRS[m]
@@ -31,10 +29,7 @@ def part2(moves: str) -> int:
         return p
 
     for i, m in enumerate(moves):
-        if i % 2 == 0:
-            santa = move(santa, m)
-        else:
-            robo = move(robo, m)
+        pos[i % 2] = move(pos[i % 2], m)
 
     return len(visited)
 

@@ -1,4 +1,5 @@
 import heapq
+import itertools
 import sys
 from collections import defaultdict, deque
 
@@ -53,10 +54,15 @@ def parse(lines: list[str]) -> Graph:
     graph: Graph = defaultdict(dict)
     for line in lines:
         src, _, dest, _, dist_s = line.split(" ")
-        d = int(dist_s)
-        graph[src][dest] = d
-        graph[dest][src] = d
+        graph[src][dest] = graph[dest][src] = int(dist_s)
     return graph
+
+
+def find_all(graph: Graph) -> list[int]:
+    return [
+        sum(graph[src][dst] for src, dst in itertools.pairwise(perm))
+        for perm in itertools.permutations(graph.keys())
+    ]
 
 
 @asserter
@@ -67,7 +73,8 @@ def part1(lines: list[str]) -> int:
 
 @asserter
 def part2(lines: list[str]) -> int:
-    return find_longest(parse(lines))
+    return max(find_all(parse(lines)))
+    # return find_longest(parse(lines))
 
 
 @timing("day9")

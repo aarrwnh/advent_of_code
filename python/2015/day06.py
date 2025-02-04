@@ -34,12 +34,7 @@ def parse(lines: list[str]) -> Generator[tuple[int, int, int], None, None]:
 
         for x in range(ax, bx + 1):
             for y in range(ay, by + 1):
-                if ay == by:  # horz
-                    yield x, ay, inst
-                elif ax == bx:  # vert
-                    yield ax, y, inst
-                else:  # diag
-                    yield x, y, inst
+                yield x, y, inst
 
 
 def count(grid: Grid) -> int:
