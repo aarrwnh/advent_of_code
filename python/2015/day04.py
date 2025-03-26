@@ -1,5 +1,5 @@
-import hashlib
 import sys
+from _md5 import md5
 
 from support import InputReader, asserter, timing
 
@@ -7,7 +7,7 @@ from support import InputReader, asserter, timing
 def digest(secret: str, part: int = 1) -> int:
     for i in range(10_000_000):
         key = f"{secret}{i}".encode()
-        b = hashlib.md5(key).digest()
+        b = md5(key).digest()
         if b[0] != 0 or b[1] != 0:
             continue
         if part == 1 and b[2] & 0xF0 != 0:

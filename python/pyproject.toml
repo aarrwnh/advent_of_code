@@ -3,14 +3,16 @@ name = "aoc"
 version = "1"
 requires-python = ">=3.8"
 
-[tool.pyright]
+[tool.basedpyright]
 verboseOutput = true
 reportUnnecessaryTypeIgnoreComment = true
 reportUnnecessaryIsInstance = false
 reportMissingImports = false
 reportMissingModuleSource = false
+reportAny = false
+reportExplicitAny = false
 
-[[tool.pyright.executionEnvironments]]
+[[tool.basedpyright.executionEnvironments]]
 extraPaths = [ "support" ]
 root = "."
 
