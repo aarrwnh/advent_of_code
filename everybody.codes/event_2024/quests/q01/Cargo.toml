@@ -1,0 +1,10 @@
+[package]
+name = "q01"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+utils = { workspace = true }
+
+[lints]
+workspace = true

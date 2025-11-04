@@ -1,0 +1,27 @@
+use utils::*;
+
+fn main() {
+    let input = InputReader::new("e2024", 1);
+    check!(part1 <- 0 ; &input.load(1));
+    check!(part2 <- 0 ; &input.load(2));
+    check!(part3 <- 0 ; &input.load(3));
+}
+
+fn part1(input: &str) -> usize {
+    0
+}
+
+fn part2(input: &str) -> usize {
+    0
+}
+
+fn part3(input: &str) -> usize {
+    0
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+	//
+}

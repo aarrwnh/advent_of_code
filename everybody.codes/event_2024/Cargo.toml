@@ -1,0 +1,25 @@
+[package]
+name = "event_2024"
+version = "0.1.0"
+edition = "2024"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+resolver = "3"
+members = ["quests/*"]
+
+[workspace.dependencies]
+utils = { path = ".", package = "event_2024" }
+
+[lints]
+workspace = true
+
+[workspace.lints.rust]
+dead_code = "allow"
+unused_variables = "allow"
+
+[workspace.lints.clippy]
+cast_possible_truncation = "allow"
