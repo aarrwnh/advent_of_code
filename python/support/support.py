@@ -165,7 +165,7 @@ def read_file_lines(path__: str, filename: str = "") -> list[str]:
 class InputReader:
     y: str
     d: str
-    _path: str
+    # _path: str
 
     def __init__(self, year: int, day: int) -> None:
         self.y = str(year)
@@ -221,6 +221,11 @@ P = tuple[int, int]
 
 
 class Grid:
+    grid: dict[P, int]
+    max_x: int
+    max_y: int
+    start_pos: P
+
     def __init__(
         self, grid: dict[P, int], max_x: int, max_y: int, start_pos: P
     ) -> None:
@@ -469,7 +474,9 @@ def download_input() -> int:
         print(line)
     print("...")
 
-    print(f"../input/{year}/{day}-example ../input/{year}/{day}-puzzle ./{year}/day{day}.py")
+    print(
+        f"../input/{year}/{day}-example ../input/{year}/{day}-puzzle ./{year}/day{day}.py"
+    )
 
     return 0
 
@@ -479,3 +486,46 @@ def mul(a: list[int] | ValuesView[int]) -> int:
     for b in a:
         total *= b
     return total
+
+
+# T = TypeVar("T")
+
+
+# def bfs[T](
+#     start: T,
+#     neighbours: Callable[[T], list[T]],
+#     is_end: Callable[[T], bool],
+#     find_all: bool = False,
+# ) -> Generator[T]:
+#     queue = collections.deque([(0, start)])
+#     visited = set()
+#     while queue:
+#         step, item = queue.popleft()
+#         if is_end(item):
+#             yield item
+#             if not find_all:
+#                 break
+#             continue
+#         elif item not in visited:
+#             visited.add(item)
+#         else:
+#             continue
+#         for n in neighbours(item):
+#             queue.append((step + 1, n))
+
+#     return None
+
+
+# def dfs[T](
+#     items: list[T],
+#     item: T,
+#     neighbours: Callable[[T], list[T]],
+#     is_end: Callable[[T], bool],
+# ) -> list[T]:
+#     if is_end(item):
+#         items.append(item)
+#     else:
+#         for n in neighbours(item):
+#             dfs(items, n, neighbours, is_end)
+
+#     return items

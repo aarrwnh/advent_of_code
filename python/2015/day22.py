@@ -35,7 +35,7 @@ class Game:
             f"mp={self.player_mp} enemy_hp={self.enemy_hp}"
         )
 
-    def clone(self):
+    def next(self):
         n = Game(self.enemy_hp, self.enemy_dmg, self.player_hp, self.player_mp)
         n.active_spells = self.active_spells.copy()
         n.used_spells = self.used_spells.copy()
@@ -119,7 +119,7 @@ def simulate(enemy: Character, player: Character, difficulty: int = 0) -> int:
             if state.active_spells[spell_id] > 0:
                 continue
 
-            n = state.clone()
+            n = state.next()
             # player has enough mp?
             if n.player_mp < spell.mp:
                 continue
@@ -141,7 +141,7 @@ def simulate(enemy: Character, player: Character, difficulty: int = 0) -> int:
         return cand
 
     def enemy_turn(state: Game) -> Game:
-        n = state.clone()
+        n = state.next()
         n.player_hp -= max(1, n.enemy_dmg - n.player_armor)
         return n
 

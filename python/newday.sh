@@ -11,7 +11,7 @@ if [[ -n "$1" && -n "$2" ]]; then
 		echo "file exists"
 	else
 		mkdir -p "$1"
-	   mkdir -p "../input/$1/${day}"
+	   mkdir -p "../input/$1/"
 		touch "../input/$1/${day}-example"
 		touch "../input/$1/${day}-puzzle"
 		cp "../templates__/python" "$1/day${day}.py"

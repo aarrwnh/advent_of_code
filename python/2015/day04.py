@@ -1,18 +1,17 @@
 import sys
+from typing import Any, Callable
 from _md5 import md5
 
 from support import InputReader, asserter, timing
 
 
-def digest(secret: str, part: int = 1) -> int:
+def digest(secret: str, check: Callable[[Any], bool]) -> int:
     for i in range(10_000_000):
         key = f"{secret}{i}".encode()
         b = md5(key).digest()
         if b[0] != 0 or b[1] != 0:
             continue
-        if part == 1 and b[2] & 0xF0 != 0:
-            continue
-        if part == 2 and b[2] != 0:
+        if check(b):
             continue
         return i
 
@@ -22,12 +21,12 @@ def digest(secret: str, part: int = 1) -> int:
 
 @asserter
 def part1(secret: str) -> int:
-    return digest(secret, 1)
+    return digest(secret, lambda b: b[2] & 0xF0 != 0)
 
 
 @asserter
 def part2(secret: str) -> int:
-    return digest(secret, 2)
+    return digest(secret, lambda b: b[2] != 0)
 
 
 @timing("day04")

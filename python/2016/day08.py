@@ -2,16 +2,20 @@ import sys
 
 from support import InputReader, asserter, timing
 
+code = ""
+
 
 @asserter
 def part1(instructions: list[str], height: int, width: int) -> int:
+    global code
+
     scr = [[False] * width for _ in range(height)]
-    cand: list[int] = set()
+    cand: set[int] = set()
 
     for inst in instructions:
         match inst.split(" "):
             case "rect", p:
-                w, h = map(lambda x: int(x), p.split("x"))
+                w, h = map(int, p.split("x"))
                 for x in range(w):
                     for y in range(h):
                         scr[y][x] = True
@@ -50,13 +54,12 @@ def part1(instructions: list[str], height: int, width: int) -> int:
                 code += " "
         code += "\n"
 
-    print(code)
-
     return total
 
 
 @asserter
 def part2() -> str:
+    print(code)
     return "EOARGPHYAO"
 
 

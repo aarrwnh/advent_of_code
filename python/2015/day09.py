@@ -89,8 +89,8 @@ def main() -> int:
         assert part1(puzzle)(207)
 
     def s2() -> None:
-        part2(example)(982)
-        part2(puzzle)(804)
+        assert part2(example)(982)
+        assert part2(puzzle)(804)
 
     match sys.argv:
         case [_, "1"]:

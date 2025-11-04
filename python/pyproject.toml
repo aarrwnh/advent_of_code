@@ -11,6 +11,8 @@ reportMissingImports = false
 reportMissingModuleSource = false
 reportAny = false
 reportExplicitAny = false
+reportImplicitOverride = false
+reportIncompatibleMethodOverride = false
 
 [[tool.basedpyright.executionEnvironments]]
 extraPaths = [ "support" ]
