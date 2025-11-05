@@ -1,5 +1,10 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign};
 
+#[cfg(feature = "visualize")]
+mod pallette;
+#[cfg(feature = "visualize")]
+use pallette::Palette;
+
 use utils::*;
 
 // https://en.wikipedia.org/wiki/Mandelbrot_set
@@ -13,6 +18,7 @@ fn main() {
 
 fn part1(input: &str) -> String {
     cycle(input.parse().unwrap(), 3, DIVISOR1)
+        .1
         .unwrap()
         .to_string()
     // (x, y) = (x0 + (x ** 2 - y ** 2) / 10, y0 + (2 * x * y) / 10);
@@ -35,36 +41,70 @@ fn part3(input: &str) -> usize {
 const DIVISOR1: Complex = Complex::n(10, 10);
 const DIVISOR2: Complex = Complex::n(100_000, 100_000);
 
-fn cycle(p: Complex, cycles: usize, divisor: Complex) -> Option<Complex> {
+fn cycle(p: Complex, cycles: usize, divisor: Complex) -> (usize, Option<Complex>) {
     let mut r = Complex::n(0i64, 0i64);
-    for _ in 0..cycles {
+    for i in 0..cycles {
         r *= r;
         r /= divisor;
         r += p;
 
         if r.can_engrave() {
-            return None;
+            return (i, None);
         }
     }
-    Some(r)
+    (0, Some(r))
 }
 
+#[cfg(not(feature = "visualize"))]
 fn frac_engrave(p: Complex, precision: usize) -> usize {
     let cycles = 100;
-    let size = 1001;
+    let size = 1001i64;
     let mut total = 0;
+
     for y in (0..size).step_by(precision) {
         'next: for x in (0..size).step_by(precision) {
             let p = Complex::n(p.real + x, p.imag + y);
-            if cycle(p, cycles, DIVISOR2).is_none() {
-                // print!(" ");
+            if cycle(p, cycles, DIVISOR2).1.is_none() {
+                if cfg!(feature = "print") {
+                    print!(" ");
+                }
                 continue 'next;
             }
-            // print!("x");
+            if cfg!(feature = "print") {
+                print!("▫");
+            }
             total += 1;
         }
-        // println!();
+        if cfg!(feature = "print") {
+            println!();
+        }
     }
+    total
+}
+
+#[cfg(feature = "visualize")]
+fn frac_engrave(p: Complex, precision: usize) -> usize {
+    let cycles = 100;
+    let size = 1001i64;
+    let mut total = 0;
+
+    let pallete = Palette::ocean();
+    let mut imgbuf = image::ImageBuffer::new(size as u32, size as u32);
+
+    for y in (0..size).step_by(precision) {
+        'next: for x in (0..size).step_by(precision) {
+            let p = Complex::n(p.real + x, p.imag + y);
+            let (n, v) = cycle(p, cycles, DIVISOR2);
+            if v.is_none() {
+                let pixel = imgbuf.get_pixel_mut(x as u32, y as u32);
+                let color = pallete.color(n as f32 / 255 as f32);
+                *pixel = image::Rgb(color);
+                continue 'next;
+            }
+            total += 1;
+        }
+    }
+    imgbuf.save(format!("fractal{precision}.png")).unwrap();
     total
 }
 

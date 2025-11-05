@@ -3,7 +3,13 @@ name = "q02"
 version.workspace = true
 edition.workspace = true
 
+[features]
+default = []
+visualize = ["dep:image"]
+print = []
+
 [dependencies]
+image = { version = "0.25.8", default-features = false, features = ["png"], optional = true }
 utils.workspace = true
 
 [lints]
