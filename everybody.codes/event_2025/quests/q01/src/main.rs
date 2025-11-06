@@ -24,7 +24,7 @@ fn part3(input: &str) -> String {
 
 struct Shell<'a> {
     names: Vec<&'a str>,
-    inst: Box<dyn Iterator<Item = Inst> + 'a>,
+    instructions: Box<dyn Iterator<Item = Inst> + 'a>,
 }
 
 impl<'a> Shell<'a> {
@@ -34,14 +34,14 @@ impl<'a> Shell<'a> {
         };
         Self {
             names: names.split(',').collect::<Vec<_>>(),
-            inst: Box::new(instructions.split(',').map(|x| x.parse().unwrap())),
+            instructions: Box::new(instructions.split(',').map(|x| x.parse().unwrap())),
         }
     }
 
     fn part1(self) -> String {
         let mut idx = 0;
         let total = self.names.len() as isize;
-        for inst in self.inst {
+        for inst in self.instructions {
             idx += inst.offset();
             if idx < 0 {
                 idx = 0;
@@ -53,19 +53,22 @@ impl<'a> Shell<'a> {
     }
 
     fn part2(self) -> String {
-        let idx = &self.inst.fold(0, |acc, inst| acc + inst.offset());
+        let idx = &self.instructions.fold(0, |acc, inst| acc + inst.offset());
         self.names[*idx as usize % self.names.len()].to_string()
     }
 
     fn part3(self) -> String {
-        let Self { mut names, inst } = self;
+        let Self {
+            mut names,
+            instructions: inst,
+        } = self;
         let total = names.len() as isize;
         for inst in inst {
-            let idx = match inst {
-                Left(n) => total + (n % total),
+            let idx = (match inst {
+                Left(n) => n.rem_euclid(total),
                 Right(n) => n,
-            } % total;
-            [names[0], names[idx as usize]] = [names[idx as usize], names[0]];
+            } % total) as usize;
+            [names[0], names[idx]] = [names[idx], names[0]];
         }
         names[0].to_string()
     }
@@ -85,15 +88,15 @@ impl Inst {
 }
 
 impl FromStr for Inst {
-    type Err = String;
+    type Err = ();
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut chars = s.chars();
-        let dir = chars.next().ok_or("no direction?")?;
+        let dir = chars.next().unwrap();
         let offset = chars
             .collect::<String>()
             .parse::<isize>()
-            .map_err(|_| "bad instruction".to_string())?;
+            .unwrap();
         match dir {
             'L' => Ok(Left(-offset)),
             'R' => Ok(Right(offset)),
