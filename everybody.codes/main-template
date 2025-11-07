@@ -20,8 +20,24 @@ fn part3(input: &str) -> usize {
 }
 
 #[cfg(test)]
-mod test {
+mod q01 {
     use super::*;
 
-	//
+    #[test]
+    fn part1_example() {
+        let input = "";
+        assert_eq!(0, part1(input));
+    }
+
+    #[test]
+    fn part2_example() {
+        let input = "";
+        assert_eq!(0, part2(input));
+    }
+
+    #[test]
+    fn part3_example() {
+        let input = "";
+        assert_eq!(0, part3(input));
+    }
 }
