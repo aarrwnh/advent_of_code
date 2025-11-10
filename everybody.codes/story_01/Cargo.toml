@@ -1,5 +1,5 @@
 [package]
-name = "event_2025"
+name = "story_1"
 version = "0.1.0"
 edition = "2024"
 
@@ -23,6 +23,3 @@ unused_variables = "allow"
 
 [workspace.lints.clippy]
 cast_possible_truncation = "allow"
-
-# [profile.dev]
-# opt-level = 2
