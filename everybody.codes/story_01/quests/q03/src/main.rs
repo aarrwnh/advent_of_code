@@ -41,15 +41,15 @@ fn golden_line(input: &str) -> usize {
     let mut congruences = Vec::new();
 
     for line in input.trim().lines() {
-        let Snail { idx, coords, .. } = Snail::from_str(line).unwrap();
-        let len = coords.len() as i64;
-        n.push(len);
-        for i in 0..len {
-            if (idx as i64 + i) % len == 0 {
-                congruences.push(i as i64);
-                break;
-            }
-        }
+        let Snail { pos, .. } = Snail::from_str(line).unwrap();
+        n.push((pos.0 + pos.1) as i64 - 1);
+        congruences.push(pos.1 as i64);
+        // for i in 0..len {
+        //     if (idx as i64 + i) % len == 0 {
+        //         congruences.push(i as i64);
+        //         break;
+        //     }
+        // }
     }
 
     chinese_remainder(n, congruences) as usize - 1

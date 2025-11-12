@@ -17,13 +17,17 @@ fn part1(input: &str) -> String {
 }
 
 fn part2(input: &str) -> u64 {
-    let mut res = input
+    let mut min = u64::MAX;
+    let mut max = 0;
+    for q in input
         .trim()
         .lines()
         .map(|line| Fishbone::from_str(line).unwrap().quality)
-        .collect::<Vec<_>>();
-    res.sort_unstable();
-    res[res.len() - 1] - res[0]
+    {
+        min = min.min(q);
+        max = max.max(q);
+    }
+    max - min
 }
 
 fn part3(input: &str) -> u64 {
@@ -31,7 +35,7 @@ fn part3(input: &str) -> u64 {
     for line in input.trim().lines() {
         res.push(Fishbone::from_str(line).unwrap());
     }
-    res.sort_by(compare);
+    res.sort();
     res.iter()
         .rev()
         .enumerate()
@@ -133,20 +137,35 @@ where
     }
 }
 
-fn compare(a: &Fishbone, b: &Fishbone) -> Ordering {
-    match a.quality.cmp(&b.quality) {
-        Ordering::Equal => {}
-        c => return c,
-    }
-
-    for (a1, b1) in a.levels.iter().zip(b.levels.iter()) {
-        match a1.cmp(b1) {
+impl Ord for Fishbone {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.quality.cmp(&other.quality) {
             Ordering::Equal => {}
             c => return c,
         }
-    }
 
-    a.id.cmp(&b.id)
+        for (a1, b1) in self.levels.iter().zip(other.levels.iter()) {
+            match a1.cmp(b1) {
+                Ordering::Equal => {}
+                c => return c,
+            }
+        }
+        assert!(self.id != other.id);
+        self.id.cmp(&other.id)
+    }
+}
+
+impl PartialOrd for Fishbone {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Eq for Fishbone {}
+impl PartialEq for Fishbone {
+    fn eq(&self, _other: &Self) -> bool {
+        unreachable!()
+    }
 }
 
 #[cfg(test)]
