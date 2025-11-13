@@ -1,5 +1,3 @@
-use std::collections::VecDeque;
-
 use utils::*;
 
 fn main() {
@@ -25,7 +23,7 @@ fn part1(input: &str) -> usize {
 
 fn part2(input: &str) -> usize {
     // count_pairs(input.as_bytes()).iter().sum()
-    counter(input.as_bytes(), 1, usize::MAX)
+    counter(input.as_bytes(), 1, input.len())
 }
 
 fn part3(input: &str, repeats: usize, distance: usize) -> usize {
@@ -78,32 +76,40 @@ fn counter(chars: &[u8], repeats: usize, distance: usize) -> usize {
 
     // keep track of mentors position within the range
     // (assume we only need 3 keys (ABC))
-    let mut counts: Vec<VecDeque<usize>> = vec![VecDeque::new(); 3];
-    let mut idx = 0;
+    // let mut counts: Vec<VecDeque<usize>> = vec![VecDeque::new(); 3];
+    let mut counts: Vec<usize> = vec![0; 3];
+    let mut idx = 0usize;
 
     for rep in 0..repeats {
         let mut current_total = 0;
         for ch in chars {
             if ch.is_ascii_uppercase() {
-                counts[(ch - b'A') as usize].push_back(idx);
+                counts[(ch - b'A') as usize] += 1;
             } else {
-                let key = (ch - b'a') as usize;
-
                 // prune mentors outside of the range
-                while let Some(m_idx) = counts[key].front() {
-                    if idx - m_idx > distance {
-                        counts[key].pop_front();
-                    } else {
-                        break;
-                    }
-                }
+                // while let Some(m_idx) = counts[key].front() {
+                //     if idx - m_idx > distance {
+                //         counts[key].pop_front();
+                //     } else {
+                //         break;
+                //     }
+                // }
 
-                current_total += counts[key].len();
+                let key = (ch - b'a') as usize;
+                current_total += counts[key];
             }
+
+            if let Some(d) = idx.checked_sub(distance) {
+                let p = d % chars.len();
+                if chars[p].is_ascii_uppercase() {
+                    counts[(chars[p] - b'A') as usize] -= 1;
+                }
+            }
+
             idx += 1;
         }
 
-        if rep * chars.len() > distance {
+        if rep * chars.len() > distance as usize {
             total += current_total * (repeats - rep);
             break;
         } else {
