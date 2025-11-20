@@ -13,6 +13,7 @@ members = ["quests/*"]
 
 [workspace.dependencies]
 utils = { path = "../event_2024", package = "event_2024" }
+rustc-hash = "2.1.1"
 
 [lints]
 workspace = true

@@ -1,11 +1,10 @@
 [package]
-name = "q10"
+name = "q13"
 version.workspace = true
 edition.workspace = true
 
 [dependencies]
 utils.workspace = true
-rustc-hash.workspace = true
 
 [lints]
 workspace = true
