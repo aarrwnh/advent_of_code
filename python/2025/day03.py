@@ -8,8 +8,8 @@ def find_largest(bank: str, total_batteries: int) -> int:
     size = len(nums)
     start = 0
     res = 0
-    for i in range(1, total_batteries + 1):
-        nums0 = nums[start:size - (total_batteries - i)]
+    for offset in range(1, total_batteries + 1):
+        nums0 = nums[start:size - (total_batteries - offset)]
         n = max(nums0)
         j = nums0.index(n)
         start += j + 1

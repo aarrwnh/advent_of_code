@@ -4,12 +4,12 @@ from support import InputReader, asserter, timing
 
 
 @asserter
-def part1(lines: list[str]) -> int:
+def part1(input: list[str]) -> int:
     return 0
 
 
 @asserter
-def part2(lines: list[str]) -> int:
+def part2(input: list[str]) -> int:
     return 0
 
 
