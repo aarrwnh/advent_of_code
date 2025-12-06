@@ -24,15 +24,16 @@ def part2(input: str) -> int:
     ranges_s, _ = input.split("\n\n")
     ranges = sorted([tuple(map(int, line.split("-")))
                     for line in ranges_s.splitlines()])
-    s = [ranges[0]]
-    for r1, r2 in ranges[1:]:
-        p_r1, p_r2 = s[-1]
-        if (p_r1 <= r1 <= p_r2 or p_r1 <= r2 <= p_r2):
-            s[-1] = (min(r1, p_r1), max(r2, p_r2))
-        else:
-            s.append((r1, r2))
 
-    return sum(abs(r1 - r2) + 1 for r1, r2 in s)
+    prev = ranges[0]
+    total = 0
+    for ar1, ar2 in ranges[1:]:
+        if prev[1] < ar1:
+            total += abs(prev[0] - prev[1]) + 1
+            prev = (ar1, ar2)
+        else:
+            prev = (prev[0], max(prev[1], ar2))
+    return total + (abs(prev[0] - prev[1]) + 1)
 
 
 @timing("day5")

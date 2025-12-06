@@ -23,30 +23,29 @@ def roll(input: list[str], once: bool = False) -> int:
 
     total = 0
     prev = -1
-    while prev != 0:
-        new_grid: set[tuple[int, int]] = set()
-        can_remove = 0
-        for r, c in grid:
-            count = 0
-            for n in neighbours(r, c):
-                count += n in grid
-                if count >= 4:
-                    break
-            if count < 4:
-                can_remove += 1
-            else:
-                new_grid.add((r, c))
 
-        total += can_remove
+    counts = {k: 0 for k in grid}
+    for r, c in grid:
+        for dr, dc in adjacent(r, c):
+            if (dr, dc) in grid:
+                counts[dr, dc] += 1
+
+    while prev != total:
+        prev = total
+        for (r, c), v in tuple(counts.items()):
+            if v < 4:
+                total += 1
+                del counts[r, c]
+                for n in adjacent(r, c):
+                    if n in counts:
+                        counts[n] -= 1
         if once:
             break
-        prev = can_remove
-        grid = new_grid
 
     return total
 
 
-def neighbours(r: int, c: int) -> Generator[tuple[int, int]]:
+def adjacent(r: int, c: int) -> Generator[tuple[int, int]]:
     for dr in [-1, 0, 1]:
         for dc in [-1, 0, 1]:
             if dr == dc == 0:
