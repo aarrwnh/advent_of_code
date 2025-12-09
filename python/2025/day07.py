@@ -3,6 +3,8 @@ from functools import cache
 
 from support import InputReader, asserter, timing
 
+type P = tuple[int, int]
+
 
 @asserter
 def part1(input: list[str]) -> int:
@@ -11,7 +13,7 @@ def part1(input: list[str]) -> int:
     splits = 0
 
     for _ in range(len(input) // 2):
-        n: set[tuple[int, int]] = set()
+        n: set[P] = set()
         for r, c in beams:
             nr = r + 2
             if (r, c) in splitters:
@@ -41,10 +43,24 @@ def part2(input: list[str]) -> int:
 
     return solve(*start)
 
+    # import collections
+    # beams: collections.defaultdict[P, int]
+    # beams = collections.defaultdict(int)
+    # beams[start] = 1
+    # for _ in range(len(input) // 2):
+    #     for (r, c), splits in list(beams.items()):
+    #         nr = r + 2
+    #         if (r, c) in splitters:
+    #             beams[nr, c - 1] += splits
+    #             beams[nr, c + 1] += splits
+    #         else:
+    #             beams[nr, c] += splits
+    # return sum(splits for pos, splits in beams.items() if pos[0] == end)
 
-def parse(input: list[str]) -> tuple[tuple[int, int], set[tuple[int, int]]]:
+
+def parse(input: list[str]) -> tuple[P, set[P]]:
     start = None
-    splitters: set[tuple[int, int]] = set()
+    splitters: set[P] = set()
     for r, line in enumerate(input):
         for c, ch in enumerate(line):
             if ch == "S":
