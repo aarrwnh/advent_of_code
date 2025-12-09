@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 import math
 import sys
-from typing import Callable, NamedTuple
+from collections.abc import Callable
+from typing import NamedTuple
 
 from support import InputReader, asserter, timing
 
@@ -25,7 +28,7 @@ def solve(input: list[str], cb: Callable[[Distances], Distances]) -> int:
 
     distances: Distances = []
     for i, a in enumerate(boxes):
-        for j, b in enumerate(boxes[i + 1:], i + 1):
+        for j, b in enumerate(boxes[i + 1 :], i + 1):
             distances.append((a.dist(b), i, j))
     distances.sort(key=lambda x: x[0])
 
