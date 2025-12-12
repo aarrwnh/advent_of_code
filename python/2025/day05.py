@@ -22,18 +22,23 @@ def part1(input: str) -> int:
 @asserter
 def part2(input: str) -> int:
     ranges_s, _ = input.split("\n\n")
-    ranges = sorted([tuple(map(int, line.split("-")))
-                    for line in ranges_s.splitlines()])
+    ranges = sorted(
+        [tuple(map(int, line.split("-"))) for line in ranges_s.splitlines()]
+    )
 
     prev = ranges[0]
     total = 0
+
+    def diff(p: tuple[int, ...]) -> int:
+        return abs(p[0] - p[1]) + 1
+
     for ar1, ar2 in ranges[1:]:
         if prev[1] < ar1:
-            total += abs(prev[0] - prev[1]) + 1
+            total += diff(prev)
             prev = (ar1, ar2)
         else:
             prev = (prev[0], max(prev[1], ar2))
-    return total + (abs(prev[0] - prev[1]) + 1)
+    return total + diff(prev)
 
 
 @timing("day5")

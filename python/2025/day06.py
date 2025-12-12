@@ -3,7 +3,6 @@ import sys
 
 from support import InputReader, asserter, timing
 
-
 OPS = {"*": math.prod, "+": sum}
 
 
@@ -13,7 +12,7 @@ def part1(input: str) -> int:
     ops = lines.pop().split()
     n = [x.split() for x in lines]
     total = 0
-    for i, a in enumerate(zip(*n)):
+    for i, a in enumerate(zip(*n, strict=True)):
         nums = tuple(int(x) for x in a)
         total += OPS[ops[i]](nums)
     return total
@@ -36,10 +35,10 @@ def part2(input: str) -> int:
         n.append(out)
 
     total = 0
-    for *a, op in zip(*n, ops):
+    for *a, op in zip(*n, ops, strict=True):
         nums: list[int] = []
         # slice numbers vertically
-        for b in zip(*a):
+        for b in zip(*a, strict=False):
             v = "".join(b).strip()
             if v != "":
                 nums.append(int(v))
